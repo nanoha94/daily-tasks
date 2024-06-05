@@ -1,9 +1,8 @@
 import "@/styles/auth.css";
 import TextInput from "../../components/form/TextInput";
-import SendButton from "../../components/form/SendButton";
 import Link from "next/link";
 
-const PageRegiter = () => {
+const PageLogin = () => {
   return (
     <div>
       <h1 className="title">ログイン</h1>
@@ -21,7 +20,9 @@ const PageRegiter = () => {
               placeholder="半角英数6文字以上"
             />
           </div>
-          <SendButton>ログイン</SendButton>
+          <button type="submit" className="send-button">
+            ログイン
+          </button>
         </form>
         <p className="text-black text-base text-center">
           アカウント登録がまだの方は
@@ -32,4 +33,4 @@ const PageRegiter = () => {
   );
 };
 
-export default PageRegiter;
+export default PageLogin;

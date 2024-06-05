@@ -13,3 +13,7 @@
 .input-area {
   @apply flex flex-col gap-y-5;
 }
+
+.send-button {
+  @apply text-white font-bold bg-dark_blue border-2 border-transparent rounded-lg p-3 hover:text-dark_blue hover:bg-transparent hover:border-dark_blue;
+}
