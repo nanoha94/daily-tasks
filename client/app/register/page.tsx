@@ -41,8 +41,6 @@ const PageRegister = () => {
     }
   };
 
-  console.log(errors);
-
   return (
     <div>
       <h1 className="title">アカウント登録</h1>
