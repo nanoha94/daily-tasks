@@ -26,7 +26,7 @@ const PageLogin = () => {
         </form>
         <p className="text-black text-base text-center">
           アカウント登録がまだの方は
-          <Link href="/login">こちら</Link>
+          <Link href="/register">こちら</Link>
         </p>
       </div>
     </div>
