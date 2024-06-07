@@ -1,15 +1,10 @@
 import { forwardRef } from "react";
-import { styled } from "styled-components";
 
 interface Props
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "id"> {
   id: string;
   label: string;
   errorMessage?: string;
-}
-
-interface InputProps {
-  isError: boolean;
 }
 
 const TextInput = forwardRef<HTMLInputElement, Props>(

@@ -3,8 +3,7 @@ import "@/styles/auth.css";
 import TextInput from "../../components/form/TextInput";
 import Link from "next/link";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { supabase } from "@/utils/supabase";
-import { useRouter } from "next/navigation";
+import { useAuth } from "@/contexts/AuthProvider";
 
 interface FormValues {
   name: string;
@@ -14,14 +13,14 @@ interface FormValues {
 }
 
 const PageRegister = () => {
-  const router = useRouter();
+  const { signUp } = useAuth();
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<FormValues>();
 
-  const handleSubmitSuccess: SubmitHandler<FormValues> = async ({
+  const handleSubmitSuccess: SubmitHandler<FormValues> = ({
     email,
     password,
     passwordConfirm,
@@ -30,12 +29,7 @@ const PageRegister = () => {
       throw new Error("パスワードが一致しません");
     }
     try {
-      const { data, error } = await supabase.auth.signUp({
-        email,
-        password,
-      });
-      console.log(data, error);
-      router.push("/login");
+      signUp(email, password);
     } catch (err) {
       console.error(err);
     }

@@ -2,9 +2,8 @@
 import "@/styles/auth.css";
 import TextInput from "../../components/form/TextInput";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { supabase } from "@/utils/supabase";
+import { useAuth } from "@/contexts/AuthProvider";
 
 interface FormValues {
   email: string;
@@ -12,24 +11,19 @@ interface FormValues {
 }
 
 const PageLogin = () => {
-  const router = useRouter();
+  const { signIn } = useAuth();
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<FormValues>();
 
-  const handleSubmitSuccess: SubmitHandler<FormValues> = async ({
+  const handleSubmitSuccess: SubmitHandler<FormValues> = ({
     email,
     password,
   }: FormValues) => {
     try {
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
-      console.log(data, error);
-      router.push("/");
+      signIn(email, password);
     } catch (err) {
       console.error(err);
     }

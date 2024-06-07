@@ -1,13 +1,12 @@
 "use client";
-import { supabase } from "@/utils/supabase";
+import { useAuth } from "@/contexts/AuthProvider";
 
 const Page = () => {
-  const logout = async () => {
+  const { signOut } = useAuth();
+
+  const logout = () => {
     try {
-      const { error } = await supabase.auth.signOut();
-      if (error) {
-        throw error;
-      }
+      signOut();
     } catch (err) {
       console.error(err);
     }
