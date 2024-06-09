@@ -20,7 +20,8 @@ const PageRegister = () => {
     formState: { errors },
   } = useForm<FormValues>();
 
-  const handleSubmitSuccess: SubmitHandler<FormValues> = ({
+  const handleSubmitSuccess: SubmitHandler<FormValues> = async ({
+    name,
     email,
     password,
     passwordConfirm,
@@ -29,7 +30,7 @@ const PageRegister = () => {
       throw new Error("パスワードが一致しません");
     }
     try {
-      signUp(email, password);
+      await signUp(email, password);
     } catch (err) {
       console.error(err);
     }

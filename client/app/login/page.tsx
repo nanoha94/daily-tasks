@@ -18,12 +18,12 @@ const PageLogin = () => {
     formState: { errors },
   } = useForm<FormValues>();
 
-  const handleSubmitSuccess: SubmitHandler<FormValues> = ({
+  const handleSubmitSuccess: SubmitHandler<FormValues> = async ({
     email,
     password,
   }: FormValues) => {
     try {
-      signIn(email, password);
+      await signIn(email, password);
     } catch (err) {
       console.error(err);
     }

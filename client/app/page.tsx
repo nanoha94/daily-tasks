@@ -4,9 +4,9 @@ import { useAuth } from "@/contexts/AuthProvider";
 const Page = () => {
   const { signOut } = useAuth();
 
-  const logout = () => {
+  const logout = async () => {
     try {
-      signOut();
+      await signOut();
     } catch (err) {
       console.error(err);
     }
