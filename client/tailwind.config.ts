@@ -16,6 +16,9 @@ const config: Config = {
       dark_blue: "#005595",
       green: "#57BDA8",
       bg: "#DDF1FC",
+      gray: {
+        400: "#BDBDBD",
+      },
     },
   },
   plugins: [],
