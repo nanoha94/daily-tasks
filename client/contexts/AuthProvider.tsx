@@ -31,19 +31,24 @@ export const AuthProvider = ({ children }: Props) => {
   const pathname = usePathname();
   const router = useRouter();
 
-  supabase.auth.onAuthStateChange((_, session) => {
-    if (session?.user) {
-      setUser(session.user);
-    } else {
-      setUser(null);
-    }
-  });
-
   useEffect(() => {
-    (async () => {
+    const fetchData = async () => {
       const { data } = await supabase.auth.getUser();
       setUser(data.user);
-    })();
+    };
+    fetchData();
+
+    const { data } = supabase.auth.onAuthStateChange((_, session) => {
+      if (session?.user) {
+        setUser(session.user);
+      } else {
+        setUser(null);
+      }
+    });
+
+    return () => {
+      data.subscription.unsubscribe();
+    };
   }, []);
 
   useEffect(() => {

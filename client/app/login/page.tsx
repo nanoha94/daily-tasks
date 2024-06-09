@@ -30,7 +30,7 @@ const PageLogin = () => {
   };
 
   return (
-    <div>
+    <div className="auth">
       <h1 className="title">ログイン</h1>
       <div className="content">
         <form className="form" onSubmit={handleSubmit(handleSubmitSuccess)}>

@@ -14,31 +14,33 @@ datasource db {
 }
 
 model User {
-  id        Int     @id @default(autoincrement())
+  id        String     @id @default(uuid())
   email     String
   password  String
 }
 
 model Post {
-  id        Int       @id @default(autoincrement())
+  id        String       @id @default(uuid())
   comment   String?
   tasks     Task[]
+  category  String
+  numOfGood Int
   authorId  Int
   createdAt DateTime  @default(now())
 }
 
 model Task {
-  id        Int     @id @default(autoincrement())
-  content   String?
+  id        String     @id @default(uuid())
+  content   String
   completed Boolean
-  postId    Int
+  postId    String
   post      Post    @relation(fields: [postId], references: [id])
 }
 
 model Profile {
-  id          Int     @id @default(autoincrement())
+  id          String     @id @default(uuid())
   bio         String?
-  profileSrc  String
+  profileSrc  String?
   userId      Int     @unique
 }
 

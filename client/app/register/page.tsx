@@ -37,7 +37,7 @@ const PageRegister = () => {
   };
 
   return (
-    <div>
+    <div className="auth">
       <h1 className="title">アカウント登録</h1>
       <div className="content">
         <form className="form" onSubmit={handleSubmit(handleSubmitSuccess)}>
