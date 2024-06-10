@@ -52,14 +52,14 @@ export const AuthProvider = ({ children }: Props) => {
   }, []);
 
   useEffect(() => {
-    if (!!user) {
-      if (pathname === "/register" || pathname === "/login") {
-        router.push("/");
-      }
-    } else {
-      if (pathname !== "/register" && pathname !== "/login") {
-        router.push("/login");
-      }
+    console.log(pathname);
+  }, [pathname]);
+
+  useEffect(() => {
+    if (!!user && (pathname === "/register" || pathname === "/login")) {
+      router.push("/");
+    } else if (!user && pathname !== "/register" && pathname !== "/login") {
+      router.push("/login");
     }
   }, [user]);
 
