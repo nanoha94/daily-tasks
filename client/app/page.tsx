@@ -1,6 +1,7 @@
 "use client";
 import Header from "@/components/Header";
 import PostCard from "@/components/PostCard";
+import CreatePost from "@/components/drawer/CreatePost";
 import { useAuth } from "@/contexts/AuthProvider";
 
 const Page = () => {
@@ -52,7 +53,7 @@ const Page = () => {
       createdAt: new Date("2024-06-09 08:00:00"),
     },
     {
-      id: "post_01",
+      id: "post_02",
       comment:
         "コメントコメントコメントコメントコメントコメントコメントコメントコメントコメントコメントコメントコメントコメントコメント",
       tasks,
@@ -67,7 +68,7 @@ const Page = () => {
     <>
       <div className="title">aaa</div>
       <Header user={user} />
-      <div className="flex flex-col gap-y-2 bg-bg py-2">
+      <div className="flex-1 flex flex-col gap-y-2 bg-bg py-2">
         {/* TODO: 後で削除（開発用に設置） */}
         <button onClick={logout}>ログアウト</button>
         <ul className="flex flex-col gap-y-2">
@@ -78,6 +79,7 @@ const Page = () => {
           ))}
         </ul>
       </div>
+      <CreatePost />
     </>
   );
 };

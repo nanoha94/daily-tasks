@@ -89,7 +89,7 @@ export const AuthProvider = ({ children }: Props) => {
 
   return (
     <AuthContext.Provider value={{ user, signIn, signUp, signOut }}>
-      <div>{children}</div>
+      <div className="flex flex-col h-screen">{children}</div>
     </AuthContext.Provider>
   );
 };
