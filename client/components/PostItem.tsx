@@ -2,10 +2,10 @@ import { POST_CATEGORIES } from "@/costants/posts";
 import { Post } from "@/types/post";
 import ProfileIcon from "./ProfileIcon";
 import Link from "next/link";
-import Checkbox from "./form/Checkbox";
 import styled from "styled-components";
 import { colors } from "@/tailwind.config";
 import GoodButton from "./button/GoodButton";
+import styles from "@/styles/form.module.css";
 
 interface Props {
   post: Post;
@@ -78,13 +78,18 @@ const PostItem = ({ post }: Props) => {
         {post.comment && <p className="text-base text-black">{post.comment}</p>}
         <div className="flex flex-col gap-y-1">
           {post.tasks.map((task) => (
-            <Checkbox
-              key={task.id}
-              id={task.id}
-              label={task.content}
-              checked={task.completed}
-              onChange={() => {}}
-            />
+            <div key={task.id} className={styles.checkbox_container}>
+              <input
+                type="checkbox"
+                id={task.id}
+                checked={task.completed}
+                className={styles.checkbox}
+                onChange={() => {}}
+              />
+              <label htmlFor={task.id} className={styles.checkbox_label}>
+                {task.content}
+              </label>
+            </div>
           ))}
         </div>
       </div>

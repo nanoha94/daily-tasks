@@ -1,9 +1,8 @@
 import styles from "@/styles/form.module.css";
 import PrimaryButton from "../button/PrimaryButton";
 import Textarea from "../form/Textarea";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { SubmitHandler, useFieldArray, useForm } from "react-hook-form";
 import { Task } from "@/types/task";
-import Checkbox from "../form/Checkbox";
 import AddButton from "../button/AddButton";
 import { useState } from "react";
 
@@ -13,18 +12,23 @@ interface FormValues {
 }
 
 const CreatePost = () => {
-  const [tasks, setTasks] = useState<Task[]>([
-    { id: null, content: "", completed: false },
-  ]);
   const {
     register,
+    control,
     handleSubmit,
     formState: { errors },
-  } = useForm<FormValues>();
+  } = useForm<FormValues>({
+    defaultValues: {
+      tasks: [{ id: undefined, content: "", completed: false }],
+    },
+  });
+  const { fields, append } = useFieldArray({
+    name: "tasks",
+    control,
+  });
 
   const handleAddTask = () => {
-    console.log("click");
-    setTasks([...tasks, { id: null, content: "", completed: false }]);
+    append({ id: undefined, content: "", completed: false });
   };
 
   const handleSubmitSuccess: SubmitHandler<FormValues> = ({
@@ -51,16 +55,26 @@ const CreatePost = () => {
             <p className={styles.label}>今日のタスク</p>
             <p className={styles.memo}>各30文字以内で入力してください。</p>
           </div>
-          {tasks?.map((task, idx) => (
-            <Checkbox
-              key={idx}
-              id="test"
-              label={task.content}
-              placeholder="今日のタスクは？"
-              checked={task.completed}
-              isEdit={true}
-              {...register(`tasks`)}
-            />
+          {fields.map((field, idx) => (
+            <div
+              key={field.id}
+              className={`${styles.checkbox_container} py-1 px-2 rounded border border-gray-600 bg-white`}
+            >
+              <input
+                type="checkbox"
+                value={field.content}
+                // dafaultCheckedにすると、ON/OFFが切り替えられる
+                // defaultChecked={field.completed}
+                checked={false}
+                {...register(`tasks.${idx}.completed`)}
+                className={styles.checkbox}
+              />
+              <input
+                placeholder="今日のタスクは？"
+                className={styles.item}
+                {...register(`tasks.${idx}.content`)}
+              />
+            </div>
           ))}
         </div>
         <AddButton onClick={handleAddTask}>タスクを追加する</AddButton>

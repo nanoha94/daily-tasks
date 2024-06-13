@@ -21,7 +21,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, Props>(
           {memo && <p className={styles.memo}>{memo}</p>}
         </div>
         <textarea
-          className={`${styles.item_border} ${
+          className={`${styles.item} ${styles.item_border} ${
             !!errorMessage && styles.item_error
           }`}
           id={id}

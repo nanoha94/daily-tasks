@@ -17,7 +17,7 @@ const TextInput = forwardRef<HTMLInputElement, Props>(
           {label}
         </label>
         <input
-          className={`${styles.item_border} ${
+          className={`${styles.item} ${styles.item_border} ${
             !!errorMessage && styles.item_error
           }`}
           id={id}
