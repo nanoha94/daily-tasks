@@ -1,10 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
+import styled from "styled-components";
 
 interface Props {
+  className?: string;
   link?: string;
   imgSrc?: string;
-  size?: number;
 }
 
 interface ContainerProps {
@@ -23,11 +24,11 @@ const Container = ({ children, className, link }: ContainerProps) => {
   );
 };
 
-const ProfileIcon = ({ link, imgSrc, size = 40 }: Props) => {
+const ProfileIcon = ({ className, link, imgSrc }: Props) => {
   return (
     <Container
       link={link}
-      className={`w-[${size}px] h-auto aspect-square bg-gray-400 rounded-full`}
+      className={`${className} w-[40px] h-auto aspect-square bg-gray-400 rounded-full`}
     >
       {!!imgSrc && (
         <Image

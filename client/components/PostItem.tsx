@@ -32,6 +32,10 @@ const CategoryLabelBgColor = ($category: CategoryLabelProps["$category"]) => {
   }
 };
 
+const StyledProfileIcon = styled(ProfileIcon)`
+  width: 32px;
+`;
+
 const CategoryLabel = styled.span<CategoryLabelProps>`
   padding: 6px 8px 4px;
   width: fit-content;
@@ -56,7 +60,7 @@ const PostItem = ({ post }: Props) => {
           href={`/profile/${post.author.id}`}
           className="flex flex-1 items-center gap-x-2 transition-opacity hover:opacity-70"
         >
-          <ProfileIcon imgSrc={post.author.profile?.profileScr} size={32} />
+          <StyledProfileIcon imgSrc={post.author.profile?.profileScr} />
           <p className="text-xs text-black">{post.author.name}</p>
         </Link>
         <span className="text-xs text-gray-700">
