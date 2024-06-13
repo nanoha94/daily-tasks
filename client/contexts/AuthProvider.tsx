@@ -7,7 +7,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 interface AuthContextType {
   user: User | null;
   signIn: (email: string, password: string) => void;
-  signUp: (email: string, password: string) => void;
+  signUp: (email: string, password: string, name: string) => void;
   signOut: () => void;
 }
 
@@ -73,8 +73,16 @@ export const AuthProvider = ({ children }: Props) => {
     }
   };
 
-  const signUp = async (email: string, password: string) => {
-    const { error } = await supabase.auth.signUp({ email, password });
+  const signUp = async (email: string, password: string, name: string) => {
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          name,
+        },
+      },
+    });
     if (error) {
       throw error;
     }

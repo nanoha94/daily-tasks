@@ -30,7 +30,7 @@ const PageRegister = () => {
       throw new Error("パスワードが一致しません");
     }
     try {
-      await signUp(email, password);
+      await signUp(email, password, name);
     } catch (err) {
       console.error(err);
     }
