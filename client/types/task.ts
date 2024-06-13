@@ -1,5 +1,6 @@
 export interface Task {
-  id: string;
+  // todo:nullは暫定対策
+  id: string | null;
   content: string;
   completed: boolean;
 }
