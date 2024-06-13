@@ -5,8 +5,7 @@ import Link from "next/link";
 import Checkbox from "./form/Checkbox";
 import styled from "styled-components";
 import { colors } from "@/tailwind.config";
-import GoodButton from "./GoodButton";
-import { ChangeEvent } from "react";
+import GoodButton from "./button/GoodButton";
 
 interface Props {
   post: Post;

@@ -1,4 +1,4 @@
-import PrimaryButton from "../PrimaryButton";
+import PrimaryButton from "../button/PrimaryButton";
 import TaskEditor from "../TaskEditor";
 import Textarea from "../form/Textarea";
 

@@ -1,3 +1,4 @@
+"use client";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import { ButtonHTMLAttributes } from "react";
 
