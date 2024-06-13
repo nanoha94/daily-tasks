@@ -4,7 +4,8 @@ import Textarea from "../form/Textarea";
 import { SubmitHandler, useFieldArray, useForm } from "react-hook-form";
 import { Task } from "@/types/task";
 import AddButton from "../button/AddButton";
-import { useState } from "react";
+import apiClient from "@/lib/apiClient";
+import { useAuth } from "@/contexts/AuthProvider";
 
 interface FormValues {
   comment: string;
@@ -12,15 +13,19 @@ interface FormValues {
 }
 
 const CreatePost = () => {
+  const { user } = useAuth();
+  const defaultValues = {
+    comment: "",
+    tasks: [{ id: undefined, content: "", completed: false }],
+  };
   const {
     register,
     control,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<FormValues>({
-    defaultValues: {
-      tasks: [{ id: undefined, content: "", completed: false }],
-    },
+    defaultValues,
   });
   const { fields, append } = useFieldArray({
     name: "tasks",
@@ -28,14 +33,28 @@ const CreatePost = () => {
   });
 
   const handleAddTask = () => {
-    append({ id: undefined, content: "", completed: false });
+    append(defaultValues["tasks"]);
   };
 
-  const handleSubmitSuccess: SubmitHandler<FormValues> = ({
+  const handleSubmitSuccess: SubmitHandler<FormValues> = async ({
     comment,
     tasks,
   }: FormValues) => {
-    console.log(comment, tasks);
+    console.log(comment, tasks, user);
+
+    try {
+      const newPost = await apiClient.post("/posts", {
+        comment,
+        tasks,
+        category: "task",
+        numOfGood: 0,
+        authorId: user?.id,
+      });
+      // TODO: 一覧の内容を更新する処理を入れる
+      reset(defaultValues);
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   return (

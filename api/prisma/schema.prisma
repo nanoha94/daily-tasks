@@ -24,7 +24,7 @@ model Post {
   tasks     Task[]
   category  String
   numOfGood Int
-  authorId  Int
+  authorId  String
   createdAt DateTime  @default(now())
 }
 
