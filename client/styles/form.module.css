@@ -1,0 +1,27 @@
+.container {
+  @apply flex flex-col gap-y-2;
+}
+
+.label_container {
+  @apply flex flex-col gap-y-1;
+}
+
+.label {
+  @apply block text-black text-base;
+}
+
+.memo {
+  @apply text-xs text-black;
+}
+
+.text_error {
+  @apply text-error text-xs font-bold;
+}
+
+.item_border {
+  @apply appearance-none border border-gray-600 rounded w-full py-2 px-3 text-black text-base placeholder:text-placeholder focus:outline-none;
+}
+
+.item_error {
+  @apply border-2 border-error;
+}

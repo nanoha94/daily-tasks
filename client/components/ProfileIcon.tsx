@@ -9,7 +9,7 @@ interface Props {
 
 interface ContainerProps {
   children: React.ReactNode;
-  className?: string;
+  className: string;
   link?: Props["link"];
 }
 

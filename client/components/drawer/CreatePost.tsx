@@ -1,30 +1,20 @@
-import AddRoundedIcon from "@mui/icons-material/AddRounded";
-import FullscreenDrawer from "./FullscreenDrawer";
-import { useState } from "react";
+import PrimaryButton from "../PrimaryButton";
+import TaskEditor from "../TaskEditor";
+import Textarea from "../form/Textarea";
 
 const CreatePost = () => {
-  const [isOpen, setIsOpen] = useState(false);
-
-  const handleToggleDrawer = (state: boolean) => {
-    setIsOpen(state);
-  };
-
   return (
-    <>
-      <button
-        type="button"
-        onClick={() => handleToggleDrawer(true)}
-        className="fixed bottom-2 right-2 text-white bg-green rounded-full border-4 border-transparent p-1 hover:text-green hover:bg-white hover:border-green"
-      >
-        <AddRoundedIcon className="text-4xl" />
-      </button>
-      <FullscreenDrawer
-        isOpen={isOpen}
-        onClose={() => handleToggleDrawer(false)}
-      >
-        Enter
-      </FullscreenDrawer>
-    </>
+    <form className="flex flex-col gap-y-5">
+      <Textarea
+        label="今日のひとこと"
+        memo="250文字以内で入力してください。"
+        placeholder="今日の意気込みは？"
+      />
+      <TaskEditor />
+      <div className="ml-auto mr-0">
+        <PrimaryButton type="submit">投稿する</PrimaryButton>
+      </div>
+    </form>
   );
 };
 

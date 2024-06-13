@@ -5,11 +5,12 @@ export const colors = {
   white: "#fff",
   black: "#333",
   error: "#D75265",
-  placeholder: "#757575",
+  placeholder: "#9E9E9E",
   dark_blue: "#005595",
   green: "#57BDA8",
   bg: "#DDF1FC",
   gray: {
+    200: "#EEEEEE",
     400: "#BDBDBD",
     600: "#757575",
     700: "#616161",

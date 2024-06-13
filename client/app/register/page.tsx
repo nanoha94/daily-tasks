@@ -1,5 +1,5 @@
 "use client";
-import "@/styles/auth.css";
+import styles from "@/styles/auth.module.css";
 import TextInput from "../../components/form/TextInput";
 import Link from "next/link";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -37,11 +37,14 @@ const PageRegister = () => {
   };
 
   return (
-    <div className="auth">
-      <h1 className="title">アカウント登録</h1>
-      <div className="content">
-        <form className="form" onSubmit={handleSubmit(handleSubmitSuccess)}>
-          <div className="input-area">
+    <div>
+      <h1 className={styles.title}>アカウント登録</h1>
+      <div className={styles.content}>
+        <form
+          className={styles.form}
+          onSubmit={handleSubmit(handleSubmitSuccess)}
+        >
+          <div className={styles.input_area}>
             <TextInput
               id="name"
               label="アカウント名"
@@ -53,6 +56,7 @@ const PageRegister = () => {
             />
             <TextInput
               id="email"
+              type="email"
               label="メールアドレス"
               placeholder="you@example.com"
               errorMessage={errors.email?.message}
@@ -63,6 +67,7 @@ const PageRegister = () => {
             />
             <TextInput
               id="password"
+              type="password"
               label="パスワード"
               placeholder="半角英数6文字以上"
               errorMessage={errors.password?.message}
@@ -73,6 +78,7 @@ const PageRegister = () => {
             />
             <TextInput
               id="password"
+              type="password"
               label="パスワード（確認用）"
               placeholder="半角英数6文字以上"
               errorMessage={errors.passwordConfirm?.message}
@@ -82,19 +88,15 @@ const PageRegister = () => {
               })}
             />
           </div>
-          <button
-            type="submit"
-            className="send-button"
-            onClick={() => {
-              console.log("click");
-            }}
-          >
+          <button type="submit" className={styles.submit_button}>
             アカウント作成
           </button>
         </form>
         <p className="text-black text-base text-center">
           ログインは
-          <Link href="/login">こちら</Link>
+          <Link href="/login" className={styles.link}>
+            こちら
+          </Link>
         </p>
       </div>
     </div>

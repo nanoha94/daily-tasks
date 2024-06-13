@@ -1,7 +1,8 @@
 "use client";
 import Header from "@/components/Header";
-import PostCard from "@/components/PostCard";
+import PostItem from "@/components/PostItem";
 import CreatePost from "@/components/drawer/CreatePost";
+import CreatePostDrawer from "@/components/drawer/CreatePostDrawer";
 import { useAuth } from "@/contexts/AuthProvider";
 
 const Page = () => {
@@ -66,20 +67,26 @@ const Page = () => {
 
   return (
     <>
-      <div className="title">aaa</div>
+      {/* TODO: 後で削除（開発用に設置） */}
+      <button onClick={logout}>ログアウト</button>
       <Header user={user} />
-      <div className="flex-1 flex flex-col gap-y-2 bg-bg py-2">
-        {/* TODO: 後で削除（開発用に設置） */}
-        <button onClick={logout}>ログアウト</button>
-        <ul className="flex flex-col gap-y-2">
-          {posts.map((post) => (
-            <li key={post.id}>
-              <PostCard post={post} />
-            </li>
-          ))}
-        </ul>
+      <div className="flex-1 bg-bg">
+        <div className="max-w-[960px] w-fit py-3 mx-auto md:flex md:justify-center md:items-start md:gap-x-6 md:py-5 md:px-4">
+          <div className="hidden md:block md:min-w-[300px] md:w-2/5 md:bg-white md:rounded md:shadow-sm md:py-5 md:px-4">
+            <CreatePost />
+          </div>
+          <ul className="flex flex-col gap-y-2 mx-auto md:w-3/5">
+            {posts.map((post) => (
+              <li key={post.id}>
+                <PostItem post={post} />
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
-      <CreatePost />
+      <div className="md:hidden">
+        <CreatePostDrawer />
+      </div>
     </>
   );
 };

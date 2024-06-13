@@ -1,6 +1,6 @@
 "use client";
-import "@/styles/auth.css";
-import TextInput from "../../components/form/TextInput";
+import styles from "@/styles/auth.module.css";
+import TextInput from "@/components/form/TextInput";
 import Link from "next/link";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useAuth } from "@/contexts/AuthProvider";
@@ -30,13 +30,17 @@ const PageLogin = () => {
   };
 
   return (
-    <div className="auth">
-      <h1 className="title">ログイン</h1>
-      <div className="content">
-        <form className="form" onSubmit={handleSubmit(handleSubmitSuccess)}>
-          <div className="input-area">
+    <div>
+      <h1 className={styles.title}>ログイン</h1>
+      <div className={styles.content}>
+        <form
+          className={styles.form}
+          onSubmit={handleSubmit(handleSubmitSuccess)}
+        >
+          <div className={styles.input_area}>
             <TextInput
               id="email"
+              type="email"
               label="メールアドレス"
               placeholder="you@example.com"
               errorMessage={errors.email?.message}
@@ -46,6 +50,7 @@ const PageLogin = () => {
             />
             <TextInput
               id="password"
+              type="password"
               label="パスワード"
               placeholder="半角英数6文字以上"
               errorMessage={errors.password?.message}
@@ -54,13 +59,15 @@ const PageLogin = () => {
               })}
             />
           </div>
-          <button type="submit" className="send-button">
+          <button type="submit" className={styles.submit_button}>
             ログイン
           </button>
         </form>
         <p className="text-black text-base text-center">
           アカウント登録がまだの方は
-          <Link href="/register">こちら</Link>
+          <Link href="/register" className={styles.link}>
+            こちら
+          </Link>
         </p>
       </div>
     </div>

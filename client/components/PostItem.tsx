@@ -44,13 +44,13 @@ const CategoryLabel = styled.span<CategoryLabelProps>`
   border-radius: 8px;
 `;
 
-const PostCard = ({ post }: Props) => {
+const PostItem = ({ post }: Props) => {
   const handleClickNumOfGood = () => {
     // TODO: いいね数を更新する
   };
 
   return (
-    <div className="max-w-lg flex flex-col gap-y-5 bg-white shadow-sm p-3 mx-auto">
+    <div className="flex flex-col gap-y-5 rounded bg-white shadow-sm p-3 mx-auto">
       <div className="flex">
         <Link
           href={`/profile/${post.author.id}`}
@@ -95,4 +95,4 @@ const PostCard = ({ post }: Props) => {
   );
 };
 
-export default PostCard;
+export default PostItem;
