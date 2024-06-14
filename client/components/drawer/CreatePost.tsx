@@ -6,13 +6,18 @@ import { Task } from "@/types/task";
 import AddButton from "../button/AddButton";
 import apiClient from "@/lib/apiClient";
 import { useAuth } from "@/contexts/AuthProvider";
+import { Post } from "@/types/post";
+
+interface Props {
+  updatePost: (post: Post) => void;
+}
 
 interface FormValues {
   comment: string;
   tasks: Task[];
 }
 
-const CreatePost = () => {
+const CreatePost = ({ updatePost }: Props) => {
   const { user } = useAuth();
   const defaultValues = {
     comment: "",
@@ -51,6 +56,8 @@ const CreatePost = () => {
         authorId: user?.id,
       });
       // TODO: 一覧の内容を更新する処理を入れる
+      console.log(newPost.data);
+      updatePost(newPost.data);
       reset(defaultValues);
     } catch (err) {
       console.error(err);

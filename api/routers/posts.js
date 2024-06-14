@@ -24,6 +24,7 @@ router.post("/", async (req, res) => {
   try {
     const newPost = await prisma.post.create({
       data,
+      include: { tasks: true, author: true },
     });
     res.status(201).json(newPost);
   } catch (err) {
@@ -35,7 +36,8 @@ router.post("/", async (req, res) => {
 router.get("/", async (req, res) => {
   try {
     const allPosts = await prisma.post.findMany({
-      include: { tasks: true },
+      include: { tasks: true, author: true },
+      orderBy: { createdAt: "desc" },
     });
     res.status(201).json(allPosts);
   } catch (err) {

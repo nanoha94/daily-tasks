@@ -48,6 +48,7 @@ const CategoryLabel = styled.span<CategoryLabelProps>`
 `;
 
 const PostItem = ({ post }: Props) => {
+  const createdAt = new Date(post.createdAt);
   const handleClickNumOfGood = () => {
     // TODO: いいね数を更新する
   };
@@ -64,11 +65,11 @@ const PostItem = ({ post }: Props) => {
         </Link>
         <span className="text-xs text-gray-700">
           {`
-          ${post.createdAt.toLocaleDateString("en-us", {
+          ${createdAt.toLocaleDateString("en-us", {
             year: "numeric",
             month: "short",
             day: "numeric",
-          })} ${post.createdAt.toLocaleTimeString("en-US")}`}
+          })} ${createdAt.toLocaleTimeString("en-US")}`}
         </span>
       </div>
       <div className="flex flex-col gap-y-2">

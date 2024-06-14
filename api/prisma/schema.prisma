@@ -16,6 +16,8 @@ datasource db {
 model User {
   id        String     @id @default(uuid())
   name      String
+  posts     Post[]
+  profile   Profile?
 }
 
 model Post {
@@ -25,6 +27,7 @@ model Post {
   category  String
   numOfGood Int
   authorId  String
+  author    User      @relation(fields: [authorId],references: [id])
   createdAt DateTime  @default(now())
 }
 
@@ -33,13 +36,14 @@ model Task {
   content   String
   completed Boolean
   postId    String
-  post      Post    @relation(fields: [postId], references: [id])
+  post      Post        @relation(fields: [postId], references: [id])
 }
 
 model Profile {
   id          String     @id @default(uuid())
   bio         String?
   profileSrc  String?
-  userId      Int     @unique
+  userId      String     @unique
+  user        User       @relation(fields: [userId], references: [id])
 }
 
