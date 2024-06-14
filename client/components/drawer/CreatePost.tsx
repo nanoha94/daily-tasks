@@ -9,7 +9,7 @@ import { Post } from "@/types/post";
 import FormItem from "../FormItem";
 
 interface Props {
-  updatePost: (post: Post) => void;
+  addPost: (post: Post) => void;
 }
 
 interface FormValues {
@@ -17,7 +17,7 @@ interface FormValues {
   tasks: Task[];
 }
 
-const CreatePost = ({ updatePost }: Props) => {
+const CreatePost = ({ addPost }: Props) => {
   const { user } = useAuth();
   const defaultValues = {
     comment: "",
@@ -53,7 +53,7 @@ const CreatePost = ({ updatePost }: Props) => {
         numOfGood: 0,
         authorId: user?.id,
       });
-      updatePost(newPost.data);
+      addPost(newPost.data);
       reset(defaultValues);
     } catch (err) {
       console.error(err);

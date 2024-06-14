@@ -6,9 +6,12 @@ import styled from "styled-components";
 import { colors } from "@/tailwind.config";
 import GoodButton from "./button/GoodButton";
 import styles from "@/styles/form.module.css";
+import apiClient from "@/lib/apiClient";
+import { useState } from "react";
 
 interface Props {
   post: Post;
+  updatePost: (post: Post) => void;
 }
 
 interface CategoryLabelProps {
@@ -47,10 +50,32 @@ const CategoryLabel = styled.span<CategoryLabelProps>`
   border-radius: 8px;
 `;
 
-const PostItem = ({ post }: Props) => {
+const PostItem = ({ post, updatePost }: Props) => {
+  const {
+    id,
+    comment,
+    tasks,
+    category,
+    numOfGood,
+    author: { id: authorId },
+  } = post;
   const createdAt = new Date(post.createdAt);
-  const handleClickNumOfGood = () => {
-    // TODO: いいね数を更新する
+  const [isClickedGoodButton, setIsClickedGoodButton] =
+    useState<boolean>(false);
+  const handleClickNumOfGood = async () => {
+    try {
+      const updatedPost = await apiClient.put(`/posts/${post.id}`, {
+        comment,
+        tasks,
+        category,
+        numOfGood: isClickedGoodButton ? numOfGood - 1 : numOfGood + 1,
+        authorId,
+      });
+      updatePost(updatedPost.data);
+      setIsClickedGoodButton((prev) => !prev);
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   return (
@@ -96,7 +121,11 @@ const PostItem = ({ post }: Props) => {
       </div>
       <div className="flex gap-x-2">
         <div className="flex-1">
-          <GoodButton count={post.numOfGood} onClick={handleClickNumOfGood} />
+          <GoodButton
+            count={post.numOfGood}
+            isClicked={isClickedGoodButton}
+            onClick={handleClickNumOfGood}
+          />
         </div>
         {/* TODO: ダイアログ表示ボタンを配置 */}
       </div>

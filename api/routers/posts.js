@@ -64,16 +64,10 @@ router.put("/:postId", async (req, res) => {
   const { postId } = req.params;
   const { comment, tasks, category, numOfGood, authorId } = req.body;
 
-  const data_tasks = tasks.map((task) => {
-    return { content: task.content, completed: task.completed };
-  });
-
   const data = {
     comment,
     tasks: {
-      createMany: {
-        data: data_tasks,
-      },
+      set: tasks,
     },
     category,
     numOfGood,
@@ -81,12 +75,12 @@ router.put("/:postId", async (req, res) => {
   };
 
   try {
-    const newPost = await prisma.post.update({
+    const updatedPost = await prisma.post.update({
       data,
       where: { id: postId },
       include: { tasks: true, author: true },
     });
-    res.status(201).json(newPost);
+    res.status(201).json(updatedPost);
   } catch (err) {
     console.log(err);
     res.status(500).json({ message: "サーバーエラーです" });

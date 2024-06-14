@@ -33,8 +33,14 @@ const Page = () => {
     profile,
   };
 
-  const updateLatestPosts = (newPost: Post) => {
+  const addLatestPosts = (newPost: Post) => {
     setLatestPosts((prev) => [newPost, ...latestPosts]);
+  };
+
+  const updateLatestPosts = (updatedPost: Post) => {
+    setLatestPosts((prev) =>
+      prev.map((post) => (post.id === updatedPost.id ? updatedPost : post))
+    );
   };
 
   useEffect(() => {
@@ -57,20 +63,20 @@ const Page = () => {
       <div className="flex-1 bg-bg">
         <div className="max-w-[960px] w-full py-3 mx-auto md:flex md:justify-center md:items-start md:gap-x-6 md:py-5 md:px-4">
           <div className="hidden md:block md:min-w-[300px] md:w-2/5 md:bg-white md:rounded md:shadow-sm md:py-5 md:px-4">
-            <CreatePost updatePost={updateLatestPosts} />
+            <CreatePost addPost={addLatestPosts} />
           </div>
           <ul className="flex flex-col gap-y-2 mx-auto md:w-3/5">
             {!!latestPosts &&
               latestPosts.map((post) => (
                 <li key={post.id}>
-                  <PostItem post={post} />
+                  <PostItem post={post} updatePost={updateLatestPosts} />
                 </li>
               ))}
           </ul>
         </div>
       </div>
       <div className="md:hidden">
-        <CreatePostDrawer updatePost={updateLatestPosts} />
+        <CreatePostDrawer addPost={addLatestPosts} />
       </div>
     </>
   );

@@ -5,10 +5,10 @@ import CreatePost from "./CreatePost";
 import { Post } from "@/types/post";
 
 interface Props {
-  updatePost: (post: Post) => void;
+  addPost: (post: Post) => void;
 }
 
-const CreatePostDrawer = ({ updatePost }: Props) => {
+const CreatePostDrawer = ({ addPost }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleToggleDrawer = (state: boolean) => {
@@ -28,7 +28,7 @@ const CreatePostDrawer = ({ updatePost }: Props) => {
         isOpen={isOpen}
         onClose={() => handleToggleDrawer(false)}
       >
-        <CreatePost updatePost={updatePost} />
+        <CreatePost addPost={addPost} />
       </FullscreenDrawer>
     </>
   );
