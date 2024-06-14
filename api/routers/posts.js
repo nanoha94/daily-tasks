@@ -60,4 +60,37 @@ router.get("/:postId", async (req, res) => {
   }
 });
 
+router.put("/:postId", async (req, res) => {
+  const { postId } = req.params;
+  const { comment, tasks, category, numOfGood, authorId } = req.body;
+
+  const data_tasks = tasks.map((task) => {
+    return { content: task.content, completed: task.completed };
+  });
+
+  const data = {
+    comment,
+    tasks: {
+      createMany: {
+        data: data_tasks,
+      },
+    },
+    category,
+    numOfGood,
+    authorId,
+  };
+
+  try {
+    const newPost = await prisma.post.update({
+      data,
+      where: { id: postId },
+      include: { tasks: true, author: true },
+    });
+    res.status(201).json(newPost);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "サーバーエラーです" });
+  }
+});
+
 module.exports = router;
