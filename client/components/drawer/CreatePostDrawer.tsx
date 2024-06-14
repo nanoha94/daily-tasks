@@ -2,8 +2,13 @@ import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import FullscreenDrawer from "./FullscreenDrawer";
 import { useState } from "react";
 import CreatePost from "./CreatePost";
+import { Post } from "@/types/post";
 
-const CreatePostDrawer = () => {
+interface Props {
+  updatePost: (post: Post) => void;
+}
+
+const CreatePostDrawer = ({ updatePost }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleToggleDrawer = (state: boolean) => {
@@ -23,7 +28,7 @@ const CreatePostDrawer = () => {
         isOpen={isOpen}
         onClose={() => handleToggleDrawer(false)}
       >
-        <CreatePost />
+        <CreatePost updatePost={updatePost} />
       </FullscreenDrawer>
     </>
   );

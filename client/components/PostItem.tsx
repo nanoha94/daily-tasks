@@ -55,7 +55,7 @@ const PostItem = ({ post }: Props) => {
 
   return (
     <div className="flex flex-col gap-y-5 rounded bg-white shadow-sm p-3 mx-auto">
-      <div className="flex">
+      <div className="flex items-center">
         <Link
           href={`/profile/${post.author.id}`}
           className="flex flex-1 items-center gap-x-2 transition-opacity hover:opacity-70"

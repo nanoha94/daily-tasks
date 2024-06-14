@@ -10,7 +10,7 @@ const AddButton = ({ children, ...props }: Props) => {
     <button
       type="button"
       {...props}
-      className="w-fit flex gap-x-1 items-center text-green text-xs font-bold hover:text-dark_blue"
+      className="w-fit flex gap-x-1 items-center text-green text-sm font-bold leading-none hover:text-dark_blue"
     >
       <AddCircleOutlineIcon className="text-[18px]" />
       {children}

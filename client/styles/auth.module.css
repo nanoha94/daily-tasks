@@ -18,6 +18,14 @@
   @apply flex flex-col gap-y-5;
 }
 
+.item {
+  @apply appearance-none w-full text-black text-base border border-gray-600 rounded py-2 px-3 placeholder:text-placeholder focus:outline-none;
+}
+
+.item_error {
+  @apply border-2 border-error;
+}
+
 .submit_button {
   @apply text-white font-bold bg-dark_blue border-2 border-transparent rounded-lg p-3 hover:text-dark_blue hover:bg-transparent hover:border-dark_blue;
 }

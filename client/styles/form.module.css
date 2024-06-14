@@ -22,8 +22,12 @@
   @apply appearance-none w-full text-black text-base placeholder:text-placeholder focus:outline-none;
 }
 
-.item_border {
-  @apply border border-gray-600 rounded py-2 px-3;
+.item_frame {
+  @apply bg-white shadow rounded py-2 px-3 md:border md:border-gray-600;
+}
+
+.item_frame_sm {
+  @apply bg-white shadow rounded py-1 px-2 md:border md:border-gray-600;
 }
 
 .item_error {

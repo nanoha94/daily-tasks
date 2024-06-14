@@ -13,12 +13,14 @@ const FullscreenDrawer = ({ children, isOpen, onClose }: Props) => {
     <div
       className={`fixed bottom-0 h-screen ${
         isOpen ? "max-h-screen" : "max-h-0"
-      } flex flex-col items-center gap-y-5 bg-bg w-full transition-[max-height] overflow-hidden`}
+      } flex flex-col items-start gap-y-5 bg-bg w-full transition-[max-height] overflow-hidden`}
     >
-      <button type="button" onClick={onClose}>
-        <CloseIcon />
-      </button>
-      {children}
+      <div className="w-full p-3">
+        <button type="button" onClick={onClose}>
+          <CloseIcon />
+        </button>
+        <div className="max-w-[600px] w-full mx-auto">{children}</div>
+      </div>
     </div>
   );
 };

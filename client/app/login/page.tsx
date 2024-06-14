@@ -1,9 +1,9 @@
 "use client";
 import styles from "@/styles/auth.module.css";
-import TextInput from "@/components/form/TextInput";
 import Link from "next/link";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useAuth } from "@/contexts/AuthProvider";
+import FormItem from "@/components/FormItem";
 
 interface FormValues {
   email: string;
@@ -38,26 +38,40 @@ const PageLogin = () => {
           onSubmit={handleSubmit(handleSubmitSuccess)}
         >
           <div className={styles.input_area}>
-            <TextInput
+            <FormItem
               id="email"
-              type="email"
               label="メールアドレス"
-              placeholder="you@example.com"
               errorMessage={errors.email?.message}
-              {...register("email", {
-                required: "必須項目です",
-              })}
-            />
-            <TextInput
+            >
+              <input
+                id="email"
+                type="email"
+                placeholder="you@example.com"
+                {...register("email", {
+                  required: "必須項目です",
+                })}
+                className={`${styles.item} ${
+                  !!errors.email && styles.item_error
+                }`}
+              />
+            </FormItem>
+            <FormItem
               id="password"
-              type="password"
               label="パスワード"
-              placeholder="半角英数6文字以上"
-              errorMessage={errors.password?.message}
-              {...register("password", {
-                required: "必須項目です",
-              })}
-            />
+              errorMessage={errors.email?.message}
+            >
+              <input
+                id="password"
+                type="password"
+                placeholder="半角英数6文字以上"
+                {...register("password", {
+                  required: "必須項目です",
+                })}
+                className={`${styles.item} ${
+                  !!errors.password && styles.item_error
+                }`}
+              />
+            </FormItem>
           </div>
           <button type="submit" className={styles.submit_button}>
             ログイン

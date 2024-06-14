@@ -70,7 +70,7 @@ const Page = () => {
         </div>
       </div>
       <div className="md:hidden">
-        <CreatePostDrawer />
+        <CreatePostDrawer updatePost={updateLatestPosts} />
       </div>
     </>
   );

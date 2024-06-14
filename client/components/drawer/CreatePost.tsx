@@ -1,12 +1,12 @@
 import styles from "@/styles/form.module.css";
 import PrimaryButton from "../button/PrimaryButton";
-import Textarea from "../form/Textarea";
 import { SubmitHandler, useFieldArray, useForm } from "react-hook-form";
 import { Task } from "@/types/task";
 import AddButton from "../button/AddButton";
 import apiClient from "@/lib/apiClient";
 import { useAuth } from "@/contexts/AuthProvider";
 import { Post } from "@/types/post";
+import FormItem from "../FormItem";
 
 interface Props {
   updatePost: (post: Post) => void;
@@ -65,12 +65,14 @@ const CreatePost = ({ updatePost }: Props) => {
       onSubmit={handleSubmit(handleSubmitSuccess)}
       className="flex flex-col gap-y-5"
     >
-      <Textarea
-        label="今日のひとこと"
-        memo="250文字以内で入力してください。"
-        placeholder="今日の意気込みは？"
-        {...register("comment")}
-      />
+      <FormItem label="今日のひとこと" memo="250文字以内で入力してください。">
+        <textarea
+          rows={4}
+          placeholder="今日の意気込みは？"
+          {...register("comment")}
+          className={`${styles.item} ${styles.item_frame}`}
+        />
+      </FormItem>
       <div className="flex flex-col gap-y-2">
         <div className={styles.container}>
           <div className={styles.label_container}>
@@ -80,7 +82,7 @@ const CreatePost = ({ updatePost }: Props) => {
           {fields.map((field, idx) => (
             <div
               key={field.id}
-              className={`${styles.checkbox_container} py-1 px-2 rounded border border-gray-600 bg-white`}
+              className={`${styles.checkbox_container} ${styles.item_frame_sm}`}
             >
               <input
                 type="checkbox"
