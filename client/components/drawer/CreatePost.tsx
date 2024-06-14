@@ -45,8 +45,6 @@ const CreatePost = ({ updatePost }: Props) => {
     comment,
     tasks,
   }: FormValues) => {
-    console.log(comment, tasks, user);
-
     try {
       const newPost = await apiClient.post("/posts", {
         comment,
@@ -55,8 +53,6 @@ const CreatePost = ({ updatePost }: Props) => {
         numOfGood: 0,
         authorId: user?.id,
       });
-      // TODO: 一覧の内容を更新する処理を入れる
-      console.log(newPost.data);
       updatePost(newPost.data);
       reset(defaultValues);
     } catch (err) {

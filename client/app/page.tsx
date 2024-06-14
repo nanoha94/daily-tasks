@@ -42,7 +42,6 @@ const Page = () => {
       try {
         const posts = await apiClient.get("/posts");
         setLatestPosts(posts.data);
-        console.log(posts.data);
       } catch (err) {
         console.error(err);
       }
