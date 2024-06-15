@@ -13,37 +13,37 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
+model users {
   id        String     @id @default(uuid())
   name      String
-  posts     Post[]
-  profile   Profile?
+  posts     posts[]
+  profile   profiles?
 }
 
-model Post {
+model posts {
   id        String       @id @default(uuid())
   comment   String?
-  tasks     Task[]
+  tasks     tasks[]
   category  String
   numOfGood Int
   authorId  String
-  author    User      @relation(fields: [authorId],references: [id])
+  author    users      @relation(fields: [authorId],references: [id])
   createdAt DateTime  @default(now())
 }
 
-model Task {
+model tasks {
   id        String     @id @default(uuid())
   content   String
   completed Boolean
   postId    String
-  post      Post        @relation(fields: [postId], references: [id])
+  post      posts        @relation(fields: [postId], references: [id])
 }
 
-model Profile {
+model profiles {
   id          String     @id @default(uuid())
   bio         String?
   profileSrc  String?
   userId      String     @unique
-  user        User       @relation(fields: [userId], references: [id])
+  user        users      @relation(fields: [userId], references: [id])
 }
 

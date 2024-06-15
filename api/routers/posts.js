@@ -22,7 +22,7 @@ router.post("/", async (req, res) => {
   };
 
   try {
-    const newPost = await prisma.post.create({
+    const newPost = await prisma.posts.create({
       data,
       include: { tasks: true, author: true },
     });
@@ -35,7 +35,7 @@ router.post("/", async (req, res) => {
 
 router.get("/", async (req, res) => {
   try {
-    const allPosts = await prisma.post.findMany({
+    const allPosts = await prisma.posts.findMany({
       include: { tasks: true, author: true },
       orderBy: { createdAt: "desc" },
     });
@@ -49,7 +49,7 @@ router.get("/", async (req, res) => {
 router.get("/:postId", async (req, res) => {
   const { postId } = req.params;
   try {
-    const post = await prisma.post.findUnique({
+    const post = await prisma.posts.findUnique({
       where: { id: postId },
       include: { tasks: true },
     });
@@ -75,7 +75,7 @@ router.put("/:postId", async (req, res) => {
   };
 
   try {
-    const updatedPost = await prisma.post.update({
+    const updatedPost = await prisma.posts.update({
       data,
       where: { id: postId },
       include: { tasks: true, author: true },

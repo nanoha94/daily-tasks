@@ -5,7 +5,7 @@ const prisma = new PrismaClient();
 router.get("/:userId", async (req, res) => {
   const { userId } = req.params;
   try {
-    const user = await prisma.user.findUnique({
+    const user = await prisma.users.findUnique({
       where: { id: userId },
       include: { posts: true, profile: true },
     });

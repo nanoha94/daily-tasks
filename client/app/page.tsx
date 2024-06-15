@@ -34,7 +34,9 @@ const Page = () => {
     const fetchPosts = async () => {
       try {
         const posts = await apiClient.get("/posts");
-        setLatestPosts(posts.data);
+        if (!!posts) {
+          setLatestPosts(posts.data);
+        }
       } catch (err) {
         console.error(err);
       }
