@@ -9,7 +9,7 @@ import { Post } from "@/types/post";
 import { useEffect, useState } from "react";
 
 const Page = () => {
-  const { signOut } = useAuth();
+  const { user, signOut } = useAuth();
   const [latestPosts, setLatestPosts] = useState<Post[]>([]);
 
   const logout = async () => {
@@ -18,19 +18,6 @@ const Page = () => {
     } catch (err) {
       console.error(err);
     }
-  };
-
-  const profile = {
-    id: "profile_01",
-    bio: "",
-    profileScr: "",
-  };
-
-  const user = {
-    id: "user_01",
-    name: "user-name",
-    posts: null,
-    profile,
   };
 
   const addLatestPosts = (newPost: Post) => {

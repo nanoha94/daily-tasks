@@ -1,18 +1,19 @@
 "use client";
+import apiClient from "@/lib/apiClient";
+import { DefaultUser, User } from "@/types/user";
 import { supabase } from "@/utils/supabase";
-import { User } from "@supabase/supabase-js";
 import { usePathname, useRouter } from "next/navigation";
 import { createContext, useContext, useEffect, useState } from "react";
 
 interface AuthContextType {
-  user: User | null;
+  user: User;
   signIn: (email: string, password: string) => void;
   signUp: (email: string, password: string, name: string) => void;
   signOut: () => void;
 }
 
 const AuthContext = createContext<AuthContextType>({
-  user: null,
+  user: DefaultUser,
   signIn: async () => {},
   signUp: async () => {},
   signOut: async () => {},
@@ -27,22 +28,33 @@ interface Props {
 }
 
 export const AuthProvider = ({ children }: Props) => {
-  const [user, setUser] = useState<AuthContextType["user"]>(null);
+  const [user, setUser] = useState<AuthContextType["user"]>(DefaultUser);
   const pathname = usePathname();
   const router = useRouter();
 
   useEffect(() => {
     const fetchData = async () => {
       const { data } = await supabase.auth.getUser();
-      setUser(data.user);
+
+      if (!!data.user) {
+        try {
+          const authorizedUser = await apiClient.get(`/users/${data.user.id}`);
+          setUser(authorizedUser.data);
+        } catch (err) {
+          console.error(err);
+        }
+      }
     };
     fetchData();
 
     const { data } = supabase.auth.onAuthStateChange((_, session) => {
       if (session?.user) {
-        setUser(session.user);
+        setUser({
+          ...user,
+          id: session.user?.id,
+        });
       } else {
-        setUser(null);
+        setUser(DefaultUser);
       }
     });
 
@@ -56,9 +68,9 @@ export const AuthProvider = ({ children }: Props) => {
   }, [pathname]);
 
   useEffect(() => {
-    if (!!user && (pathname === "/register" || pathname === "/login")) {
+    if (!!user.id && (pathname === "/register" || pathname === "/login")) {
       router.push("/");
-    } else if (!user && pathname !== "/register" && pathname !== "/login") {
+    } else if (!user.id && pathname !== "/register" && pathname !== "/login") {
       router.push("/login");
     }
   }, [user]);

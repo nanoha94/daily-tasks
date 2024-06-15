@@ -5,7 +5,6 @@ interface Props {
   user: User;
 }
 
-// TODO: userをDBから取得するようにする
 const Header = ({ user }: Props) => {
   return (
     <div className="flex items-center bg-dark_blue py-2 px-3">
