@@ -1,11 +1,10 @@
 import { User } from "@/types/user";
 import ProfileIcon from "./ProfileIcon";
+import { useAuth } from "@/contexts/AuthProvider";
 
-interface Props {
-  user: User;
-}
+const Header = () => {
+  const { authUser } = useAuth();
 
-const Header = ({ user }: Props) => {
   return (
     <div className="flex items-center bg-dark_blue py-2 px-3">
       <h1 className="flex-1 text-white text-xl font-bold">
@@ -13,8 +12,8 @@ const Header = ({ user }: Props) => {
       </h1>
       {/* TODO: パラメータ調整 */}
       <ProfileIcon
-        link={`/profile/${user.id}`}
-        imgSrc={user.profile?.profileScr}
+        link={`/profile/${authUser.id}`}
+        imgSrc={authUser.profile?.profileScr}
       />
     </div>
   );

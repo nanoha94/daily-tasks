@@ -6,14 +6,14 @@ import { usePathname, useRouter } from "next/navigation";
 import { createContext, useContext, useEffect, useState } from "react";
 
 interface AuthContextType {
-  user: User;
+  authUser: User;
   signIn: (email: string, password: string) => void;
   signUp: (email: string, password: string, name: string) => void;
   signOut: () => void;
 }
 
 const AuthContext = createContext<AuthContextType>({
-  user: DefaultUser,
+  authUser: DefaultUser,
   signIn: async () => {},
   signUp: async () => {},
   signOut: async () => {},
@@ -28,7 +28,8 @@ interface Props {
 }
 
 export const AuthProvider = ({ children }: Props) => {
-  const [user, setUser] = useState<AuthContextType["user"]>(DefaultUser);
+  const [authUser, setUser] =
+    useState<AuthContextType["authUser"]>(DefaultUser);
   const pathname = usePathname();
   const router = useRouter();
 
@@ -50,7 +51,7 @@ export const AuthProvider = ({ children }: Props) => {
     const { data } = supabase.auth.onAuthStateChange((_, session) => {
       if (session?.user) {
         setUser({
-          ...user,
+          ...authUser,
           id: session.user?.id,
         });
       } else {
@@ -68,12 +69,16 @@ export const AuthProvider = ({ children }: Props) => {
   }, [pathname]);
 
   useEffect(() => {
-    if (!!user.id && (pathname === "/register" || pathname === "/login")) {
+    if (!!authUser.id && (pathname === "/register" || pathname === "/login")) {
       router.push("/");
-    } else if (!user.id && pathname !== "/register" && pathname !== "/login") {
+    } else if (
+      !authUser.id &&
+      pathname !== "/register" &&
+      pathname !== "/login"
+    ) {
       router.push("/login");
     }
-  }, [user]);
+  }, [authUser]);
 
   const signIn = async (email: string, password: string) => {
     const { error, data } = await supabase.auth.signInWithPassword({
@@ -108,7 +113,7 @@ export const AuthProvider = ({ children }: Props) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, signIn, signUp, signOut }}>
+    <AuthContext.Provider value={{ authUser, signIn, signUp, signOut }}>
       {children}
     </AuthContext.Provider>
   );
