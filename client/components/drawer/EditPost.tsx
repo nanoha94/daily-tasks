@@ -3,14 +3,11 @@ import PrimaryButton from "../button/PrimaryButton";
 import { SubmitHandler, useFieldArray, useForm } from "react-hook-form";
 import { Task } from "@/types/task";
 import AddButton from "../button/AddButton";
-import apiClient from "@/lib/apiClient";
 import { useAuth } from "@/contexts/AuthProvider";
-import { Post } from "@/types/post";
 import FormItem from "../FormItem";
 import { usePosts } from "@/contexts/PostsProvider";
-import { POST_CATEGORY, POST_MODE } from "@/costants/posts";
+import { POST_CATEGORY } from "@/costants/posts";
 import { useEffect } from "react";
-import { create } from "domain";
 
 // interface Props {
 //   mode?: POST_MODE;
@@ -24,7 +21,7 @@ interface FormValues {
 
 const EditPost = () => {
   const { authUser } = useAuth();
-  const { editingPost, isOpenEdit, setIsOpenEdit, addPosts, updatePosts } =
+  const { editingPost, isOpenEdit, setIsOpenEdit, createPost, updatePost } =
     usePosts();
   const defaultValues = {
     comment: "",
@@ -47,46 +44,30 @@ const EditPost = () => {
     append(defaultValues["tasks"]);
   };
 
-  const createPost = async ({ comment, tasks }: FormValues) => {
-    const newPost = await apiClient.post("/posts", {
-      comment,
-      tasks,
-      category: POST_CATEGORY.TASK,
-      numOfGood: 0,
-      authorId: authUser?.id,
-    });
-    addPosts(newPost.data);
-  };
-
-  const updatePost = async ({ comment, tasks }: FormValues) => {
-    if (!!editingPost && !!editingPost.id) {
-      const updatedPost = await apiClient.put(`/posts/${editingPost?.id}`, {
-        comment,
-        tasks,
-        category: POST_CATEGORY.TASK,
-        numOfGood: 0,
-        authorId: authUser?.id,
-      });
-
-      updatePosts(updatedPost.data);
-    }
-  };
-
   const handleSubmitSuccess: SubmitHandler<FormValues> = async ({
     comment,
     tasks,
   }: FormValues) => {
-    try {
-      if (!!editingPost) {
-        await updatePost({ comment, tasks });
-      } else {
-        await createPost({ comment, tasks });
-      }
-      reset(defaultValues);
-      setIsOpenEdit(false);
-    } catch (err) {
-      console.error(err);
+    if (!!editingPost) {
+      await updatePost({
+        id: editingPost?.id,
+        comment,
+        tasks,
+        category: editingPost?.category,
+        numOfGood: editingPost?.numOfGood,
+        author: editingPost?.author,
+      });
+    } else {
+      await createPost({
+        comment,
+        tasks,
+        category: POST_CATEGORY.TASK,
+        numOfGood: 0,
+        author: authUser,
+      });
     }
+    reset(defaultValues);
+    setIsOpenEdit(false);
   };
 
   useEffect(() => {

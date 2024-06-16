@@ -13,7 +13,6 @@ interface Props {
 
 const Page = ({ params }: Props) => {
   const [user, setUser] = useState<User>(DefaultUser);
-  const isPc: boolean = useMediaQuery(mediaQuery.md);
 
   useEffect(() => {
     const fetchData = async () => {

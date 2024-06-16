@@ -6,7 +6,6 @@ import styled from "styled-components";
 import { colors } from "@/tailwind.config";
 import GoodButton from "./button/GoodButton";
 import styles from "@/styles/form.module.css";
-import apiClient from "@/lib/apiClient";
 import { useState } from "react";
 import { usePosts } from "@/contexts/PostsProvider";
 import AssignmentTurnedInOutlined from "@mui/icons-material/AssignmentTurnedInOutlined";
@@ -52,32 +51,21 @@ const CategoryLabel = styled.span<CategoryLabelProps>`
 `;
 
 const PostItem = ({ post }: Props) => {
-  const {
-    id,
-    comment,
-    tasks,
-    category,
-    numOfGood,
-    author: { id: authorId },
-  } = post;
-  const { handleEditPostDrawer, updatePosts } = usePosts();
+  const { id, comment, tasks, category, numOfGood, author } = post;
+  const { handleEditPostDrawer, updatePost } = usePosts();
   const createdAt = new Date(post.createdAt);
   const [isClickedGoodButton, setIsClickedGoodButton] =
     useState<boolean>(false);
   const handleClickNumOfGood = async () => {
-    try {
-      const updatedPost = await apiClient.put(`/posts/${post.id}`, {
-        comment,
-        tasks,
-        category,
-        numOfGood: isClickedGoodButton ? numOfGood - 1 : numOfGood + 1,
-        authorId,
-      });
-      updatePosts(updatedPost.data);
-      setIsClickedGoodButton((prev) => !prev);
-    } catch (err) {
-      console.error(err);
-    }
+    await updatePost({
+      id,
+      comment,
+      tasks,
+      category,
+      numOfGood: isClickedGoodButton ? numOfGood - 1 : numOfGood + 1,
+      author,
+    });
+    setIsClickedGoodButton((prev) => !prev);
   };
 
   return (

@@ -2,6 +2,7 @@
 import apiClient from "@/lib/apiClient";
 import { Post } from "@/types/post";
 import { createContext, useContext, useEffect, useState } from "react";
+import { useAuth } from "./AuthProvider";
 
 interface PostsContextType {
   posts: Post[];
@@ -9,8 +10,8 @@ interface PostsContextType {
   isOpenEdit: boolean;
   setIsOpenEdit: (state: boolean) => void;
   handleEditPostDrawer: (state: boolean, post?: Post) => void;
-  addPosts: (addedPost: Post) => void;
-  updatePosts: (updatedPost: Post) => void;
+  createPost: (post: Omit<Post, "id" | "createdAt">) => void;
+  updatePost: (post: Omit<Post, "createdAt">) => void;
 }
 
 const PostsContext = createContext<PostsContextType>({
@@ -19,8 +20,8 @@ const PostsContext = createContext<PostsContextType>({
   isOpenEdit: false,
   setIsOpenEdit: () => {},
   handleEditPostDrawer: () => {},
-  addPosts: () => {},
-  updatePosts: () => {},
+  createPost: async () => {},
+  updatePost: () => {},
 });
 
 export const usePosts = () => {
@@ -32,6 +33,7 @@ interface Props {
 }
 
 export const PostsProvider = ({ children }: Props) => {
+  const { authUser } = useAuth();
   const [posts, setPosts] = useState<PostsContextType["posts"]>([]);
   const [editingPost, setEditingPost] =
     useState<PostsContextType["editingPost"]>(undefined);
@@ -69,14 +71,40 @@ export const PostsProvider = ({ children }: Props) => {
     fetchPosts();
   }, []);
 
-  const addPosts = (addedPost: Post) => {
-    setPosts((prev) => [addedPost, ...prev]);
+  const createPost = async (post: Omit<Post, "id" | "createdAt">) => {
+    const { comment, tasks, category, numOfGood, author } = post;
+    try {
+      const createdPost = await apiClient.post("/posts", {
+        comment,
+        tasks,
+        category,
+        numOfGood,
+        authorId: author.id,
+      });
+      setPosts((prev) => [createdPost.data, ...prev]);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
-  const updatePosts = (updatedPost: Post) => {
-    setPosts((prev) =>
-      prev.map((post) => (post.id === updatedPost.id ? updatedPost : post))
-    );
+  const updatePost = async (post: Omit<Post, "createdAt">) => {
+    const { id, comment, tasks, category, numOfGood, author } = post;
+    try {
+      const updatedPost = await apiClient.put(`/posts/${id}`, {
+        comment,
+        tasks,
+        category,
+        numOfGood,
+        authorId: author?.id,
+      });
+      setPosts((prev) =>
+        prev.map((post) =>
+          post.id === updatedPost.data.id ? updatedPost.data : post
+        )
+      );
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
@@ -87,8 +115,8 @@ export const PostsProvider = ({ children }: Props) => {
         isOpenEdit,
         setIsOpenEdit,
         handleEditPostDrawer,
-        addPosts,
-        updatePosts,
+        createPost,
+        updatePost,
       }}
     >
       {children}
