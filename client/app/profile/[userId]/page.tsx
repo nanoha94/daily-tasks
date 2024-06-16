@@ -1,33 +1,19 @@
 "use client";
 import Header from "@/components/Header";
 import PostList from "@/components/PostList";
-import ProfileIcon from "@/components/ProfileIcon";
-import ArrowButton from "@/components/button/ArrowButton";
-import { useAuth } from "@/contexts/AuthProvider";
+import Profile from "@/components/Profile";
+import { mediaQuery, useMediaQuery } from "@/hooks/useMediaQuery";
 import apiClient from "@/lib/apiClient";
 import { DefaultUser, User } from "@/types/user";
 import { useEffect, useState } from "react";
-import styled from "styled-components";
 
 interface Props {
   params: { userId: string };
 }
 
-const StyledProfileIcon = styled(ProfileIcon)`
-  width: 60px;
-`;
-
 const Page = ({ params }: Props) => {
-  const { authUser, signOut } = useAuth();
   const [user, setUser] = useState<User>(DefaultUser);
-
-  const logout = async () => {
-    try {
-      await signOut();
-    } catch (err) {
-      console.error(err);
-    }
-  };
+  const isPc: boolean = useMediaQuery(mediaQuery.md);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -45,28 +31,10 @@ const Page = ({ params }: Props) => {
     <>
       <Header />
       <div className="flex-1 bg-bg">
-        <div className="flex flex-col gap-y-5 bg-white shadow-sm p-3 mb-5">
-          <div className="flex items-center justify-between">
-            <div className="flex flex-col items-center gap-y-1">
-              <StyledProfileIcon imgSrc={user.profile?.profileScr} />
-              <p className="text-xs text-black">{user.name}</p>
-            </div>
-            {user.id === authUser.id && (
-              <div className="flex flex-col gap-y-2">
-                <ArrowButton onClick={logout}>ログアウト</ArrowButton>
-                {/* リンク設定 */}
-                <ArrowButton>プロフィール編集</ArrowButton>
-              </div>
-            )}
-          </div>
-          {!!user.profile?.bio && (
-            <p className="text-base">{user.profile.bio}</p>
-          )}
-          <p className="text-base">
-            プロフィールプロフィールプロフィールプロフィールプロフィールプロフィールプロフィールプロフィールプロフィールプロフィールプロフィールプロフィールプロフィールプロフィール
-          </p>
+        <div className="max-w-[960px] w-full py-3 mx-auto md:flex md:justify-center md:items-start md:gap-x-6 md:py-5 md:px-4">
+          <Profile user={user} />
+          <PostList userId={user.id} />{" "}
         </div>
-        <PostList userId={params.userId} />
       </div>
     </>
   );
