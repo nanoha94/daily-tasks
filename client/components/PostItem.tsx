@@ -1,4 +1,4 @@
-import { POST_CATEGORIES } from "@/costants/posts";
+import { POST_CATEGORIES, POST_CATEGORY } from "@/costants/posts";
 import { Post } from "@/types/post";
 import ProfileIcon from "./ProfileIcon";
 import Link from "next/link";
@@ -9,6 +9,7 @@ import styles from "@/styles/form.module.css";
 import apiClient from "@/lib/apiClient";
 import { useState } from "react";
 import { usePosts } from "@/contexts/PostsProvider";
+import AssignmentTurnedInOutlined from "@mui/icons-material/AssignmentTurnedInOutlined";
 
 interface Props {
   post: Post;
@@ -19,7 +20,7 @@ interface CategoryLabelProps {
 }
 
 const CategoryLabelColor = ($category: CategoryLabelProps["$category"]) => {
-  if ($category === "task") {
+  if ($category === POST_CATEGORY.TASK) {
     return colors.black;
   } else {
     return colors.white;
@@ -27,7 +28,7 @@ const CategoryLabelColor = ($category: CategoryLabelProps["$category"]) => {
 };
 
 const CategoryLabelBgColor = ($category: CategoryLabelProps["$category"]) => {
-  if ($category === "task") {
+  if ($category === POST_CATEGORY.TASK) {
     return colors.bg;
   } else {
     return colors.dark_blue;
@@ -59,7 +60,7 @@ const PostItem = ({ post }: Props) => {
     numOfGood,
     author: { id: authorId },
   } = post;
-  const { updatePosts } = usePosts();
+  const { handleEditPostDrawer, updatePosts } = usePosts();
   const createdAt = new Date(post.createdAt);
   const [isClickedGoodButton, setIsClickedGoodButton] =
     useState<boolean>(false);
@@ -100,7 +101,7 @@ const PostItem = ({ post }: Props) => {
       </div>
       <div className="flex flex-col gap-y-2">
         <CategoryLabel $category={post.category}>
-          {POST_CATEGORIES.find((cat) => cat.key === post.category)?.label}
+          {POST_CATEGORIES.find((cat) => cat.id === post.category)?.label}
         </CategoryLabel>
         {post.comment && <p className="text-base text-black">{post.comment}</p>}
         <div className="flex flex-col gap-y-1">
@@ -129,6 +130,15 @@ const PostItem = ({ post }: Props) => {
           />
         </div>
         {/* TODO: ダイアログ表示ボタンを配置 */}
+        <div className="flex gap-x-2">
+          <button
+            type="button"
+            onClick={() => handleEditPostDrawer(true, post)}
+            className="text-green"
+          >
+            <AssignmentTurnedInOutlined />
+          </button>
+        </div>
       </div>
     </div>
   );

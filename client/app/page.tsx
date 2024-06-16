@@ -3,10 +3,13 @@ import Header from "@/components/Header";
 import PostList from "@/components/PostList";
 import CreatePost from "@/components/drawer/CreatePost";
 import CreatePostDrawer from "@/components/drawer/CreatePostDrawer";
+import EditPostDrawer from "@/components/drawer/EditPostDrawer";
 import { mediaQuery, useMediaQuery } from "@/hooks/useMediaQuery";
+import { useState } from "react";
 
 const Page = () => {
   const isPc: boolean = useMediaQuery(mediaQuery.md);
+
   return (
     <>
       <Header />
@@ -21,6 +24,7 @@ const Page = () => {
         </div>
       </div>
       {!isPc && <CreatePostDrawer />}
+      <EditPostDrawer />
     </>
   );
 };

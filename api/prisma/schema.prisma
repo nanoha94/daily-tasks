@@ -24,7 +24,7 @@ model posts {
   id        String       @id @default(uuid())
   comment   String?
   tasks     tasks[]
-  category  String
+  category  Int
   numOfGood Int
   authorId  String
   author    users      @relation(fields: [authorId],references: [id])

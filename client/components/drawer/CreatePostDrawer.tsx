@@ -1,29 +1,26 @@
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import FullscreenDrawer from "./FullscreenDrawer";
 import { useState } from "react";
-import CreatePost from "./CreatePost";
+import EditPost from "./EditPost";
+import { usePosts } from "@/contexts/PostsProvider";
 
 const CreatePostDrawer = () => {
-  const [isOpen, setIsOpen] = useState(false);
-
-  const handleToggleDrawer = (state: boolean) => {
-    setIsOpen(state);
-  };
+  const { isOpenEdit, handleEditPostDrawer } = usePosts();
 
   return (
     <>
       <button
         type="button"
-        onClick={() => handleToggleDrawer(true)}
+        onClick={() => handleEditPostDrawer(true)}
         className="fixed bottom-2 right-2 text-white bg-green rounded-full border-4 border-transparent p-1 hover:text-green hover:bg-white hover:border-green"
       >
         <AddRoundedIcon className="text-4xl" />
       </button>
       <FullscreenDrawer
-        isOpen={isOpen}
-        onClose={() => handleToggleDrawer(false)}
+        isOpen={isOpenEdit}
+        onClose={() => handleEditPostDrawer(false)}
       >
-        <CreatePost />
+        <EditPost />
       </FullscreenDrawer>
     </>
   );

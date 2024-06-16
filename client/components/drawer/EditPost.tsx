@@ -5,37 +5,71 @@ import { Task } from "@/types/task";
 import AddButton from "../button/AddButton";
 import apiClient from "@/lib/apiClient";
 import { useAuth } from "@/contexts/AuthProvider";
+import { Post } from "@/types/post";
 import FormItem from "../FormItem";
 import { usePosts } from "@/contexts/PostsProvider";
+import { POST_CATEGORY, POST_MODE } from "@/costants/posts";
+import { useEffect } from "react";
+import { create } from "domain";
+
+// interface Props {
+//   mode?: POST_MODE;
+//   post?: Post;
+// }
 
 interface FormValues {
-  comment: string;
+  comment?: string;
   tasks: Task[];
 }
 
-const CreatePost = () => {
+const EditPost = () => {
   const { authUser } = useAuth();
-  const { addPosts } = usePosts();
+  const { editingPost, isOpenEdit, setIsOpenEdit, addPosts, updatePosts } =
+    usePosts();
   const defaultValues = {
     comment: "",
     tasks: [{ id: undefined, content: "", completed: false }],
   };
+
   const {
     register,
     control,
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<FormValues>({
-    defaultValues,
-  });
+  } = useForm<FormValues>({ defaultValues });
   const { fields, append } = useFieldArray({
-    name: "tasks",
     control,
+    name: "tasks",
   });
 
   const handleAddTask = () => {
     append(defaultValues["tasks"]);
+  };
+
+  const createPost = async ({ comment, tasks }: FormValues) => {
+    const newPost = await apiClient.post("/posts", {
+      comment,
+      tasks,
+      category: POST_CATEGORY.TASK,
+      numOfGood: 0,
+      authorId: authUser?.id,
+    });
+    addPosts(newPost.data);
+  };
+
+  const updatePost = async ({ comment, tasks }: FormValues) => {
+    if (!!editingPost && !!editingPost.id) {
+      const updatedPost = await apiClient.put(`/posts/${editingPost?.id}`, {
+        comment,
+        tasks,
+        category: POST_CATEGORY.TASK,
+        numOfGood: 0,
+        authorId: authUser?.id,
+      });
+
+      updatePosts(updatedPost.data);
+    }
   };
 
   const handleSubmitSuccess: SubmitHandler<FormValues> = async ({
@@ -43,19 +77,29 @@ const CreatePost = () => {
     tasks,
   }: FormValues) => {
     try {
-      const newPost = await apiClient.post("/posts", {
-        comment,
-        tasks,
-        category: "task",
-        numOfGood: 0,
-        authorId: authUser?.id,
-      });
-      addPosts(newPost.data);
+      if (!!editingPost) {
+        await updatePost({ comment, tasks });
+      } else {
+        await createPost({ comment, tasks });
+      }
       reset(defaultValues);
+      setIsOpenEdit(false);
     } catch (err) {
       console.error(err);
     }
   };
+
+  useEffect(() => {
+    if (isOpenEdit && !!editingPost) {
+      const currentValues = {
+        comment: editingPost?.comment,
+        tasks: editingPost?.tasks,
+      };
+      reset(currentValues);
+    } else {
+      reset(defaultValues);
+    }
+  }, [isOpenEdit, editingPost]);
 
   return (
     <form
@@ -83,7 +127,6 @@ const CreatePost = () => {
             >
               <input
                 type="checkbox"
-                value={field.content}
                 // dafaultCheckedにすると、ON/OFFが切り替えられる
                 // defaultChecked={field.completed}
                 checked={false}
@@ -107,4 +150,4 @@ const CreatePost = () => {
   );
 };
 
-export default CreatePost;
+export default EditPost;

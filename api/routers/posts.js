@@ -64,10 +64,16 @@ router.put("/:postId", async (req, res) => {
   const { postId } = req.params;
   const { comment, tasks, category, numOfGood, authorId } = req.body;
 
+  const update_tasks = tasks.map((task) => ({
+    create: { content: task.content, completed: task.completed },
+    update: { id: task.id, content: task.content, completed: task.completed },
+    where: { id: task.id || "" },
+  }));
+
   const data = {
     comment,
     tasks: {
-      set: tasks,
+      upsert: update_tasks,
     },
     category,
     numOfGood,

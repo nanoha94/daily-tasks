@@ -1,17 +1,24 @@
 "use client";
 import apiClient from "@/lib/apiClient";
 import { Post } from "@/types/post";
-import { usePathname, useRouter } from "next/navigation";
 import { createContext, useContext, useEffect, useState } from "react";
 
 interface PostsContextType {
   posts: Post[];
+  editingPost: Post | undefined;
+  isOpenEdit: boolean;
+  setIsOpenEdit: (state: boolean) => void;
+  handleEditPostDrawer: (state: boolean, post?: Post) => void;
   addPosts: (addedPost: Post) => void;
   updatePosts: (updatedPost: Post) => void;
 }
 
 const PostsContext = createContext<PostsContextType>({
   posts: [],
+  editingPost: undefined,
+  isOpenEdit: false,
+  setIsOpenEdit: () => {},
+  handleEditPostDrawer: () => {},
   addPosts: () => {},
   updatePosts: () => {},
 });
@@ -26,8 +33,27 @@ interface Props {
 
 export const PostsProvider = ({ children }: Props) => {
   const [posts, setPosts] = useState<PostsContextType["posts"]>([]);
-  const pathname = usePathname();
-  const router = useRouter();
+  const [editingPost, setEditingPost] =
+    useState<PostsContextType["editingPost"]>(undefined);
+  const [isOpenEdit, setIsOpenEdit] =
+    useState<PostsContextType["isOpenEdit"]>(false);
+
+  const handleEditPostDrawer = (state: boolean, post?: Post) => {
+    setIsOpenEdit(state);
+    if (!!post) {
+      setEditingPost(post);
+    } else {
+      setEditingPost(undefined);
+    }
+
+    if (!state) {
+      setEditingPost(undefined);
+    }
+  };
+
+  useEffect(() => {
+    console.log(editingPost);
+  }, [editingPost]);
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -54,7 +80,17 @@ export const PostsProvider = ({ children }: Props) => {
   };
 
   return (
-    <PostsContext.Provider value={{ posts, addPosts, updatePosts }}>
+    <PostsContext.Provider
+      value={{
+        posts,
+        editingPost,
+        isOpenEdit,
+        setIsOpenEdit,
+        handleEditPostDrawer,
+        addPosts,
+        updatePosts,
+      }}
+    >
       {children}
     </PostsContext.Provider>
   );

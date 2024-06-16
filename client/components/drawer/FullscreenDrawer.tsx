@@ -11,7 +11,7 @@ interface Props {
 const FullscreenDrawer = ({ children, isOpen, onClose }: Props) => {
   return (
     <div
-      className={`fixed bottom-0 h-screen ${
+      className={`fixed bottom-0 left-0 h-screen ${
         isOpen ? "max-h-screen" : "max-h-0"
       } flex flex-col items-start gap-y-5 bg-bg w-full transition-[max-height] overflow-hidden`}
     >

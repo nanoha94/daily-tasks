@@ -6,7 +6,7 @@ export interface Post {
   id: string;
   comment?: string;
   tasks: Task[];
-  category: (typeof POST_CATEGORIES)[number]["key"];
+  category: (typeof POST_CATEGORIES)[number]["id"];
   numOfGood: number;
   author: User;
   createdAt: Date;
