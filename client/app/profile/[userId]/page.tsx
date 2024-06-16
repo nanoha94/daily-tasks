@@ -1,4 +1,5 @@
 "use client";
+import Header from "@/components/Header";
 import PostList from "@/components/PostList";
 import ProfileIcon from "@/components/ProfileIcon";
 import ArrowButton from "@/components/button/ArrowButton";
@@ -41,28 +42,33 @@ const Page = ({ params }: Props) => {
   }, []);
 
   return (
-    <div className="flex-1 bg-bg">
-      <div className="flex flex-col gap-y-5 bg-white shadow-sm p-3 mb-5">
-        <div className="flex items-center justify-between">
-          <div className="flex flex-col items-center gap-y-1">
-            <StyledProfileIcon imgSrc={user.profile?.profileScr} />
-            <p className="text-xs text-black">{user.name}</p>
-          </div>
-          {user.id === authUser.id && (
-            <div className="flex flex-col gap-y-2">
-              <ArrowButton onClick={logout}>ログアウト</ArrowButton>
-              {/* リンク設定 */}
-              <ArrowButton>プロフィール編集</ArrowButton>
+    <>
+      <Header />
+      <div className="flex-1 bg-bg">
+        <div className="flex flex-col gap-y-5 bg-white shadow-sm p-3 mb-5">
+          <div className="flex items-center justify-between">
+            <div className="flex flex-col items-center gap-y-1">
+              <StyledProfileIcon imgSrc={user.profile?.profileScr} />
+              <p className="text-xs text-black">{user.name}</p>
             </div>
+            {user.id === authUser.id && (
+              <div className="flex flex-col gap-y-2">
+                <ArrowButton onClick={logout}>ログアウト</ArrowButton>
+                {/* リンク設定 */}
+                <ArrowButton>プロフィール編集</ArrowButton>
+              </div>
+            )}
+          </div>
+          {!!user.profile?.bio && (
+            <p className="text-base">{user.profile.bio}</p>
           )}
+          <p className="text-base">
+            プロフィールプロフィールプロフィールプロフィールプロフィールプロフィールプロフィールプロフィールプロフィールプロフィールプロフィールプロフィールプロフィールプロフィール
+          </p>
         </div>
-        {!!user.profile?.bio && <p className="text-base">{user.profile.bio}</p>}
-        <p className="text-base">
-          プロフィールプロフィールプロフィールプロフィールプロフィールプロフィールプロフィールプロフィールプロフィールプロフィールプロフィールプロフィールプロフィールプロフィール
-        </p>
+        <PostList userId={params.userId} />
       </div>
-      <PostList userId={params.userId} />
-    </div>
+    </>
   );
 };
 
