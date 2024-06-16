@@ -1,4 +1,5 @@
 "use client";
+import PostList from "@/components/PostList";
 import apiClient from "@/lib/apiClient";
 import { DefaultUser, User } from "@/types/user";
 import { useEffect, useState } from "react";
@@ -22,7 +23,11 @@ const Page = ({ params }: Props) => {
     fetchData();
   }, []);
 
-  return <div>{user.name}</div>;
+  return (
+    <div className="flex-1 bg-bg">
+      <PostList userId={params.userId} />
+    </div>
+  );
 };
 
 export default Page;
