@@ -7,18 +7,16 @@ import apiClient from "@/lib/apiClient";
 import { useAuth } from "@/contexts/AuthProvider";
 import { Post } from "@/types/post";
 import FormItem from "../FormItem";
-
-interface Props {
-  addPost: (post: Post) => void;
-}
+import { usePosts } from "@/contexts/PostsProvider";
 
 interface FormValues {
   comment: string;
   tasks: Task[];
 }
 
-const CreatePost = ({ addPost }: Props) => {
+const CreatePost = () => {
   const { user } = useAuth();
+  const { addPosts } = usePosts();
   const defaultValues = {
     comment: "",
     tasks: [{ id: undefined, content: "", completed: false }],
@@ -53,7 +51,7 @@ const CreatePost = ({ addPost }: Props) => {
         numOfGood: 0,
         authorId: user?.id,
       });
-      addPost(newPost.data);
+      addPosts(newPost.data);
       reset(defaultValues);
     } catch (err) {
       console.error(err);

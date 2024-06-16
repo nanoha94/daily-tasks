@@ -8,10 +8,10 @@ import GoodButton from "./button/GoodButton";
 import styles from "@/styles/form.module.css";
 import apiClient from "@/lib/apiClient";
 import { useState } from "react";
+import { usePosts } from "@/contexts/PostsProvider";
 
 interface Props {
   post: Post;
-  updatePost: (post: Post) => void;
 }
 
 interface CategoryLabelProps {
@@ -50,7 +50,7 @@ const CategoryLabel = styled.span<CategoryLabelProps>`
   border-radius: 8px;
 `;
 
-const PostItem = ({ post, updatePost }: Props) => {
+const PostItem = ({ post }: Props) => {
   const {
     id,
     comment,
@@ -59,6 +59,7 @@ const PostItem = ({ post, updatePost }: Props) => {
     numOfGood,
     author: { id: authorId },
   } = post;
+  const { updatePosts } = usePosts();
   const createdAt = new Date(post.createdAt);
   const [isClickedGoodButton, setIsClickedGoodButton] =
     useState<boolean>(false);
@@ -71,7 +72,7 @@ const PostItem = ({ post, updatePost }: Props) => {
         numOfGood: isClickedGoodButton ? numOfGood - 1 : numOfGood + 1,
         authorId,
       });
-      updatePost(updatedPost.data);
+      updatePosts(updatedPost.data);
       setIsClickedGoodButton((prev) => !prev);
     } catch (err) {
       console.error(err);
