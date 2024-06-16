@@ -65,7 +65,7 @@ export const AuthProvider = ({ children }: Props) => {
   }, []);
 
   useEffect(() => {
-    console.log(pathname);
+    console.log(pathname, authUser);
   }, [pathname]);
 
   useEffect(() => {
@@ -78,7 +78,7 @@ export const AuthProvider = ({ children }: Props) => {
     ) {
       router.push("/login");
     }
-  }, [authUser]);
+  }, [pathname, authUser]);
 
   const signIn = async (email: string, password: string) => {
     const { error, data } = await supabase.auth.signInWithPassword({
