@@ -54,7 +54,11 @@ export const PostsProvider = ({ children }: Props) => {
     setIsOpenEdit(state);
     setEditMode(mode ?? POST_CATEGORY.TASK);
     if (!!post) {
-      if (mode === POST_CATEGORY.REVIEW) {
+      // レビュー作成（編集は含まない）
+      if (
+        mode === POST_CATEGORY.REVIEW &&
+        post.category !== POST_CATEGORY.REVIEW
+      ) {
         setEditingPost({ ...post, comment: "" });
       } else {
         setEditingPost(post);

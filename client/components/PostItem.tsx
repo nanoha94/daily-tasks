@@ -151,9 +151,7 @@ const PostItem = ({ post }: Props) => {
               )}
               <StyledButton
                 type="button"
-                onClick={() =>
-                  handleEditPostDrawer(true, POST_CATEGORY.TASK, post)
-                }
+                onClick={() => handleEditPostDrawer(true, post.category, post)}
                 className="text-green"
               >
                 <PencilSquareIcon className="w-[24px] h-[24px] text-green" />

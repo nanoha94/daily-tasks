@@ -127,7 +127,7 @@ const EditPost = () => {
       </div>
       <div className="ml-auto mr-0">
         <PrimaryButton type="submit">
-          {!!editingPost ? "保存する" : "投稿する"}
+          {!editingPost ? "投稿する" : "保存する"}
         </PrimaryButton>
       </div>
     </form>

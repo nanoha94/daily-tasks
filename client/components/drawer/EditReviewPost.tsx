@@ -28,6 +28,8 @@ const EditReviewPost = () => {
     comment: "",
     tasks: [{ id: undefined, content: "", completed: false }],
   };
+  // カテゴーがTASKのままの場合は、新規投稿作成
+  const isCreate = editingPost?.category === POST_CATEGORY.TASK;
 
   const {
     register,
@@ -46,18 +48,16 @@ const EditReviewPost = () => {
     tasks,
   }: FormValues) => {
     console.log(comment, tasks);
-    if (!!editingPost?.comment) {
-      console.log("update");
-      // await updatePost({
-      //   id: editingPost?.id,
-      //   comment,
-      //   tasks,
-      //   category: editingPost?.category,
-      //   numOfGood: editingPost?.numOfGood,
-      //   author: editingPost?.author,
-      // });
+    if (isCreate) {
+      await updatePost({
+        id: editingPost?.id,
+        comment,
+        tasks,
+        category: editingPost?.category,
+        numOfGood: editingPost?.numOfGood,
+        author: editingPost?.author,
+      });
     } else {
-      console.log("create");
       await createPost({
         comment,
         tasks,
@@ -121,7 +121,7 @@ const EditReviewPost = () => {
       </div>
       <div className="ml-auto mr-0">
         <PrimaryButton type="submit">
-          {!!editingPost?.comment ? "保存する" : "投稿する"}
+          {isCreate ? "投稿する" : "保存する"}
         </PrimaryButton>
       </div>
     </form>
