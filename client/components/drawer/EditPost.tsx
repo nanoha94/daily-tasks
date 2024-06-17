@@ -21,8 +21,13 @@ interface FormValues {
 
 const EditPost = () => {
   const { authUser } = useAuth();
-  const { editingPost, isOpenEdit, setIsOpenEdit, createPost, updatePost } =
-    usePosts();
+  const {
+    editingPost,
+    isOpenEdit,
+    handleEditPostDrawer,
+    createPost,
+    updatePost,
+  } = usePosts();
   const defaultValues = {
     comment: "",
     tasks: [{ id: undefined, content: "", completed: false }],
@@ -67,7 +72,7 @@ const EditPost = () => {
       });
     }
     reset(defaultValues);
-    setIsOpenEdit(false);
+    handleEditPostDrawer(false);
   };
 
   useEffect(() => {

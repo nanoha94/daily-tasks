@@ -2,26 +2,29 @@
 import apiClient from "@/lib/apiClient";
 import { Post } from "@/types/post";
 import { createContext, useContext, useEffect, useState } from "react";
-import { useAuth } from "./AuthProvider";
 
 interface PostsContextType {
   posts: Post[];
   editingPost: Post | undefined;
   isOpenEdit: boolean;
-  setIsOpenEdit: (state: boolean) => void;
   handleEditPostDrawer: (state: boolean, post?: Post) => void;
+  isOpenDelete: boolean;
+  handleDeletePostDialog: (state: boolean, post?: Post) => void;
   createPost: (post: Omit<Post, "id" | "createdAt">) => void;
   updatePost: (post: Omit<Post, "createdAt">) => void;
+  deletePost: (postId: string) => void;
 }
 
 const PostsContext = createContext<PostsContextType>({
   posts: [],
   editingPost: undefined,
   isOpenEdit: false,
-  setIsOpenEdit: () => {},
   handleEditPostDrawer: () => {},
+  isOpenDelete: false,
+  handleDeletePostDialog: () => {},
   createPost: async () => {},
   updatePost: () => {},
+  deletePost: () => {},
 });
 
 export const usePosts = () => {
@@ -33,12 +36,13 @@ interface Props {
 }
 
 export const PostsProvider = ({ children }: Props) => {
-  const { authUser } = useAuth();
   const [posts, setPosts] = useState<PostsContextType["posts"]>([]);
   const [editingPost, setEditingPost] =
     useState<PostsContextType["editingPost"]>(undefined);
   const [isOpenEdit, setIsOpenEdit] =
     useState<PostsContextType["isOpenEdit"]>(false);
+  const [isOpenDelete, setIsOpenDelete] =
+    useState<PostsContextType["isOpenDelete"]>(false);
 
   const handleEditPostDrawer = (state: boolean, post?: Post) => {
     setIsOpenEdit(state);
@@ -53,9 +57,18 @@ export const PostsProvider = ({ children }: Props) => {
     }
   };
 
-  useEffect(() => {
-    console.log(editingPost);
-  }, [editingPost]);
+  const handleDeletePostDialog = (state: boolean, post?: Post) => {
+    setIsOpenDelete(state);
+    if (!!post) {
+      setEditingPost(post);
+    } else {
+      setEditingPost(undefined);
+    }
+
+    if (!state) {
+      setEditingPost(post);
+    }
+  };
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -107,16 +120,27 @@ export const PostsProvider = ({ children }: Props) => {
     }
   };
 
+  const deletePost = async (postId: string) => {
+    try {
+      await apiClient.delete(`/posts/${postId}`);
+      setPosts((prev) => prev.filter((post) => post.id !== postId));
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <PostsContext.Provider
       value={{
         posts,
         editingPost,
         isOpenEdit,
-        setIsOpenEdit,
         handleEditPostDrawer,
+        isOpenDelete,
+        handleDeletePostDialog,
         createPost,
         updatePost,
+        deletePost,
       }}
     >
       {children}

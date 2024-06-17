@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "@/styles/globals.css";
 import { AuthProvider } from "@/contexts/AuthProvider";
 import { PostsProvider } from "@/contexts/PostsProvider";
+import DeleteDialog from "@/components/dialog/DeleteDialog";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,6 +23,7 @@ export default function RootLayout({
         <AuthProvider>
           <PostsProvider>
             <div className="flex flex-col h-screen">{children}</div>
+            <DeleteDialog />
           </PostsProvider>
         </AuthProvider>
       </body>

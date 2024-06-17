@@ -27,7 +27,7 @@ model posts {
   category  Int
   numOfGood Int
   authorId  String
-  author    users      @relation(fields: [authorId],references: [id])
+  author    users      @relation(fields: [authorId],references: [id], onDelete: Cascade)
   createdAt DateTime  @default(now())
 }
 
@@ -36,7 +36,7 @@ model tasks {
   content   String
   completed Boolean
   postId    String
-  post      posts        @relation(fields: [postId], references: [id])
+  post      posts        @relation(fields: [postId], references: [id], onDelete: Cascade)
 }
 
 model profiles {
@@ -44,6 +44,6 @@ model profiles {
   bio         String?
   profileSrc  String?
   userId      String     @unique
-  user        users      @relation(fields: [userId], references: [id])
+  user        users      @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 

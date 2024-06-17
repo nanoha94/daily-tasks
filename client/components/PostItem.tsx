@@ -9,6 +9,7 @@ import styles from "@/styles/form.module.css";
 import { useState } from "react";
 import { usePosts } from "@/contexts/PostsProvider";
 import AssignmentTurnedInOutlined from "@mui/icons-material/AssignmentTurnedInOutlined";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 
 interface Props {
   post: Post;
@@ -52,7 +53,8 @@ const CategoryLabel = styled.span<CategoryLabelProps>`
 
 const PostItem = ({ post }: Props) => {
   const { id, comment, tasks, category, numOfGood, author } = post;
-  const { handleEditPostDrawer, updatePost } = usePosts();
+  const { handleEditPostDrawer, handleDeletePostDialog, updatePost } =
+    usePosts();
   const createdAt = new Date(post.createdAt);
   const [isClickedGoodButton, setIsClickedGoodButton] =
     useState<boolean>(false);
@@ -125,6 +127,14 @@ const PostItem = ({ post }: Props) => {
             className="text-green"
           >
             <AssignmentTurnedInOutlined />
+          </button>
+          <button
+            onClick={() => {
+              handleDeletePostDialog(true, post);
+            }}
+            className="text-green"
+          >
+            <DeleteForeverIcon />
           </button>
         </div>
       </div>

@@ -1,4 +1,3 @@
-import { POST_MODE } from "@/costants/posts";
 import EditPost from "./EditPost";
 import FullscreenDrawer from "./FullscreenDrawer";
 import { usePosts } from "@/contexts/PostsProvider";
