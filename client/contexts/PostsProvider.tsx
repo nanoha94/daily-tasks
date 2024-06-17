@@ -105,7 +105,7 @@ export const PostsProvider = ({ children }: Props) => {
         numOfGood,
         authorId: author.id,
       });
-      setPosts((prev) => [createdPost.data, ...prev]);
+      setPosts((prev) => [createdPost.data.post, ...prev]);
     } catch (err) {
       console.log(err);
     }
@@ -123,7 +123,7 @@ export const PostsProvider = ({ children }: Props) => {
       });
       setPosts((prev) =>
         prev.map((post) =>
-          post.id === updatedPost.data.id ? updatedPost.data : post
+          post.id === updatedPost.data.post.id ? updatedPost.data.post : post
         )
       );
     } catch (err) {
