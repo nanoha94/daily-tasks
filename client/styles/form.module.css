@@ -39,7 +39,7 @@
 }
 
 .checkbox {
-  @apply w-4 h-auto aspect-square rounded-sm border-gray-600 border-2 appearance-none relative top-1 cursor-pointer checked:border-green;
+  @apply w-4 h-auto aspect-square rounded-sm bg-white border-gray-600 border-2 accent-green relative top-1 cursor-pointer;
 }
 
 .checkbox_label {

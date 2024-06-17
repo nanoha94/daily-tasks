@@ -3,7 +3,6 @@ import Header from "@/components/Header";
 import PostList from "@/components/PostList";
 import CreatePostDrawer from "@/components/drawer/CreatePostDrawer";
 import EditPost from "@/components/drawer/EditPost";
-import EditPostDrawer from "@/components/drawer/EditPostDrawer";
 import { mediaQuery, useMediaQuery } from "@/hooks/useMediaQuery";
 
 const Page = () => {
@@ -23,7 +22,6 @@ const Page = () => {
         </div>
       </div>
       {!isPc && <CreatePostDrawer />}
-      <EditPostDrawer />
     </>
   );
 };

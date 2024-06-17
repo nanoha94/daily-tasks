@@ -7,7 +7,8 @@ export const colors = {
   error: "#D75265",
   placeholder: "#9E9E9E",
   dark_blue: "#005595",
-  green: "#57BDA8",
+  // green: "#57BDA8",
+  green: "#00a693",
   bg: "#DDF1FC",
   gray: {
     200: "#EEEEEE",

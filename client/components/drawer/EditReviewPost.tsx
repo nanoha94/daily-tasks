@@ -15,7 +15,7 @@ interface FormValues {
   tasks: Task[];
 }
 
-const EditPost = () => {
+const EditReviewPost = () => {
   const { authUser } = useAuth();
   const {
     editingPost,
@@ -41,28 +41,27 @@ const EditPost = () => {
     name: "tasks",
   });
 
-  const handleAddTask = () => {
-    append(defaultValues["tasks"]);
-  };
-
   const handleSubmitSuccess: SubmitHandler<FormValues> = async ({
     comment,
     tasks,
   }: FormValues) => {
-    if (!!editingPost) {
-      await updatePost({
-        id: editingPost?.id,
-        comment,
-        tasks,
-        category: editingPost?.category,
-        numOfGood: editingPost?.numOfGood,
-        author: editingPost?.author,
-      });
+    console.log(comment, tasks);
+    if (!!editingPost?.comment) {
+      console.log("update");
+      // await updatePost({
+      //   id: editingPost?.id,
+      //   comment,
+      //   tasks,
+      //   category: editingPost?.category,
+      //   numOfGood: editingPost?.numOfGood,
+      //   author: editingPost?.author,
+      // });
     } else {
+      console.log("create");
       await createPost({
         comment,
         tasks,
-        category: POST_CATEGORY.TASK,
+        category: POST_CATEGORY.REVIEW,
         numOfGood: 0,
         author: authUser,
       });
@@ -88,10 +87,10 @@ const EditPost = () => {
       onSubmit={handleSubmit(handleSubmitSuccess)}
       className="flex flex-col gap-y-5"
     >
-      <FormItem label="今日のひとこと" memo="250文字以内で入力してください。">
+      <FormItem label="今日の振り返り" memo="250文字以内で入力してください。">
         <textarea
           rows={4}
-          placeholder="今日の意気込みは？"
+          placeholder="今日を振り返ってどうでしたか？"
           {...register("comment")}
           className={`${styles.item} ${styles.item_frame}`}
         />
@@ -100,38 +99,33 @@ const EditPost = () => {
         <div className={styles.container}>
           <div className={styles.label_container}>
             <p className={styles.label}>今日のタスク</p>
-            <p className={styles.memo}>各30文字以内で入力してください。</p>
+            <p className={styles.memo}>
+              完了したタスクにチェックしてください。
+            </p>
           </div>
           {fields.map((field, idx) => (
-            <div
-              key={field.id}
-              className={`${styles.checkbox_container} ${styles.item_frame_sm}`}
-            >
+            <div key={field.id} className={styles.checkbox_container}>
               <input
                 type="checkbox"
-                // dafaultCheckedにすると、ON/OFFが切り替えられる
-                // defaultChecked={field.completed}
-                checked={false}
+                id={field.id}
+                defaultChecked={field.completed}
                 {...register(`tasks.${idx}.completed`)}
                 className={styles.checkbox}
               />
-              <input
-                placeholder="今日のタスクは？"
-                className={styles.item}
-                {...register(`tasks.${idx}.content`)}
-              />
+              <label htmlFor={field.id} className={styles.checkbox_label}>
+                {field.content}
+              </label>
             </div>
           ))}
         </div>
-        <AddButton onClick={handleAddTask}>タスクを追加する</AddButton>
       </div>
       <div className="ml-auto mr-0">
         <PrimaryButton type="submit">
-          {!!editingPost ? "保存する" : "投稿する"}
+          {!!editingPost?.comment ? "保存する" : "投稿する"}
         </PrimaryButton>
       </div>
     </form>
   );
 };
 
-export default EditPost;
+export default EditReviewPost;

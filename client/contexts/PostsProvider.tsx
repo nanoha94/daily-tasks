@@ -1,4 +1,5 @@
 "use client";
+import { POST_CATEGORY } from "@/costants/posts";
 import apiClient from "@/lib/apiClient";
 import { Post } from "@/types/post";
 import { createContext, useContext, useEffect, useState } from "react";
@@ -6,8 +7,9 @@ import { createContext, useContext, useEffect, useState } from "react";
 interface PostsContextType {
   posts: Post[];
   editingPost: Post | undefined;
+  editMode: number;
   isOpenEdit: boolean;
-  handleEditPostDrawer: (state: boolean, post?: Post) => void;
+  handleEditPostDrawer: (state: boolean, mode?: number, post?: Post) => void;
   isOpenDelete: boolean;
   handleDeletePostDialog: (state: boolean, post?: Post) => void;
   createPost: (post: Omit<Post, "id" | "createdAt">) => void;
@@ -18,6 +20,7 @@ interface PostsContextType {
 const PostsContext = createContext<PostsContextType>({
   posts: [],
   editingPost: undefined,
+  editMode: POST_CATEGORY.TASK,
   isOpenEdit: false,
   handleEditPostDrawer: () => {},
   isOpenDelete: false,
@@ -39,15 +42,23 @@ export const PostsProvider = ({ children }: Props) => {
   const [posts, setPosts] = useState<PostsContextType["posts"]>([]);
   const [editingPost, setEditingPost] =
     useState<PostsContextType["editingPost"]>(undefined);
+  const [editMode, setEditMode] = useState<PostsContextType["editMode"]>(
+    POST_CATEGORY.TASK
+  );
   const [isOpenEdit, setIsOpenEdit] =
     useState<PostsContextType["isOpenEdit"]>(false);
   const [isOpenDelete, setIsOpenDelete] =
     useState<PostsContextType["isOpenDelete"]>(false);
 
-  const handleEditPostDrawer = (state: boolean, post?: Post) => {
+  const handleEditPostDrawer = (state: boolean, mode?: number, post?: Post) => {
     setIsOpenEdit(state);
+    setEditMode(mode ?? POST_CATEGORY.TASK);
     if (!!post) {
-      setEditingPost(post);
+      if (mode === POST_CATEGORY.REVIEW) {
+        setEditingPost({ ...post, comment: "" });
+      } else {
+        setEditingPost(post);
+      }
     } else {
       setEditingPost(undefined);
     }
@@ -134,6 +145,7 @@ export const PostsProvider = ({ children }: Props) => {
       value={{
         posts,
         editingPost,
+        editMode,
         isOpenEdit,
         handleEditPostDrawer,
         isOpenDelete,

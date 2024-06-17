@@ -1,6 +1,5 @@
 import { usePosts } from "@/contexts/PostsProvider";
 import PostItem from "./PostItem";
-import { useEffect } from "react";
 
 interface Props {
   userId?: string;

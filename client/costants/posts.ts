@@ -1,8 +1,3 @@
-export enum POST_MODE {
-  CREATE = 0,
-  EDIT = 1,
-}
-
 export enum POST_CATEGORY {
   TASK = 0,
   REVIEW = 1,

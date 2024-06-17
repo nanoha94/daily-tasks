@@ -1,9 +1,12 @@
+"use client";
+import { POST_CATEGORY } from "@/costants/posts";
 import EditPost from "./EditPost";
 import FullscreenDrawer from "./FullscreenDrawer";
 import { usePosts } from "@/contexts/PostsProvider";
+import EditReviewPost from "./EditReviewPost";
 
 const EditPostDrawer = () => {
-  const { isOpenEdit, handleEditPostDrawer } = usePosts();
+  const { editMode, isOpenEdit, handleEditPostDrawer } = usePosts();
 
   return (
     <>
@@ -11,7 +14,7 @@ const EditPostDrawer = () => {
         isOpen={isOpenEdit}
         onClose={() => handleEditPostDrawer(false)}
       >
-        <EditPost />
+        {editMode === POST_CATEGORY.TASK ? <EditPost /> : <EditReviewPost />}
       </FullscreenDrawer>
     </>
   );

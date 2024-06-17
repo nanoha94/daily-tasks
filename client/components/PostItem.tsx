@@ -8,8 +8,12 @@ import GoodButton from "./button/GoodButton";
 import styles from "@/styles/form.module.css";
 import { useState } from "react";
 import { usePosts } from "@/contexts/PostsProvider";
-import AssignmentTurnedInOutlined from "@mui/icons-material/AssignmentTurnedInOutlined";
-import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import {
+  ClipboardDocumentCheckIcon,
+  TrashIcon,
+  PencilSquareIcon,
+} from "@heroicons/react/24/outline";
+import { useAuth } from "@/contexts/AuthProvider";
 
 interface Props {
   post: Post;
@@ -39,6 +43,15 @@ const StyledProfileIcon = styled(ProfileIcon)`
   width: 32px;
 `;
 
+const StyledButton = styled.button`
+  padding: 4px;
+  border-radius: 50vh;
+
+  &:hover {
+    background-color: ${colors.gray[200]};
+  }
+`;
+
 const CategoryLabel = styled.span<CategoryLabelProps>`
   padding: 6px 8px 4px;
   width: fit-content;
@@ -53,6 +66,7 @@ const CategoryLabel = styled.span<CategoryLabelProps>`
 
 const PostItem = ({ post }: Props) => {
   const { id, comment, tasks, category, numOfGood, author } = post;
+  const { authUser } = useAuth();
   const { handleEditPostDrawer, handleDeletePostDialog, updatePost } =
     usePosts();
   const createdAt = new Date(post.createdAt);
@@ -74,11 +88,11 @@ const PostItem = ({ post }: Props) => {
     <div className="flex flex-col gap-y-5 rounded bg-white shadow-sm p-3 mx-auto">
       <div className="flex items-center">
         <Link
-          href={`/profile/${post.author.id}`}
+          href={`/profile/${author.id}`}
           className="flex flex-1 items-center gap-x-2 transition-opacity hover:opacity-70"
         >
-          <StyledProfileIcon imgSrc={post.author.profile?.profileScr} />
-          <p className="text-xs text-black">{post.author.name}</p>
+          <StyledProfileIcon imgSrc={author.profile?.profileScr} />
+          <p className="text-xs text-black">{author.name}</p>
         </Link>
         <span className="text-xs text-gray-700">
           {`
@@ -90,12 +104,12 @@ const PostItem = ({ post }: Props) => {
         </span>
       </div>
       <div className="flex flex-col gap-y-2">
-        <CategoryLabel $category={post.category}>
-          {POST_CATEGORIES.find((cat) => cat.id === post.category)?.label}
+        <CategoryLabel $category={category}>
+          {POST_CATEGORIES.find((cat) => cat.id === category)?.label}
         </CategoryLabel>
-        {post.comment && <p className="text-base text-black">{post.comment}</p>}
+        {comment && <p className="text-base text-black">{post.comment}</p>}
         <div className="flex flex-col gap-y-1">
-          {post.tasks.map((task) => (
+          {tasks.map((task) => (
             <div key={task.id} className={styles.checkbox_container}>
               <input
                 type="checkbox"
@@ -111,31 +125,49 @@ const PostItem = ({ post }: Props) => {
           ))}
         </div>
       </div>
-      <div className="flex gap-x-2">
+      <div className="flex items-center gap-x-2">
         <div className="flex-1">
           <GoodButton
-            count={post.numOfGood}
+            count={numOfGood}
             isClicked={isClickedGoodButton}
             onClick={handleClickNumOfGood}
           />
         </div>
-        {/* TODO: ダイアログ表示ボタンを配置 */}
-        <div className="flex gap-x-2">
-          <button
-            type="button"
-            onClick={() => handleEditPostDrawer(true, post)}
-            className="text-green"
-          >
-            <AssignmentTurnedInOutlined />
-          </button>
-          <button
-            onClick={() => {
-              handleDeletePostDialog(true, post);
-            }}
-            className="text-green"
-          >
-            <DeleteForeverIcon />
-          </button>
+
+        <div className="flex items-center gap-x-2">
+          {author.id === authUser.id && (
+            <>
+              {category === POST_CATEGORY.TASK && (
+                // TODO: 振り返り処理実装
+                <StyledButton
+                  type="button"
+                  onClick={() =>
+                    handleEditPostDrawer(true, POST_CATEGORY.REVIEW, post)
+                  }
+                  className="text-green"
+                >
+                  <ClipboardDocumentCheckIcon className="w-[24px] h-[24px] text-green" />
+                </StyledButton>
+              )}
+              <StyledButton
+                type="button"
+                onClick={() =>
+                  handleEditPostDrawer(true, POST_CATEGORY.TASK, post)
+                }
+                className="text-green"
+              >
+                <PencilSquareIcon className="w-[24px] h-[24px] text-green" />
+              </StyledButton>
+              <StyledButton
+                onClick={() => {
+                  handleDeletePostDialog(true, post);
+                }}
+                className="text-green"
+              >
+                <TrashIcon className="w-[24px] h-[24px] text-green" />
+              </StyledButton>
+            </>
+          )}
         </div>
       </div>
     </div>
