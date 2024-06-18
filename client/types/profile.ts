@@ -1,5 +1,5 @@
 export interface Profile {
-  id: string;
+  id: string | undefined;
   bio?: string;
-  profileScr?: string;
+  profileSrc?: string;
 }

@@ -3,6 +3,7 @@ import { POST_CATEGORY } from "@/costants/posts";
 import apiClient from "@/lib/apiClient";
 import { Post } from "@/types/post";
 import { createContext, useContext, useEffect, useState } from "react";
+import { useAuth } from "./UserProvider";
 
 interface PostsContextType {
   allPosts: Post[];
@@ -11,9 +12,9 @@ interface PostsContextType {
   isOpenEdit: boolean;
   isOpenDelete: boolean;
   handleDeletePostDialog: (state: boolean, post?: Post) => void;
-  createPost: (post: Omit<Post, "id" | "createdAt">) => void;
-  updatePost: (post: Omit<Post, "createdAt">) => void;
-  deletePost: (postId: string) => void;
+  createPost: (post: Omit<Post, "id" | "createdAt">) => Promise<void>;
+  updatePost: (post: Omit<Post, "createdAt">) => Promise<void>;
+  deletePost: (postId: string) => Promise<void>;
 }
 
 const PostsContext = createContext<PostsContextType>({
@@ -24,8 +25,8 @@ const PostsContext = createContext<PostsContextType>({
   isOpenDelete: false,
   handleDeletePostDialog: () => {},
   createPost: async () => {},
-  updatePost: () => {},
-  deletePost: () => {},
+  updatePost: async () => {},
+  deletePost: async () => {},
 });
 
 export const usePosts = () => {
@@ -37,6 +38,7 @@ interface Props {
 }
 
 export const PostsProvider = ({ children }: Props) => {
+  const { authUser } = useAuth();
   const [allPosts, setAllPosts] = useState<PostsContextType["allPosts"]>([]);
   const [editingPost, setEditingPost] =
     useState<PostsContextType["editingPost"]>(undefined);
@@ -74,6 +76,14 @@ export const PostsProvider = ({ children }: Props) => {
     };
     fetchPosts();
   }, []);
+
+  useEffect(() => {
+    setAllPosts((prev) =>
+      prev.map((post) =>
+        post.author.id === authUser.id ? { ...post, author: authUser } : post
+      )
+    );
+  }, [authUser]);
 
   const createPost = async (post: Omit<Post, "id" | "createdAt">) => {
     const { comment, tasks, category, numOfGood, author } = post;

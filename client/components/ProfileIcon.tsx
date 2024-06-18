@@ -8,7 +8,7 @@ interface Props {
 }
 
 interface ContainerProps {
-  children: React.ReactNode;
+  children?: React.ReactNode;
   className: string;
   link?: Props["link"];
 }
@@ -29,7 +29,7 @@ const ProfileIcon = ({ className, link, imgSrc }: Props) => {
       link={link}
       className={`${className} w-[40px] h-auto aspect-square bg-gray-400 rounded-full`}
     >
-      {!!imgSrc && (
+      {/* {!!imgSrc && (
         <Image
           src={imgSrc}
           alt="nanoha"
@@ -37,7 +37,7 @@ const ProfileIcon = ({ className, link, imgSrc }: Props) => {
           height="2048"
           className="rounded-full"
         />
-      )}
+      )} */}
     </Container>
   );
 };

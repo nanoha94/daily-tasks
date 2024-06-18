@@ -19,8 +19,7 @@ interface FormValues {
 const EditPost = () => {
   const { authUser } = useAuth();
   const { createPost, updatePost } = usePosts();
-  const { handleCloseDrawer, editingPost } = useDrawer();
-  const { setIsEditing } = useDrawer();
+  const { handleCloseDrawer, editingPost, setIsEditing } = useDrawer();
   const emptyValues = {
     comment: "",
     tasks: [{ id: undefined, content: "", completed: false }],

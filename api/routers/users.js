@@ -16,4 +16,36 @@ router.get("/:userId", async (req, res) => {
   }
 });
 
+router.put("/:userId", async (req, res) => {
+  const { userId } = req.params;
+  const { name, profile } = req.body;
+
+  try {
+    const updatedUser = await prisma.users.update({
+      data: {
+        name,
+        profile: {
+          upsert: {
+            create: { bio: profile.bio, profileSrc: profile.profileSrc },
+            update: {
+              id: profile.id,
+              bio: profile.bio,
+              profileSrc: profile.profileSrc,
+            },
+            where: { id: profile.id || "" },
+          },
+        },
+      },
+      where: { id: userId },
+      include: { posts: true, profile: true },
+    });
+    res
+      .status(200)
+      .json({ message: "ユーザー情報が更新されました", user: updatedUser });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "サーバーエラーです" });
+  }
+});
+
 module.exports = router;

@@ -7,13 +7,17 @@ import { createContext, useContext, useEffect, useState } from "react";
 
 interface UserContextType {
   authUser: User;
-  signIn: (email: string, password: string) => void;
-  signUp: (email: string, password: string, name: string) => void;
-  signOut: () => void;
+  getUser: (id: User["id"]) => Promise<User | undefined>;
+  updateUser: (user: User) => Promise<void>;
+  signIn: (email: string, password: string) => Promise<void>;
+  signUp: (email: string, password: string, name: string) => Promise<void>;
+  signOut: () => Promise<void>;
 }
 
 const UserContext = createContext<UserContextType>({
   authUser: DefaultUser,
+  getUser: async () => undefined,
+  updateUser: async () => {},
   signIn: async () => {},
   signUp: async () => {},
   signOut: async () => {},
@@ -65,6 +69,15 @@ export const UserProvider = ({ children }: Props) => {
   }, []);
 
   useEffect(() => {
+    const fetchUser = async () => {
+      const myUser = getUser(authUser.id);
+      setUser({ ...authUser, ...myUser });
+      console.log(authUser);
+    };
+    fetchUser();
+  }, [authUser.id]);
+
+  useEffect(() => {
     if (!!authUser.id && (pathname === "/register" || pathname === "/login")) {
       router.push("/");
     } else if (
@@ -74,7 +87,29 @@ export const UserProvider = ({ children }: Props) => {
     ) {
       router.push("/login");
     }
-  }, [pathname, authUser]);
+  }, [pathname, authUser.id]);
+
+  const getUser = async (id: User["id"]) => {
+    try {
+      const user = await apiClient.get(`/users/${id}`);
+      return user.data;
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const updateUser = async (user: User) => {
+    const { id, name, profile } = user;
+    try {
+      const updatedUser = await apiClient.put(`/users/${id}`, {
+        name,
+        profile,
+      });
+      setUser(updatedUser.data.user);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   const signIn = async (email: string, password: string) => {
     const { error, data } = await supabase.auth.signInWithPassword({
@@ -109,7 +144,9 @@ export const UserProvider = ({ children }: Props) => {
   };
 
   return (
-    <UserContext.Provider value={{ authUser, signIn, signUp, signOut }}>
+    <UserContext.Provider
+      value={{ authUser, getUser, updateUser, signIn, signUp, signOut }}
+    >
       {children}
     </UserContext.Provider>
   );

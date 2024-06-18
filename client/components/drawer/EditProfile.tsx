@@ -14,12 +14,12 @@ interface FormValues {
 }
 
 const EditProfile = () => {
-  const { authUser } = useAuth();
-  const { setIsEditing } = useDrawer();
+  const { authUser, updateUser } = useAuth();
+  const { handleCloseDrawer, setIsEditing } = useDrawer();
   const [defaultValues, setDefaultValues] = useState<FormValues>({
     name: authUser.name,
-    bio: "",
-    profileSrc: "",
+    bio: authUser.profile?.bio,
+    profileSrc: authUser.profile?.profileSrc,
   });
 
   const {
@@ -41,7 +41,12 @@ const EditProfile = () => {
     bio,
     profileSrc,
   }: FormValues) => {
-    console.log(name, bio, profileSrc);
+    await updateUser({
+      ...authUser,
+      name,
+      profile: { id: authUser.profile?.id ?? undefined, bio, profileSrc },
+    });
+    handleCloseDrawer();
   };
 
   useEffect(() => {
@@ -61,14 +66,14 @@ const EditProfile = () => {
     );
   }, [watchName, watchBio, watchProfileSrc]);
 
-  useEffect(() => {
-    console.log(authUser);
-    setDefaultValues({
-      name: authUser.name,
-      bio: "",
-      profileSrc: "",
-    });
-  }, []);
+  // useEffect(() => {
+  //   console.log(authUser);
+  //   reset({
+  //     name: authUser.name,
+  //     bio: authUser.profile?.bio,
+  //     profileSrc: authUser.profile?.profileSrc,
+  //   });
+  // }, []);
 
   return (
     <form
@@ -84,7 +89,7 @@ const EditProfile = () => {
           placeholder="your_account"
           type="text"
           {...register("name", {
-            required: "your_account",
+            required: "必須項目です",
           })}
           className={`${styles.item} ${styles.item_frame}`}
         />

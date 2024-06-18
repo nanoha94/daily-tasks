@@ -12,7 +12,7 @@ const Header = () => {
       </h1>
       <ProfileIcon
         link={`/profile/${authUser.id}`}
-        imgSrc={authUser.profile?.profileScr}
+        imgSrc={authUser.profile?.profileSrc}
       />
     </div>
   );
