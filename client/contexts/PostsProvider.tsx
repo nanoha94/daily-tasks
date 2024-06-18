@@ -51,6 +51,7 @@ export const PostsProvider = ({ children }: Props) => {
     useState<PostsContextType["isOpenDelete"]>(false);
 
   const handleEditPostDrawer = (state: boolean, mode?: number, post?: Post) => {
+    console.log("handleEditPostDrawer", post);
     setIsOpenEdit(state);
     setEditMode(mode ?? POST_CATEGORY.TASK);
     if (!!post) {
@@ -71,6 +72,10 @@ export const PostsProvider = ({ children }: Props) => {
       setEditingPost(undefined);
     }
   };
+
+  useEffect(() => {
+    console.log("log", editingPost);
+  }, [editingPost]);
 
   const handleDeletePostDialog = (state: boolean, post?: Post) => {
     setIsOpenDelete(state);

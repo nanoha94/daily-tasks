@@ -8,7 +8,7 @@ import { useAuth } from "@/contexts/AuthProvider";
 import FormItem from "../FormItem";
 import { usePosts } from "@/contexts/PostsProvider";
 import { POST_CATEGORY } from "@/costants/posts";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 interface FormValues {
   comment?: string;
@@ -24,13 +24,14 @@ const EditPost = () => {
     createPost,
     updatePost,
   } = usePosts();
-  const defaultValues = {
+  const emptyValues = {
     comment: "",
     tasks: [{ id: undefined, content: "", completed: false }],
   };
-
+  const [defaultValues, setDefaultValues] = useState<FormValues>(emptyValues);
   const {
     register,
+    watch,
     control,
     handleSubmit,
     reset,
@@ -40,20 +41,24 @@ const EditPost = () => {
     control,
     name: "tasks",
   });
+  const watchComment = watch("comment");
+  const watchTasks = watch("tasks");
+  const [isEnable, setIsEnable] = useState<boolean>(false);
 
   const handleAddTask = () => {
-    append(defaultValues["tasks"]);
+    append(emptyValues["tasks"]);
   };
 
   const handleSubmitSuccess: SubmitHandler<FormValues> = async ({
     comment,
     tasks,
   }: FormValues) => {
+    const nonEmptyTasks = watchTasks.filter((task) => task.content.length > 0);
     if (!!editingPost) {
       await updatePost({
         id: editingPost?.id,
         comment,
-        tasks,
+        tasks: nonEmptyTasks,
         category: editingPost?.category,
         numOfGood: editingPost?.numOfGood,
         author: editingPost?.author,
@@ -61,25 +66,46 @@ const EditPost = () => {
     } else {
       await createPost({
         comment,
-        tasks,
+        tasks: nonEmptyTasks,
         category: POST_CATEGORY.TASK,
         numOfGood: 0,
         author: authUser,
       });
     }
-    reset(defaultValues);
+    reset(emptyValues);
     handleEditPostDrawer(false);
   };
 
   useEffect(() => {
+    const nonEmptyDefaultTasks = defaultValues.tasks.filter(
+      (task) => task.content.length > 0
+    );
+    const nonEmptyTasks = watchTasks.filter((task) => task.content.length > 0);
+
+    // 条件を満たすとボタンがクリックできるようになる
+    // 【条件】変更がある場合、かつ、タスクが１つ以上存在する場合
+    setIsEnable(
+      (defaultValues.comment !== watchComment ||
+        JSON.stringify(nonEmptyDefaultTasks) !==
+          JSON.stringify(nonEmptyTasks)) &&
+        nonEmptyTasks.length > 0
+    );
+  }, [watchComment, watchTasks.map((task) => task.content)]);
+
+  useEffect(() => {
     if (isOpenEdit && !!editingPost) {
-      const currentValues = {
+      const editingValues = {
         comment: editingPost?.comment,
-        tasks: editingPost?.tasks,
+        tasks:
+          editingPost?.tasks.length > 0
+            ? editingPost.tasks
+            : emptyValues["tasks"],
       };
-      reset(currentValues);
+      setDefaultValues(editingValues);
+      reset(editingValues);
     } else {
-      reset(defaultValues);
+      setDefaultValues(emptyValues);
+      reset(emptyValues);
     }
   }, [isOpenEdit, editingPost]);
 
@@ -109,8 +135,6 @@ const EditPost = () => {
             >
               <input
                 type="checkbox"
-                // dafaultCheckedにすると、ON/OFFが切り替えられる
-                // defaultChecked={field.completed}
                 checked={false}
                 {...register(`tasks.${idx}.completed`)}
                 className={styles.checkbox}
@@ -126,7 +150,7 @@ const EditPost = () => {
         <AddButton onClick={handleAddTask}>タスクを追加する</AddButton>
       </div>
       <div className="ml-auto mr-0">
-        <PrimaryButton type="submit">
+        <PrimaryButton type="submit" disabled={!isEnable}>
           {!editingPost ? "投稿する" : "保存する"}
         </PrimaryButton>
       </div>

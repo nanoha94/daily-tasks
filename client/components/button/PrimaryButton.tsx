@@ -2,13 +2,16 @@ import { colors } from "@/tailwind.config";
 import { ButtonHTMLAttributes } from "react";
 import styled from "styled-components";
 
-interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
+interface Props
+  extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, "disabled"> {
   children: React.ReactNode;
   variant?: "normal" | "cancel" | "destroy";
+  disabled?: boolean;
 }
 
 interface ButtonProps {
   $variant: Props["variant"];
+  disabled: Props["disabled"];
 }
 
 const TextColor = ($variant: ButtonProps["$variant"]) => {
@@ -29,13 +32,20 @@ const HoverTextColor = ($variant: ButtonProps["$variant"]) => {
   }
 };
 
-const BgColor = ($variant: ButtonProps["$variant"]) => {
-  if ($variant === "normal") {
-    return colors.green;
-  } else if ($variant === "cancel") {
-    return colors.white;
-  } else if ($variant === "destroy") {
-    return colors.error;
+const BgColor = (
+  $variant: ButtonProps["$variant"],
+  disabled: ButtonProps["disabled"]
+) => {
+  if (disabled) {
+    return colors.gray["400"];
+  } else {
+    if ($variant === "normal") {
+      return colors.green;
+    } else if ($variant === "cancel") {
+      return colors.white;
+    } else if ($variant === "destroy") {
+      return colors.error;
+    }
   }
 };
 
@@ -65,16 +75,25 @@ const HoverBorderColor = ($variant: ButtonProps["$variant"]) => {
   }
 };
 
+const PointerEvents = (disabled: ButtonProps["disabled"]) => {
+  if (disabled) {
+    return "none";
+  } else {
+    return "auto";
+  }
+};
+
 const StyledButton = styled.button<ButtonProps>`
   padding: 12px 20px;
   color: ${({ $variant }) => TextColor($variant)};
   font-size: 1rem;
   font-weight: bold;
   line-height: 1;
-  background-color: ${({ $variant }) => BgColor($variant)};
+  background-color: ${({ $variant, disabled }) => BgColor($variant, disabled)};
   border-width: 2px;
   border-color: ${({ $variant }) => BorderColor($variant)};
   border-radius: 8px;
+  pointer-events: ${({ disabled }) => PointerEvents(disabled)};
 
   &:hover {
     color: ${({ $variant }) => HoverTextColor($variant)};
@@ -83,9 +102,14 @@ const StyledButton = styled.button<ButtonProps>`
   }
 `;
 
-const PrimaryButton = ({ children, variant = "normal", ...props }: Props) => {
+const PrimaryButton = ({
+  children,
+  variant = "normal",
+  disabled = false,
+  ...props
+}: Props) => {
   return (
-    <StyledButton $variant={variant} {...props}>
+    <StyledButton $variant={variant} disabled={disabled} {...props}>
       {children}
     </StyledButton>
   );

@@ -3,12 +3,11 @@ import styles from "@/styles/form.module.css";
 import PrimaryButton from "../button/PrimaryButton";
 import { SubmitHandler, useFieldArray, useForm } from "react-hook-form";
 import { Task } from "@/types/task";
-import AddButton from "../button/AddButton";
 import { useAuth } from "@/contexts/AuthProvider";
 import FormItem from "../FormItem";
 import { usePosts } from "@/contexts/PostsProvider";
 import { POST_CATEGORY } from "@/costants/posts";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 interface FormValues {
   comment?: string;
@@ -24,15 +23,17 @@ const EditReviewPost = () => {
     createPost,
     updatePost,
   } = usePosts();
-  const defaultValues = {
+  const emptyValues = {
     comment: "",
     tasks: [{ id: undefined, content: "", completed: false }],
   };
+  const [defaultValues, setDefaultValues] = useState<FormValues>(emptyValues);
   // カテゴーがTASKのままの場合は、新規投稿作成
   const isCreate = editingPost?.category === POST_CATEGORY.TASK;
 
   const {
     register,
+    watch,
     control,
     handleSubmit,
     reset,
@@ -42,22 +43,15 @@ const EditReviewPost = () => {
     control,
     name: "tasks",
   });
+  const watchComment = watch("comment");
+  const watchTasks = watch("tasks");
+  const [isEnable, setIsEnable] = useState<boolean>(false);
 
   const handleSubmitSuccess: SubmitHandler<FormValues> = async ({
     comment,
     tasks,
   }: FormValues) => {
-    console.log(comment, tasks);
     if (isCreate) {
-      await updatePost({
-        id: editingPost?.id,
-        comment,
-        tasks,
-        category: editingPost?.category,
-        numOfGood: editingPost?.numOfGood,
-        author: editingPost?.author,
-      });
-    } else {
       await createPost({
         comment,
         tasks,
@@ -65,20 +59,42 @@ const EditReviewPost = () => {
         numOfGood: 0,
         author: authUser,
       });
+    } else {
+      if (editingPost) {
+        await updatePost({
+          id: editingPost?.id,
+          comment,
+          tasks,
+          category: editingPost?.category,
+          numOfGood: editingPost?.numOfGood,
+          author: editingPost?.author,
+        });
+      }
     }
-    reset(defaultValues);
+    reset(emptyValues);
     handleEditPostDrawer(false);
   };
 
   useEffect(() => {
+    // 条件を満たすとボタンがクリックできるようになる
+    // 【条件】変更がある場合
+    setIsEnable(
+      defaultValues.comment !== watchComment ||
+        JSON.stringify(defaultValues.tasks) !== JSON.stringify(watchTasks)
+    );
+  }, [watchComment, watchTasks.map((task) => task.completed)]);
+
+  useEffect(() => {
     if (isOpenEdit && !!editingPost) {
-      const currentValues = {
+      const editingValues = {
         comment: editingPost?.comment,
         tasks: editingPost?.tasks,
       };
-      reset(currentValues);
+      setDefaultValues(editingValues);
+      reset(editingValues);
     } else {
-      reset(defaultValues);
+      setDefaultValues(emptyValues);
+      reset(emptyValues);
     }
   }, [isOpenEdit, editingPost]);
 
@@ -120,7 +136,7 @@ const EditReviewPost = () => {
         </div>
       </div>
       <div className="ml-auto mr-0">
-        <PrimaryButton type="submit">
+        <PrimaryButton type="submit" disabled={!isEnable}>
           {isCreate ? "投稿する" : "保存する"}
         </PrimaryButton>
       </div>
