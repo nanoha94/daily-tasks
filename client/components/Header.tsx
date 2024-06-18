@@ -1,9 +1,9 @@
 import { User } from "@/types/user";
 import ProfileIcon from "./ProfileIcon";
-import { useAuth } from "@/contexts/UserProvider";
+import { useUser } from "@/contexts/UserProvider";
 
 const Header = () => {
-  const { authUser } = useAuth();
+  const { authUser } = useUser();
 
   return (
     <div className="flex items-center bg-dark_blue py-2 px-3">

@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import ProfileIcon from "./ProfileIcon";
-import { useAuth } from "@/contexts/UserProvider";
+import { useUser } from "@/contexts/UserProvider";
 import { User } from "@/types/user";
 import ArrowButton from "./button/ArrowButton";
 import { useDrawer } from "@/contexts/DrawerProvider";
@@ -15,7 +15,7 @@ const StyledProfileIcon = styled(ProfileIcon)`
 `;
 
 const Profile = ({ user }: Props) => {
-  const { authUser, signOut } = useAuth();
+  const { authUser, signOut } = useUser();
   const { handleOpenDrawer } = useDrawer();
 
   const logout = async () => {

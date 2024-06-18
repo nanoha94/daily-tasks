@@ -13,7 +13,7 @@ import {
   TrashIcon,
   PencilSquareIcon,
 } from "@heroicons/react/24/outline";
-import { useAuth } from "@/contexts/UserProvider";
+import { useUser } from "@/contexts/UserProvider";
 import { useDrawer } from "@/contexts/DrawerProvider";
 import EditPost from "./drawer/EditPost";
 import EditReviewPost from "./drawer/EditReviewPost";
@@ -69,7 +69,7 @@ const CategoryLabel = styled.span<CategoryLabelProps>`
 
 const PostItem = ({ post }: Props) => {
   const { id, comment, tasks, category, numOfGood, author } = post;
-  const { authUser } = useAuth();
+  const { authUser } = useUser();
   const { handleDeletePostDialog, updatePost } = usePosts();
   const { handleOpenDrawer } = useDrawer();
   const createdAt = new Date(post.createdAt);

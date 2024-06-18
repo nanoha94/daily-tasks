@@ -2,7 +2,7 @@
 import styles from "@/styles/auth.module.css";
 import Link from "next/link";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { useAuth } from "@/contexts/UserProvider";
+import { useUser } from "@/contexts/UserProvider";
 import FormItem from "@/components/FormItem";
 
 interface FormValues {
@@ -13,7 +13,7 @@ interface FormValues {
 }
 
 const PageRegister = () => {
-  const { signUp } = useAuth();
+  const { signUp } = useUser();
   const defaultValues = {
     name: "",
     email: "",

@@ -5,7 +5,7 @@ import Profile from "@/components/Profile";
 import CreatePostButton from "@/components/button/CreatePostButton";
 import DeleteDialog from "@/components/dialog/DeleteDialog";
 import FullscreenDrawer from "@/components/drawer/FullscreenDrawer";
-import { useAuth } from "@/contexts/UserProvider";
+import { useUser } from "@/contexts/UserProvider";
 import { mediaQuery, useMediaQuery } from "@/hooks/useMediaQuery";
 import { DefaultUser, User } from "@/types/user";
 import { useEffect, useState } from "react";
@@ -17,7 +17,7 @@ interface Props {
 const Page = ({ params }: Props) => {
   const isPc: boolean = useMediaQuery(mediaQuery.md);
   const [user, setUser] = useState<User>(DefaultUser);
-  const { authUser, getUser } = useAuth();
+  const { authUser, getUser } = useUser();
 
   useEffect(() => {
     const fetchData = async () => {

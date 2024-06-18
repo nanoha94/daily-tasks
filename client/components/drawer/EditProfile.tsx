@@ -2,7 +2,7 @@
 import styles from "@/styles/form.module.css";
 import PrimaryButton from "../button/PrimaryButton";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { useAuth } from "@/contexts/UserProvider";
+import { useUser } from "@/contexts/UserProvider";
 import FormItem from "../FormItem";
 import { useEffect, useState } from "react";
 import { useDrawer } from "@/contexts/DrawerProvider";
@@ -14,7 +14,7 @@ interface FormValues {
 }
 
 const EditProfile = () => {
-  const { authUser, updateUser } = useAuth();
+  const { authUser, updateUser } = useUser();
   const { handleCloseDrawer, setIsEditing } = useDrawer();
   const [defaultValues, setDefaultValues] = useState<FormValues>({
     name: authUser.name,

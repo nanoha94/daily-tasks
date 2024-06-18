@@ -3,7 +3,7 @@ import { POST_CATEGORY } from "@/costants/posts";
 import apiClient from "@/lib/apiClient";
 import { Post } from "@/types/post";
 import { createContext, useContext, useEffect, useState } from "react";
-import { useAuth } from "./UserProvider";
+import { useUser } from "./UserProvider";
 
 interface PostsContextType {
   allPosts: Post[];
@@ -38,7 +38,7 @@ interface Props {
 }
 
 export const PostsProvider = ({ children }: Props) => {
-  const { authUser } = useAuth();
+  const { authUser } = useUser();
   const [allPosts, setAllPosts] = useState<PostsContextType["allPosts"]>([]);
   const [editingPost, setEditingPost] =
     useState<PostsContextType["editingPost"]>(undefined);

@@ -23,7 +23,7 @@ const UserContext = createContext<UserContextType>({
   signOut: async () => {},
 });
 
-export const useAuth = () => {
+export const useUser = () => {
   return useContext(UserContext);
 };
 

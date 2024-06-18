@@ -4,7 +4,7 @@ import PrimaryButton from "../button/PrimaryButton";
 import { SubmitHandler, useFieldArray, useForm } from "react-hook-form";
 import { Task } from "@/types/task";
 import AddButton from "../button/AddButton";
-import { useAuth } from "@/contexts/UserProvider";
+import { useUser } from "@/contexts/UserProvider";
 import FormItem from "../FormItem";
 import { usePosts } from "@/contexts/PostsProvider";
 import { POST_CATEGORY } from "@/costants/posts";
@@ -17,7 +17,7 @@ interface FormValues {
 }
 
 const EditPost = () => {
-  const { authUser } = useAuth();
+  const { authUser } = useUser();
   const { createPost, updatePost } = usePosts();
   const { handleCloseDrawer, editingPost, setIsEditing } = useDrawer();
   const emptyValues = {
