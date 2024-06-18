@@ -17,13 +17,8 @@ interface FormValues {
 
 const EditReviewPost = () => {
   const { authUser } = useAuth();
-  const {
-    editingPost,
-    isOpenEdit,
-    handleEditPostDrawer,
-    createPost,
-    updatePost,
-  } = usePosts();
+  const { createPost, updatePost } = usePosts();
+  const { handleCloseDrawer, editingPost } = useDrawer();
   const { setIsEditing } = useDrawer();
   const emptyValues = {
     comment: "",
@@ -74,7 +69,7 @@ const EditReviewPost = () => {
       }
     }
     reset(emptyValues);
-    handleEditPostDrawer(false);
+    handleCloseDrawer();
   };
 
   useEffect(() => {
@@ -91,9 +86,9 @@ const EditReviewPost = () => {
   }, [watchComment, watchTasks.map((task) => task.completed)]);
 
   useEffect(() => {
-    if (isOpenEdit && !!editingPost) {
+    if (!!editingPost) {
       const editingValues = {
-        comment: editingPost?.comment,
+        comment: isCreate ? "" : editingPost?.comment,
         tasks: editingPost?.tasks,
       };
       setDefaultValues(editingValues);
@@ -102,7 +97,7 @@ const EditReviewPost = () => {
       setDefaultValues(emptyValues);
       reset(emptyValues);
     }
-  }, [isOpenEdit, editingPost]);
+  }, [editingPost]);
 
   return (
     <form

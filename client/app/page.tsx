@@ -4,7 +4,7 @@ import PostList from "@/components/PostList";
 import CreatePostButton from "@/components/button/CreatePostButton";
 import DeleteDialog from "@/components/dialog/DeleteDialog";
 import EditPost from "@/components/drawer/EditPost";
-import EditPostDrawer from "@/components/drawer/EditPostDrawer";
+import FullscreenDrawer from "@/components/drawer/FullscreenDrawer";
 import { mediaQuery, useMediaQuery } from "@/hooks/useMediaQuery";
 
 const Page = () => {
@@ -24,7 +24,7 @@ const Page = () => {
         </div>
       </div>{" "}
       {!isPc && <CreatePostButton />}
-      <EditPostDrawer />
+      <FullscreenDrawer />
       <DeleteDialog />
     </>
   );

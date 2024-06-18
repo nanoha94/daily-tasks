@@ -18,13 +18,8 @@ interface FormValues {
 
 const EditPost = () => {
   const { authUser } = useAuth();
-  const {
-    editingPost,
-    isOpenEdit,
-    handleEditPostDrawer,
-    createPost,
-    updatePost,
-  } = usePosts();
+  const { createPost, updatePost } = usePosts();
+  const { handleCloseDrawer, editingPost } = useDrawer();
   const { setIsEditing } = useDrawer();
   const emptyValues = {
     comment: "",
@@ -55,7 +50,7 @@ const EditPost = () => {
     comment,
     tasks,
   }: FormValues) => {
-    const nonEmptyTasks = watchTasks.filter((task) => task.content.length > 0);
+    const nonEmptyTasks = tasks.filter((task) => task.content.length > 0);
     if (!!editingPost) {
       await updatePost({
         id: editingPost?.id,
@@ -75,7 +70,7 @@ const EditPost = () => {
       });
     }
     reset(emptyValues);
-    handleEditPostDrawer(false);
+    handleCloseDrawer();
   };
 
   useEffect(() => {
@@ -100,7 +95,7 @@ const EditPost = () => {
   }, [watchComment, watchTasks.map((task) => task.content)]);
 
   useEffect(() => {
-    if (isOpenEdit && !!editingPost) {
+    if (!!editingPost) {
       const editingValues = {
         comment: editingPost?.comment,
         tasks:
@@ -114,7 +109,7 @@ const EditPost = () => {
       setDefaultValues(emptyValues);
       reset(emptyValues);
     }
-  }, [isOpenEdit, editingPost]);
+  }, [editingPost]);
 
   return (
     <form
@@ -144,7 +139,7 @@ const EditPost = () => {
                 type="checkbox"
                 checked={false}
                 {...register(`tasks.${idx}.completed`)}
-                className={styles.checkbox}
+                className={styles.checkbox_disabled}
               />
               <input
                 placeholder="今日のタスクは？"

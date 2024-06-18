@@ -3,6 +3,9 @@ import ProfileIcon from "./ProfileIcon";
 import { useAuth } from "@/contexts/AuthProvider";
 import { User } from "@/types/user";
 import ArrowButton from "./button/ArrowButton";
+import { useDrawer } from "@/contexts/DrawerProvider";
+import FullscreenDrawer from "./drawer/FullscreenDrawer";
+import EditProfile from "./drawer/EditProfile";
 
 interface Props {
   user: User;
@@ -14,6 +17,7 @@ const StyledProfileIcon = styled(ProfileIcon)`
 
 const Profile = ({ user }: Props) => {
   const { authUser, signOut } = useAuth();
+  const { handleOpenDrawer } = useDrawer();
 
   const logout = async () => {
     try {
@@ -21,6 +25,10 @@ const Profile = ({ user }: Props) => {
     } catch (err) {
       console.error(err);
     }
+  };
+
+  const test = () => {
+    handleOpenDrawer({ drawer: <EditProfile /> });
   };
 
   return (
@@ -34,8 +42,7 @@ const Profile = ({ user }: Props) => {
           {user.id === authUser.id && (
             <div className="flex flex-col gap-y-2">
               <ArrowButton onClick={logout}>ログアウト</ArrowButton>
-              {/* TODO: リンク設定 */}
-              <ArrowButton>プロフィール編集</ArrowButton>
+              <ArrowButton onClick={test}>プロフィール編集</ArrowButton>
             </div>
           )}
         </div>

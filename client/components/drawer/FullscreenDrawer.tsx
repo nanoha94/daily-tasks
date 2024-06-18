@@ -6,46 +6,40 @@ import Dialog from "../dialog/Dialog";
 import PrimaryButton from "../button/PrimaryButton";
 import styled from "styled-components";
 
-interface Props {
-  children: React.ReactNode;
-  isOpen: boolean;
-  onClose: () => void;
-}
-
 const StyledPrimaryButton = styled(PrimaryButton)`
   flex: 1;
   width: 140px;
 `;
 
-const FullscreenDrawer = ({ children, isOpen, onClose }: Props) => {
-  const { isEditing } = useDrawer();
+const FullscreenDrawer = () => {
+  const { drawer, isOpenDrawer, handleCloseDrawer, isEditing } = useDrawer();
   const [isOpenDialog, setIsOpenDialog] = useState<boolean>(false);
 
   const handleClose = () => {
     if (isEditing) {
       setIsOpenDialog(true);
     } else {
-      onClose();
+      handleCloseDrawer();
     }
   };
 
   const handleDelete = () => {
     setIsOpenDialog(false);
-    onClose();
+    handleCloseDrawer();
   };
 
   return (
     <>
       <div
         className={`fixed bottom-0 left-0 h-screen ${
-          isOpen ? "max-h-screen" : "max-h-0"
+          isOpenDrawer ? "max-h-screen" : "max-h-0"
         } flex flex-col items-start gap-y-5 bg-bg w-full transition-[max-height] overflow-hidden`}
       >
         <div className="w-full p-3">
           <button type="button" onClick={handleClose}>
             <CloseIcon />
           </button>
-          <div className="max-w-[600px] w-full mx-auto">{children}</div>
+          <div className="max-w-[600px] w-full mx-auto">{drawer}</div>
         </div>
       </div>
       <Dialog isOpen={isOpenDialog}>

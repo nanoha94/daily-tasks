@@ -9,7 +9,6 @@ interface PostsContextType {
   editingPost: Post | undefined;
   editMode: number;
   isOpenEdit: boolean;
-  handleEditPostDrawer: (state: boolean, mode?: number, post?: Post) => void;
   isOpenDelete: boolean;
   handleDeletePostDialog: (state: boolean, post?: Post) => void;
   createPost: (post: Omit<Post, "id" | "createdAt">) => void;
@@ -22,7 +21,6 @@ const PostsContext = createContext<PostsContextType>({
   editingPost: undefined,
   editMode: POST_CATEGORY.TASK,
   isOpenEdit: false,
-  handleEditPostDrawer: () => {},
   isOpenDelete: false,
   handleDeletePostDialog: () => {},
   createPost: async () => {},
@@ -49,28 +47,6 @@ export const PostsProvider = ({ children }: Props) => {
     useState<PostsContextType["isOpenEdit"]>(false);
   const [isOpenDelete, setIsOpenDelete] =
     useState<PostsContextType["isOpenDelete"]>(false);
-
-  const handleEditPostDrawer = (state: boolean, mode?: number, post?: Post) => {
-    setIsOpenEdit(state);
-    setEditMode(mode ?? POST_CATEGORY.TASK);
-    if (!!post) {
-      // レビュー作成（編集は含まない）
-      if (
-        mode === POST_CATEGORY.REVIEW &&
-        post.category !== POST_CATEGORY.REVIEW
-      ) {
-        setEditingPost({ ...post, comment: "" });
-      } else {
-        setEditingPost(post);
-      }
-    } else {
-      setEditingPost(undefined);
-    }
-
-    if (!state) {
-      setEditingPost(undefined);
-    }
-  };
 
   const handleDeletePostDialog = (state: boolean, post?: Post) => {
     setIsOpenDelete(state);
@@ -151,7 +127,6 @@ export const PostsProvider = ({ children }: Props) => {
         editingPost,
         editMode,
         isOpenEdit,
-        handleEditPostDrawer,
         isOpenDelete,
         handleDeletePostDialog,
         createPost,

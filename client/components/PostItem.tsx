@@ -14,6 +14,9 @@ import {
   PencilSquareIcon,
 } from "@heroicons/react/24/outline";
 import { useAuth } from "@/contexts/AuthProvider";
+import { useDrawer } from "@/contexts/DrawerProvider";
+import EditPost from "./drawer/EditPost";
+import EditReviewPost from "./drawer/EditReviewPost";
 
 interface Props {
   post: Post;
@@ -67,8 +70,8 @@ const CategoryLabel = styled.span<CategoryLabelProps>`
 const PostItem = ({ post }: Props) => {
   const { id, comment, tasks, category, numOfGood, author } = post;
   const { authUser } = useAuth();
-  const { handleEditPostDrawer, handleDeletePostDialog, updatePost } =
-    usePosts();
+  const { handleDeletePostDialog, updatePost } = usePosts();
+  const { handleOpenDrawer } = useDrawer();
   const createdAt = new Date(post.createdAt);
   const [isClickedGoodButton, setIsClickedGoodButton] =
     useState<boolean>(false);
@@ -115,12 +118,10 @@ const PostItem = ({ post }: Props) => {
                 type="checkbox"
                 id={task.id}
                 checked={task.completed}
-                className={styles.checkbox}
-                onChange={() => {}}
+                readOnly
+                className={styles.checkbox_disabled}
               />
-              <label htmlFor={task.id} className={styles.checkbox_label}>
-                {task.content}
-              </label>
+              <label className={styles.checkbox_label}>{task.content}</label>
             </div>
           ))}
         </div>
@@ -138,11 +139,10 @@ const PostItem = ({ post }: Props) => {
           {author.id === authUser.id && (
             <>
               {category === POST_CATEGORY.TASK && (
-                // TODO: 振り返り処理実装
                 <StyledButton
                   type="button"
                   onClick={() =>
-                    handleEditPostDrawer(true, POST_CATEGORY.REVIEW, post)
+                    handleOpenDrawer({ drawer: <EditReviewPost />, post })
                   }
                   className="text-green"
                 >
@@ -151,7 +151,17 @@ const PostItem = ({ post }: Props) => {
               )}
               <StyledButton
                 type="button"
-                onClick={() => handleEditPostDrawer(true, post.category, post)}
+                onClick={() =>
+                  handleOpenDrawer({
+                    drawer:
+                      post.category === POST_CATEGORY.TASK ? (
+                        <EditPost />
+                      ) : (
+                        <EditReviewPost />
+                      ),
+                    post,
+                  })
+                }
                 className="text-green"
               >
                 <PencilSquareIcon className="w-[24px] h-[24px] text-green" />
