@@ -8,7 +8,7 @@ export const mediaQuery = {
 export const useMediaQuery = (query: string) => {
   const formattedQuery = `(${query})`;
   const [match, setMatch] = useState<boolean>(
-    matchMedia(formattedQuery).matches
+    () => matchMedia(formattedQuery).matches
   );
 
   useEffect(() => {
