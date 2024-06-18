@@ -8,6 +8,7 @@ import FormItem from "../FormItem";
 import { usePosts } from "@/contexts/PostsProvider";
 import { POST_CATEGORY } from "@/costants/posts";
 import { useEffect, useState } from "react";
+import { useDrawer } from "@/contexts/DrawerProvider";
 
 interface FormValues {
   comment?: string;
@@ -23,12 +24,13 @@ const EditReviewPost = () => {
     createPost,
     updatePost,
   } = usePosts();
+  const { setIsEditing } = useDrawer();
   const emptyValues = {
     comment: "",
     tasks: [{ id: undefined, content: "", completed: false }],
   };
   const [defaultValues, setDefaultValues] = useState<FormValues>(emptyValues);
-  // カテゴーがTASKのままの場合は、新規投稿作成
+  // カテゴリーがTASKのままの場合は、新規投稿作成
   const isCreate = editingPost?.category === POST_CATEGORY.TASK;
 
   const {
@@ -79,6 +81,10 @@ const EditReviewPost = () => {
     // 条件を満たすとボタンがクリックできるようになる
     // 【条件】変更がある場合
     setIsEnable(
+      defaultValues.comment !== watchComment ||
+        JSON.stringify(defaultValues.tasks) !== JSON.stringify(watchTasks)
+    );
+    setIsEditing(
       defaultValues.comment !== watchComment ||
         JSON.stringify(defaultValues.tasks) !== JSON.stringify(watchTasks)
     );

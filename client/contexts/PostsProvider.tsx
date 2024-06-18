@@ -5,7 +5,7 @@ import { Post } from "@/types/post";
 import { createContext, useContext, useEffect, useState } from "react";
 
 interface PostsContextType {
-  posts: Post[];
+  allPosts: Post[];
   editingPost: Post | undefined;
   editMode: number;
   isOpenEdit: boolean;
@@ -18,7 +18,7 @@ interface PostsContextType {
 }
 
 const PostsContext = createContext<PostsContextType>({
-  posts: [],
+  allPosts: [],
   editingPost: undefined,
   editMode: POST_CATEGORY.TASK,
   isOpenEdit: false,
@@ -39,7 +39,7 @@ interface Props {
 }
 
 export const PostsProvider = ({ children }: Props) => {
-  const [posts, setPosts] = useState<PostsContextType["posts"]>([]);
+  const [allPosts, setAllPosts] = useState<PostsContextType["allPosts"]>([]);
   const [editingPost, setEditingPost] =
     useState<PostsContextType["editingPost"]>(undefined);
   const [editMode, setEditMode] = useState<PostsContextType["editMode"]>(
@@ -51,7 +51,6 @@ export const PostsProvider = ({ children }: Props) => {
     useState<PostsContextType["isOpenDelete"]>(false);
 
   const handleEditPostDrawer = (state: boolean, mode?: number, post?: Post) => {
-    console.log("handleEditPostDrawer", post);
     setIsOpenEdit(state);
     setEditMode(mode ?? POST_CATEGORY.TASK);
     if (!!post) {
@@ -73,10 +72,6 @@ export const PostsProvider = ({ children }: Props) => {
     }
   };
 
-  useEffect(() => {
-    console.log("log", editingPost);
-  }, [editingPost]);
-
   const handleDeletePostDialog = (state: boolean, post?: Post) => {
     setIsOpenDelete(state);
     if (!!post) {
@@ -95,7 +90,7 @@ export const PostsProvider = ({ children }: Props) => {
       try {
         const posts = await apiClient.get("/posts");
         if (!!posts) {
-          setPosts(posts.data);
+          setAllPosts(posts.data);
         }
       } catch (err) {
         console.error(err);
@@ -114,7 +109,7 @@ export const PostsProvider = ({ children }: Props) => {
         numOfGood,
         authorId: author.id,
       });
-      setPosts((prev) => [createdPost.data.post, ...prev]);
+      setAllPosts((prev) => [createdPost.data.post, ...prev]);
     } catch (err) {
       console.log(err);
     }
@@ -130,7 +125,7 @@ export const PostsProvider = ({ children }: Props) => {
         numOfGood,
         authorId: author?.id,
       });
-      setPosts((prev) =>
+      setAllPosts((prev) =>
         prev.map((post) =>
           post.id === updatedPost.data.post.id ? updatedPost.data.post : post
         )
@@ -143,7 +138,7 @@ export const PostsProvider = ({ children }: Props) => {
   const deletePost = async (postId: string) => {
     try {
       await apiClient.delete(`/posts/${postId}`);
-      setPosts((prev) => prev.filter((post) => post.id !== postId));
+      setAllPosts((prev) => prev.filter((post) => post.id !== postId));
     } catch (err) {
       console.log(err);
     }
@@ -152,7 +147,7 @@ export const PostsProvider = ({ children }: Props) => {
   return (
     <PostsContext.Provider
       value={{
-        posts,
+        allPosts,
         editingPost,
         editMode,
         isOpenEdit,

@@ -6,12 +6,12 @@ interface Props {
 }
 
 const PostList = ({ userId }: Props) => {
-  const { posts } = usePosts();
+  const { allPosts } = usePosts();
 
   return (
     <ul className="max-w-[560px] flex flex-col gap-y-2 mx-auto md:w-3/5">
-      {!!posts &&
-        posts.map((post) =>
+      {!!allPosts &&
+        allPosts.map((post) =>
           !!userId ? (
             userId === post.author.id && (
               <li key={post.id}>

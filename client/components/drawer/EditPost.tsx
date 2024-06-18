@@ -9,6 +9,7 @@ import FormItem from "../FormItem";
 import { usePosts } from "@/contexts/PostsProvider";
 import { POST_CATEGORY } from "@/costants/posts";
 import { useEffect, useState } from "react";
+import { useDrawer } from "@/contexts/DrawerProvider";
 
 interface FormValues {
   comment?: string;
@@ -24,6 +25,7 @@ const EditPost = () => {
     createPost,
     updatePost,
   } = usePosts();
+  const { setIsEditing } = useDrawer();
   const emptyValues = {
     comment: "",
     tasks: [{ id: undefined, content: "", completed: false }],
@@ -90,6 +92,11 @@ const EditPost = () => {
           JSON.stringify(nonEmptyTasks)) &&
         nonEmptyTasks.length > 0
     );
+
+    setIsEditing(
+      defaultValues.comment !== watchComment ||
+        JSON.stringify(nonEmptyDefaultTasks) !== JSON.stringify(nonEmptyTasks)
+    );
   }, [watchComment, watchTasks.map((task) => task.content)]);
 
   useEffect(() => {
@@ -125,7 +132,7 @@ const EditPost = () => {
       <div className="flex flex-col gap-y-2">
         <div className={styles.container}>
           <div className={styles.label_container}>
-            <p className={styles.label}>今日のタスク</p>
+            <p className={styles.label}>今日のタスク（必須）</p>
             <p className={styles.memo}>各30文字以内で入力してください。</p>
           </div>
           {fields.map((field, idx) => (

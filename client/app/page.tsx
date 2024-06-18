@@ -1,8 +1,10 @@
 "use client";
 import Header from "@/components/Header";
 import PostList from "@/components/PostList";
-import CreatePostDrawer from "@/components/drawer/CreatePostDrawer";
+import CreatePostButton from "@/components/button/CreatePostButton";
+import DeleteDialog from "@/components/dialog/DeleteDialog";
 import EditPost from "@/components/drawer/EditPost";
+import EditPostDrawer from "@/components/drawer/EditPostDrawer";
 import { mediaQuery, useMediaQuery } from "@/hooks/useMediaQuery";
 
 const Page = () => {
@@ -20,8 +22,10 @@ const Page = () => {
           )}
           <PostList />
         </div>
-      </div>
-      {!isPc && <CreatePostDrawer />}
+      </div>{" "}
+      {!isPc && <CreatePostButton />}
+      <EditPostDrawer />
+      <DeleteDialog />
     </>
   );
 };

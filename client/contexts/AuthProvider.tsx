@@ -65,10 +65,6 @@ export const AuthProvider = ({ children }: Props) => {
   }, []);
 
   useEffect(() => {
-    console.log(pathname, authUser);
-  }, [pathname]);
-
-  useEffect(() => {
     if (!!authUser.id && (pathname === "/register" || pathname === "/login")) {
       router.push("/");
     } else if (
