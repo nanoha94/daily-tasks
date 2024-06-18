@@ -4,7 +4,7 @@ import PrimaryButton from "../button/PrimaryButton";
 import { SubmitHandler, useFieldArray, useForm } from "react-hook-form";
 import { Task } from "@/types/task";
 import AddButton from "../button/AddButton";
-import { useAuth } from "@/contexts/AuthProvider";
+import { useAuth } from "@/contexts/UserProvider";
 import FormItem from "../FormItem";
 import { usePosts } from "@/contexts/PostsProvider";
 import { POST_CATEGORY } from "@/costants/posts";

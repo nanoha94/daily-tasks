@@ -13,7 +13,7 @@ import {
   TrashIcon,
   PencilSquareIcon,
 } from "@heroicons/react/24/outline";
-import { useAuth } from "@/contexts/AuthProvider";
+import { useAuth } from "@/contexts/UserProvider";
 import { useDrawer } from "@/contexts/DrawerProvider";
 import EditPost from "./drawer/EditPost";
 import EditReviewPost from "./drawer/EditReviewPost";

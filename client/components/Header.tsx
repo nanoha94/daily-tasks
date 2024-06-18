@@ -1,6 +1,6 @@
 import { User } from "@/types/user";
 import ProfileIcon from "./ProfileIcon";
-import { useAuth } from "@/contexts/AuthProvider";
+import { useAuth } from "@/contexts/UserProvider";
 
 const Header = () => {
   const { authUser } = useAuth();

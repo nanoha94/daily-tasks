@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import ProfileIcon from "./ProfileIcon";
-import { useAuth } from "@/contexts/AuthProvider";
+import { useAuth } from "@/contexts/UserProvider";
 import { User } from "@/types/user";
 import ArrowButton from "./button/ArrowButton";
 import { useDrawer } from "@/contexts/DrawerProvider";

@@ -1,8 +1,8 @@
 "use client";
 import styles from "@/styles/form.module.css";
 import PrimaryButton from "../button/PrimaryButton";
-import { SubmitHandler, useFieldArray, useForm } from "react-hook-form";
-import { useAuth } from "@/contexts/AuthProvider";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { useAuth } from "@/contexts/UserProvider";
 import FormItem from "../FormItem";
 import { useEffect, useState } from "react";
 import { useDrawer } from "@/contexts/DrawerProvider";
@@ -16,11 +16,11 @@ interface FormValues {
 const EditProfile = () => {
   const { authUser } = useAuth();
   const { setIsEditing } = useDrawer();
-  const defaultValues = {
+  const [defaultValues, setDefaultValues] = useState<FormValues>({
     name: authUser.name,
     bio: "",
     profileSrc: "",
-  };
+  });
 
   const {
     register,
@@ -61,6 +61,15 @@ const EditProfile = () => {
     );
   }, [watchName, watchBio, watchProfileSrc]);
 
+  useEffect(() => {
+    console.log(authUser);
+    setDefaultValues({
+      name: authUser.name,
+      bio: "",
+      profileSrc: "",
+    });
+  }, []);
+
   return (
     <form
       onSubmit={handleSubmit(handleSubmitSuccess)}
@@ -84,7 +93,7 @@ const EditProfile = () => {
         <textarea
           rows={4}
           placeholder="あなたはどんな人？"
-          {...register("name")}
+          {...register("bio")}
           className={`${styles.item} ${styles.item_frame}`}
         />
       </FormItem>

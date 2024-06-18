@@ -5,14 +5,14 @@ import { supabase } from "@/utils/supabase";
 import { usePathname, useRouter } from "next/navigation";
 import { createContext, useContext, useEffect, useState } from "react";
 
-interface AuthContextType {
+interface UserContextType {
   authUser: User;
   signIn: (email: string, password: string) => void;
   signUp: (email: string, password: string, name: string) => void;
   signOut: () => void;
 }
 
-const AuthContext = createContext<AuthContextType>({
+const UserContext = createContext<UserContextType>({
   authUser: DefaultUser,
   signIn: async () => {},
   signUp: async () => {},
@@ -20,16 +20,16 @@ const AuthContext = createContext<AuthContextType>({
 });
 
 export const useAuth = () => {
-  return useContext(AuthContext);
+  return useContext(UserContext);
 };
 
 interface Props {
   children: React.ReactNode;
 }
 
-export const AuthProvider = ({ children }: Props) => {
+export const UserProvider = ({ children }: Props) => {
   const [authUser, setUser] =
-    useState<AuthContextType["authUser"]>(DefaultUser);
+    useState<UserContextType["authUser"]>(DefaultUser);
   const pathname = usePathname();
   const router = useRouter();
 
@@ -109,8 +109,8 @@ export const AuthProvider = ({ children }: Props) => {
   };
 
   return (
-    <AuthContext.Provider value={{ authUser, signIn, signUp, signOut }}>
+    <UserContext.Provider value={{ authUser, signIn, signUp, signOut }}>
       {children}
-    </AuthContext.Provider>
+    </UserContext.Provider>
   );
 };

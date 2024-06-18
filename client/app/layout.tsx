@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "@/styles/globals.css";
-import { AuthProvider } from "@/contexts/AuthProvider";
+import { UserProvider } from "@/contexts/UserProvider";
 import { PostsProvider } from "@/contexts/PostsProvider";
-import DeleteDialog from "@/components/dialog/DeleteDialog";
 import { DrawerProvider } from "@/contexts/DrawerProvider";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -21,13 +20,13 @@ export default function RootLayout({
   return (
     <html lang="ja">
       <body className={inter.className}>
-        <AuthProvider>
+        <UserProvider>
           <PostsProvider>
             <DrawerProvider>
               <div className="flex flex-col h-screen">{children}</div>
             </DrawerProvider>
           </PostsProvider>
-        </AuthProvider>
+        </UserProvider>
       </body>
     </html>
   );

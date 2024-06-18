@@ -3,7 +3,7 @@ import styles from "@/styles/form.module.css";
 import PrimaryButton from "../button/PrimaryButton";
 import { SubmitHandler, useFieldArray, useForm } from "react-hook-form";
 import { Task } from "@/types/task";
-import { useAuth } from "@/contexts/AuthProvider";
+import { useAuth } from "@/contexts/UserProvider";
 import FormItem from "../FormItem";
 import { usePosts } from "@/contexts/PostsProvider";
 import { POST_CATEGORY } from "@/costants/posts";
