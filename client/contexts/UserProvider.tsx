@@ -72,7 +72,6 @@ export const UserProvider = ({ children }: Props) => {
     const fetchUser = async () => {
       const myUser = getUser(authUser.id);
       setUser({ ...authUser, ...myUser });
-      console.log(authUser);
     };
     fetchUser();
   }, [authUser.id]);

@@ -66,15 +66,6 @@ const EditProfile = () => {
     );
   }, [watchName, watchBio, watchProfileSrc]);
 
-  // useEffect(() => {
-  //   console.log(authUser);
-  //   reset({
-  //     name: authUser.name,
-  //     bio: authUser.profile?.bio,
-  //     profileSrc: authUser.profile?.profileSrc,
-  //   });
-  // }, []);
-
   return (
     <form
       onSubmit={handleSubmit(handleSubmitSuccess)}

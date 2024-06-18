@@ -48,14 +48,9 @@ export const DrawerProvider = ({ children }: Props) => {
     setIsOpenDrawer(true);
     setDrawer(drawer);
     if (!!post) {
-      console.log(post);
       setEditingPost(post);
     }
   };
-
-  useEffect(() => {
-    console.log(editingPost);
-  }, [editingPost]);
 
   const handleCloseDrawer = () => {
     setIsOpenDrawer(false);
