@@ -4,14 +4,13 @@ import { DefaultUser, User } from "@/types/user";
 import { supabase } from "@/utils/supabase";
 import { usePathname, useRouter } from "next/navigation";
 import { createContext, useContext, useEffect, useState } from "react";
-import { v4 as uuidv4 } from "uuid";
 
 interface UserContextType {
   authUser: User;
   getUser: (id: User["id"]) => Promise<User | undefined>;
   updateUser: (user: User) => Promise<void>;
-  getProfileImg: () => string;
-  uploadProfileImg: (file: File) => Promise<void>;
+  getProfileImg: (user: User) => string;
+  uploadProfileImg: (file: File, fileName: string) => Promise<void>;
   signIn: (email: string, password: string) => Promise<void>;
   signUp: (email: string, password: string, name: string) => Promise<void>;
   signOut: () => Promise<void>;
@@ -91,8 +90,6 @@ export const UserProvider = ({ children }: Props) => {
     ) {
       router.push("/login");
     }
-
-    console.log(!!supabase.auth.getSession());
   }, [pathname, authUser.id]);
 
   const getUser = async (id: User["id"]) => {
@@ -113,30 +110,32 @@ export const UserProvider = ({ children }: Props) => {
       });
       setUser(updatedUser.data.user);
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   };
 
-  const getProfileImg = () => {
-    const { data } = supabase.storage
-      .from("profileImg")
-      .getPublicUrl("img/1718869195768_KAZTDSCF6970_TP_V.webp");
+  const getProfileImg = (user: User) => {
+    if (!!user.profile?.profileSrc && user.profile?.profileSrc !== "") {
+      const { data } = supabase.storage
+        .from("profileImg")
+        .getPublicUrl(`img/${user.profile?.profileSrc}`);
 
-    return data.publicUrl;
+      return data.publicUrl;
+    } else {
+      return "";
+    }
   };
 
-  const uploadProfileImg = async (file: File) => {
-    const fileExtension = file.name.split(".").pop();
-    const file_name = `img/${uuidv4()}.${fileExtension}`;
+  const uploadProfileImg = async (file: File, fileName: string) => {
     try {
       const { error } = await supabase.storage
         .from("profileImg")
-        .upload(file_name, file);
+        .upload(`img/${fileName}`, file);
       if (error) {
         throw error;
       }
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   };
 

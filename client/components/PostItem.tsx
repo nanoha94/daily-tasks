@@ -97,7 +97,7 @@ const PostItem = ({ post }: Props) => {
           href={`/profile/${author.id}`}
           className="flex flex-1 items-center gap-x-2 transition-opacity hover:opacity-70"
         >
-          <StyledProfileIcon imgSrc={author.profile?.profileSrc} />
+          <StyledProfileIcon user={author} />
           <p className="text-xs text-black">{author.name}</p>
         </Link>
         <span className="text-xs text-gray-700">

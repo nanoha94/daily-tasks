@@ -78,7 +78,7 @@ export const PostsProvider = ({ children }: Props) => {
       });
       setAllPosts((prev) => [createdPost.data.post, ...prev]);
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   };
 
@@ -98,7 +98,7 @@ export const PostsProvider = ({ children }: Props) => {
         )
       );
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   };
 
@@ -107,7 +107,7 @@ export const PostsProvider = ({ children }: Props) => {
       await apiClient.delete(`/posts/${postId}`);
       setAllPosts((prev) => prev.filter((post) => post.id !== postId));
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   };
 

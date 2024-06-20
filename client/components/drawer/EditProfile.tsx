@@ -10,6 +10,7 @@ import { CameraIcon } from "@heroicons/react/24/outline";
 import styled from "styled-components";
 import { colors } from "@/tailwind.config";
 import Image from "next/image";
+import { v4 as uuidv4 } from "uuid";
 
 interface FormValues {
   name: string;
@@ -50,16 +51,18 @@ const EditProfile = () => {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [defaultProfileSrc, setDefaultProfileSrc] = useState<string>();
   const [profileImgFile, setProfileImgFile] = useState<File>();
-  const [profileSrc, setProfileSrc] = useState<string>();
+  const [profileImgFileName, setProfileImgFileName] = useState<string>("");
+  const [profileSrc, setProfileSrc] = useState<string>("");
 
   const handleChangeProfileImg = async (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
     const { files } = e.target;
     if (!!files && !!files[0]) {
+      const fileExtension = files[0].name.split(".").pop();
       setProfileSrc(window.URL.createObjectURL(files[0]));
-
       setProfileImgFile(files[0]);
+      setProfileImgFileName(`${uuidv4()}.${fileExtension}`);
     }
   };
 
@@ -75,12 +78,8 @@ const EditProfile = () => {
     name,
     bio,
   }: FormValues) => {
-    try {
-      if (!!profileImgFile) {
-        await uploadProfileImg(profileImgFile);
-      }
-    } catch (err) {
-      console.log(err);
+    if (!!profileImgFile) {
+      await uploadProfileImg(profileImgFile, profileImgFileName);
     }
     await updateUser({
       ...authUser,
@@ -88,7 +87,7 @@ const EditProfile = () => {
       profile: {
         id: authUser.profile?.id ?? undefined,
         bio,
-        profileSrc: profileSrc,
+        profileSrc: profileImgFileName,
       },
     });
 
@@ -113,7 +112,6 @@ const EditProfile = () => {
   }, [watchName, watchBio, profileSrc]);
 
   useEffect(() => {
-    console.log(authUser);
     //  reset data to initial state
     reset({
       name: authUser.name,
@@ -123,10 +121,11 @@ const EditProfile = () => {
       name: authUser.name,
       bio: authUser.profile?.bio,
     });
-    const storageImg = getProfileImg();
+    const storageImg = getProfileImg(authUser);
     setDefaultProfileSrc(storageImg);
     setProfileSrc(storageImg);
-  }, [isOpenDrawer]);
+    setProfileImgFileName(authUser.profile?.profileSrc ?? "");
+  }, [isOpenDrawer, authUser]);
 
   return (
     <form

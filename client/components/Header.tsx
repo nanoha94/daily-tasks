@@ -10,10 +10,7 @@ const Header = () => {
       <h1 className="flex-1 text-white text-xl font-bold">
         <a href="/">{process.env.NEXT_PUBLIC_APP_NAME}</a>
       </h1>
-      <ProfileIcon
-        link={`/profile/${authUser.id}`}
-        imgSrc={authUser.profile?.profileSrc}
-      />
+      <ProfileIcon link={`/profile/${authUser.id}`} user={authUser} />
     </div>
   );
 };

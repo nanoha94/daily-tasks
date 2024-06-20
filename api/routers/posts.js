@@ -36,7 +36,14 @@ router.post("/", async (req, res) => {
 router.get("/", async (req, res) => {
   try {
     const allPosts = await prisma.posts.findMany({
-      include: { tasks: true, author: true },
+      include: {
+        tasks: true,
+        author: {
+          include: {
+            profile: true,
+          },
+        },
+      },
       orderBy: { createdAt: "desc" },
     });
     res.status(200).json(allPosts);

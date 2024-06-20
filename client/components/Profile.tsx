@@ -15,7 +15,7 @@ const StyledProfileIcon = styled(ProfileIcon)`
 `;
 
 const Profile = ({ user }: Props) => {
-  const { authUser, signOut } = useUser();
+  const { authUser, signOut, getProfileImg } = useUser();
   const { handleOpenDrawer } = useDrawer();
 
   const logout = async () => {
@@ -31,7 +31,7 @@ const Profile = ({ user }: Props) => {
       <div className="max-w-[560px] w-full flex flex-col gap-y-5 p-3 mb-5 mx-auto md:py-5 md:px-4">
         <div className="flex items-center justify-between">
           <div className="flex flex-col items-center gap-y-1">
-            <StyledProfileIcon imgSrc={user.profile?.profileSrc} />
+            <StyledProfileIcon user={user} />
             <p className="text-xs text-black">{user.name}</p>
           </div>
           {user.id === authUser.id && (

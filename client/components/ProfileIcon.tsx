@@ -1,10 +1,12 @@
+import { useUser } from "@/contexts/UserProvider";
+import { User } from "@/types/user";
 import Image from "next/image";
 import Link from "next/link";
 
 interface Props {
   className?: string;
   link?: string;
-  imgSrc?: string;
+  user: User;
 }
 
 interface ContainerProps {
@@ -23,21 +25,28 @@ const Container = ({ children, className, link }: ContainerProps) => {
   );
 };
 
-const ProfileIcon = ({ className, link, imgSrc }: Props) => {
+const ProfileIcon = ({ className, link, user }: Props) => {
+  const { getProfileImg } = useUser();
+  const profileImg = getProfileImg(user);
+
   return (
     <Container
       link={link}
-      className={`${className} w-[40px] h-auto aspect-square bg-gray-400 rounded-full`}
+      className={`${className} relative w-[40px] h-auto aspect-square ${
+        !profileImg && "bg-gray-400"
+      } rounded-full`}
     >
-      {/* {!!imgSrc && (
-        <Image
-          src={imgSrc}
-          alt="nanoha"
-          width="2048"
-          height="2048"
-          className="rounded-full"
-        />
-      )} */}
+      {!!profileImg && (
+        <>
+          <Image
+            src={profileImg}
+            alt={`${user.name}のプロフィール画像`}
+            fill={true}
+            style={{ objectFit: "cover" }}
+            className="rounded-full"
+          />
+        </>
+      )}
     </Container>
   );
 };
