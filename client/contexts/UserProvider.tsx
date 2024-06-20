@@ -4,11 +4,14 @@ import { DefaultUser, User } from "@/types/user";
 import { supabase } from "@/utils/supabase";
 import { usePathname, useRouter } from "next/navigation";
 import { createContext, useContext, useEffect, useState } from "react";
+import { v4 as uuidv4 } from "uuid";
 
 interface UserContextType {
   authUser: User;
   getUser: (id: User["id"]) => Promise<User | undefined>;
   updateUser: (user: User) => Promise<void>;
+  getProfileImg: () => string;
+  uploadProfileImg: (file: File) => Promise<void>;
   signIn: (email: string, password: string) => Promise<void>;
   signUp: (email: string, password: string, name: string) => Promise<void>;
   signOut: () => Promise<void>;
@@ -18,6 +21,8 @@ const UserContext = createContext<UserContextType>({
   authUser: DefaultUser,
   getUser: async () => undefined,
   updateUser: async () => {},
+  getProfileImg: () => "",
+  uploadProfileImg: async () => {},
   signIn: async () => {},
   signUp: async () => {},
   signOut: async () => {},
@@ -86,6 +91,8 @@ export const UserProvider = ({ children }: Props) => {
     ) {
       router.push("/login");
     }
+
+    console.log(!!supabase.auth.getSession());
   }, [pathname, authUser.id]);
 
   const getUser = async (id: User["id"]) => {
@@ -110,8 +117,31 @@ export const UserProvider = ({ children }: Props) => {
     }
   };
 
+  const getProfileImg = () => {
+    const { data } = supabase.storage
+      .from("profileImg")
+      .getPublicUrl("img/1718869195768_KAZTDSCF6970_TP_V.webp");
+
+    return data.publicUrl;
+  };
+
+  const uploadProfileImg = async (file: File) => {
+    const fileExtension = file.name.split(".").pop();
+    const file_name = `img/${uuidv4()}.${fileExtension}`;
+    try {
+      const { error } = await supabase.storage
+        .from("profileImg")
+        .upload(file_name, file);
+      if (error) {
+        throw error;
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   const signIn = async (email: string, password: string) => {
-    const { error, data } = await supabase.auth.signInWithPassword({
+    const { error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
@@ -144,7 +174,16 @@ export const UserProvider = ({ children }: Props) => {
 
   return (
     <UserContext.Provider
-      value={{ authUser, getUser, updateUser, signIn, signUp, signOut }}
+      value={{
+        authUser,
+        getUser,
+        updateUser,
+        getProfileImg,
+        uploadProfileImg,
+        signIn,
+        signUp,
+        signOut,
+      }}
     >
       {children}
     </UserContext.Provider>

@@ -4,8 +4,12 @@ import PrimaryButton from "../button/PrimaryButton";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useUser } from "@/contexts/UserProvider";
 import FormItem from "../FormItem";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDrawer } from "@/contexts/DrawerProvider";
+import { CameraIcon } from "@heroicons/react/24/outline";
+import styled from "styled-components";
+import { colors } from "@/tailwind.config";
+import Image from "next/image";
 
 interface FormValues {
   name: string;
@@ -13,19 +17,28 @@ interface FormValues {
   profileSrc?: string;
 }
 
+const StyledCameraIcon = styled(CameraIcon)`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  width: 32px;
+  height: auto;
+  color: ${colors.white};
+`;
+
 const EditProfile = () => {
-  const { authUser, updateUser } = useUser();
-  const { handleCloseDrawer, setIsEditing } = useDrawer();
+  const { authUser, updateUser, getProfileImg, uploadProfileImg } = useUser();
+  const { handleCloseDrawer, setIsEditing, isOpenDrawer } = useDrawer();
   const [defaultValues, setDefaultValues] = useState<FormValues>({
     name: authUser.name,
     bio: authUser.profile?.bio,
-    profileSrc: authUser.profile?.profileSrc,
   });
 
   const {
     register,
     watch,
-    control,
     handleSubmit,
     reset,
     formState: { errors },
@@ -33,19 +46,52 @@ const EditProfile = () => {
 
   const watchName = watch("name");
   const watchBio = watch("bio");
-  const watchProfileSrc = watch("profileSrc");
   const [isEnable, setIsEnable] = useState<boolean>(false);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const [defaultProfileSrc, setDefaultProfileSrc] = useState<string>();
+  const [profileImgFile, setProfileImgFile] = useState<File>();
+  const [profileSrc, setProfileSrc] = useState<string>();
+
+  const handleChangeProfileImg = async (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const { files } = e.target;
+    if (!!files && !!files[0]) {
+      setProfileSrc(window.URL.createObjectURL(files[0]));
+
+      setProfileImgFile(files[0]);
+    }
+  };
+
+  useEffect(() => {
+    return () => {
+      if (profileSrc) {
+        window.URL.revokeObjectURL(profileSrc);
+      }
+    };
+  }, [profileSrc]);
 
   const handleSubmitSuccess: SubmitHandler<FormValues> = async ({
     name,
     bio,
-    profileSrc,
   }: FormValues) => {
+    try {
+      if (!!profileImgFile) {
+        await uploadProfileImg(profileImgFile);
+      }
+    } catch (err) {
+      console.log(err);
+    }
     await updateUser({
       ...authUser,
       name,
-      profile: { id: authUser.profile?.id ?? undefined, bio, profileSrc },
+      profile: {
+        id: authUser.profile?.id ?? undefined,
+        bio,
+        profileSrc: profileSrc,
+      },
     });
+
     handleCloseDrawer();
   };
 
@@ -55,22 +101,65 @@ const EditProfile = () => {
     setIsEnable(
       (defaultValues.name !== watchName ||
         defaultValues.bio !== watchBio ||
-        defaultValues.profileSrc !== watchProfileSrc) &&
+        defaultProfileSrc !== profileSrc) &&
         watchName !== ""
     );
 
     setIsEditing(
       defaultValues.name !== watchName ||
         defaultValues.bio !== watchBio ||
-        defaultValues.profileSrc !== watchProfileSrc
+        defaultProfileSrc !== profileSrc
     );
-  }, [watchName, watchBio, watchProfileSrc]);
+  }, [watchName, watchBio, profileSrc]);
+
+  useEffect(() => {
+    console.log(authUser);
+    //  reset data to initial state
+    reset({
+      name: authUser.name,
+      bio: authUser.profile?.bio,
+    });
+    setDefaultValues({
+      name: authUser.name,
+      bio: authUser.profile?.bio,
+    });
+    const storageImg = getProfileImg();
+    setDefaultProfileSrc(storageImg);
+    setProfileSrc(storageImg);
+  }, [isOpenDrawer]);
 
   return (
     <form
       onSubmit={handleSubmit(handleSubmitSuccess)}
       className="flex flex-col gap-y-5"
     >
+      <div className="relative w-[80px] h-auto aspect-square mx-auto">
+        {!!profileSrc && (
+          <Image
+            src={profileSrc}
+            alt={`${authUser.name}のプロフィール画像`}
+            fill={true}
+            style={{ objectFit: "cover" }}
+            className="rounded-full"
+          />
+        )}
+        <button
+          type="button"
+          onClick={() => !!fileInputRef.current && fileInputRef.current.click()}
+          className={`absolute w-full h-full rounded-full hover:opacity-50 transition-all ${
+            !profileSrc ? "bg-gray-500" : "hover:bg-gray-600"
+          }`}
+        >
+          <StyledCameraIcon />
+        </button>
+        <input
+          type="file"
+          accept="image/*"
+          hidden
+          ref={fileInputRef}
+          onChange={handleChangeProfileImg}
+        />
+      </div>
       <FormItem
         label="アカウント名（必須）"
         memo="30文字以内で入力してください。"
