@@ -3,7 +3,7 @@ import Header from "@/components/Header";
 import PostList from "@/components/PostList";
 import Profile from "@/components/Profile";
 import CreatePostButton from "@/components/button/CreatePostButton";
-import DeleteDialog from "@/components/dialog/DeleteDialog";
+import Dialog from "@/components/dialog/Dialog";
 import FullscreenDrawer from "@/components/drawer/FullscreenDrawer";
 import { useUser } from "@/contexts/UserProvider";
 import { mediaQuery, useMediaQuery } from "@/hooks/useMediaQuery";
@@ -40,7 +40,7 @@ const Page = ({ params }: Props) => {
       </div>
       {!isPc && <CreatePostButton />}
       <FullscreenDrawer />
-      <DeleteDialog />
+      <Dialog />
     </>
   );
 };

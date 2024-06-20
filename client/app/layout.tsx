@@ -4,6 +4,7 @@ import "@/styles/globals.css";
 import { UserProvider } from "@/contexts/UserProvider";
 import { PostsProvider } from "@/contexts/PostsProvider";
 import { DrawerProvider } from "@/contexts/DrawerProvider";
+import { DialogProvider } from "@/contexts/DialogProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -23,7 +24,9 @@ export default function RootLayout({
         <UserProvider>
           <PostsProvider>
             <DrawerProvider>
-              <div className="flex flex-col h-screen">{children}</div>
+              <DialogProvider>
+                <div className="flex flex-col h-screen">{children}</div>
+              </DialogProvider>
             </DrawerProvider>
           </PostsProvider>
         </UserProvider>

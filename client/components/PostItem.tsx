@@ -17,6 +17,8 @@ import { useUser } from "@/contexts/UserProvider";
 import { useDrawer } from "@/contexts/DrawerProvider";
 import EditPost from "./drawer/EditPost";
 import EditReviewPost from "./drawer/EditReviewPost";
+import { useDialog } from "@/contexts/DialogProvider";
+import DeletePost from "./dialog/DeletePost";
 
 interface Props {
   post: Post;
@@ -70,7 +72,8 @@ const CategoryLabel = styled.span<CategoryLabelProps>`
 const PostItem = ({ post }: Props) => {
   const { id, comment, tasks, category, numOfGood, author } = post;
   const { authUser } = useUser();
-  const { handleDeletePostDialog, updatePost } = usePosts();
+  const { updatePost } = usePosts();
+  const { handleOpenDialog } = useDialog();
   const { handleOpenDrawer } = useDrawer();
   const createdAt = new Date(post.createdAt);
   const [isClickedGoodButton, setIsClickedGoodButton] =
@@ -168,7 +171,7 @@ const PostItem = ({ post }: Props) => {
               </StyledButton>
               <StyledButton
                 onClick={() => {
-                  handleDeletePostDialog(true, post);
+                  handleOpenDialog({ dialog: <DeletePost />, post });
                 }}
                 className="text-green"
               >

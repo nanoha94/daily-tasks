@@ -1,11 +1,7 @@
 "use client";
+import { useDialog } from "@/contexts/DialogProvider";
 import { colors } from "@/tailwind.config";
 import styled from "styled-components";
-
-interface Props {
-  children: React.ReactNode;
-  isOpen: boolean;
-}
 
 const ContainerOpacity = ($isOpen: boolean) => {
   if ($isOpen) {
@@ -43,7 +39,7 @@ const Panel = styled.div`
   transform: translate(-50%, -50%);
 
   max-width: 80%;
-  width: fit-content;
+  width: 320px;
 
   padding: 40px 20px;
   display: flex;
@@ -54,10 +50,11 @@ const Panel = styled.div`
   border-radius: 8px;
 `;
 
-const Dialog = ({ children, isOpen }: Props) => {
+const Dialog = () => {
+  const { dialog, isOpenDialog } = useDialog();
   return (
-    <Container $isOpen={isOpen}>
-      <Panel>{children}</Panel>
+    <Container $isOpen={isOpenDialog}>
+      <Panel>{dialog}</Panel>
     </Container>
   );
 };

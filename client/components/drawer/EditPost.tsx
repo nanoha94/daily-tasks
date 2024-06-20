@@ -19,7 +19,8 @@ interface FormValues {
 const EditPost = () => {
   const { authUser } = useUser();
   const { createPost, updatePost } = usePosts();
-  const { handleCloseDrawer, editingPost, setIsEditing } = useDrawer();
+  const { isOpenDrawer, handleCloseDrawer, editingPost, setIsEditing } =
+    useDrawer();
   const emptyValues = {
     comment: "",
     tasks: [{ id: undefined, content: "", completed: false }],
@@ -108,7 +109,7 @@ const EditPost = () => {
       setDefaultValues(emptyValues);
       reset(emptyValues);
     }
-  }, [editingPost]);
+  }, [isOpenDrawer, editingPost]);
 
   return (
     <form

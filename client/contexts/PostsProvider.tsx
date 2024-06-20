@@ -9,9 +9,7 @@ interface PostsContextType {
   allPosts: Post[];
   editingPost: Post | undefined;
   editMode: number;
-  isOpenEdit: boolean;
   isOpenDelete: boolean;
-  handleDeletePostDialog: (state: boolean, post?: Post) => void;
   createPost: (post: Omit<Post, "id" | "createdAt">) => Promise<void>;
   updatePost: (post: Omit<Post, "createdAt">) => Promise<void>;
   deletePost: (postId: string) => Promise<void>;
@@ -21,9 +19,7 @@ const PostsContext = createContext<PostsContextType>({
   allPosts: [],
   editingPost: undefined,
   editMode: POST_CATEGORY.TASK,
-  isOpenEdit: false,
   isOpenDelete: false,
-  handleDeletePostDialog: () => {},
   createPost: async () => {},
   updatePost: async () => {},
   deletePost: async () => {},
@@ -45,23 +41,8 @@ export const PostsProvider = ({ children }: Props) => {
   const [editMode, setEditMode] = useState<PostsContextType["editMode"]>(
     POST_CATEGORY.TASK
   );
-  const [isOpenEdit, setIsOpenEdit] =
-    useState<PostsContextType["isOpenEdit"]>(false);
   const [isOpenDelete, setIsOpenDelete] =
     useState<PostsContextType["isOpenDelete"]>(false);
-
-  const handleDeletePostDialog = (state: boolean, post?: Post) => {
-    setIsOpenDelete(state);
-    if (!!post) {
-      setEditingPost(post);
-    } else {
-      setEditingPost(undefined);
-    }
-
-    if (!state) {
-      setEditingPost(post);
-    }
-  };
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -136,9 +117,7 @@ export const PostsProvider = ({ children }: Props) => {
         allPosts,
         editingPost,
         editMode,
-        isOpenEdit,
         isOpenDelete,
-        handleDeletePostDialog,
         createPost,
         updatePost,
         deletePost,

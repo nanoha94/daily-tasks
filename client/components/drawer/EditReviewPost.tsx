@@ -18,7 +18,7 @@ interface FormValues {
 const EditReviewPost = () => {
   const { authUser } = useUser();
   const { createPost, updatePost } = usePosts();
-  const { handleCloseDrawer, editingPost } = useDrawer();
+  const { isOpenDrawer, handleCloseDrawer, editingPost } = useDrawer();
   const { setIsEditing } = useDrawer();
   const emptyValues = {
     comment: "",
@@ -97,7 +97,7 @@ const EditReviewPost = () => {
       setDefaultValues(emptyValues);
       reset(emptyValues);
     }
-  }, [editingPost]);
+  }, [isOpenDrawer, editingPost]);
 
   return (
     <form

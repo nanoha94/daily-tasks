@@ -1,33 +1,32 @@
 "use client";
 import styled from "styled-components";
 import PrimaryButton from "../button/PrimaryButton";
-import Dialog from "./Dialog";
 import { usePosts } from "@/contexts/PostsProvider";
+import { useDialog } from "@/contexts/DialogProvider";
 
 const StyledPrimaryButton = styled(PrimaryButton)`
   flex: 1;
-  width: 140px;
 `;
 
-const DeleteDialog = () => {
-  const { editingPost, isOpenDelete, handleDeletePostDialog, deletePost } =
-    usePosts();
+const DeletePost = () => {
+  const { editingPost, deletePost } = usePosts();
+  const { handleCloseDialog } = useDialog();
 
   const handleDelete = async () => {
     if (!!editingPost) {
       await deletePost(editingPost?.id);
-      handleDeletePostDialog(false);
+      handleCloseDialog();
     }
   };
 
   return (
-    <Dialog isOpen={isOpenDelete}>
+    <>
       <p className="text-xl text-black text-center">投稿を削除しますか？</p>
-      <div className="flex justify-center flex-wrap gap-5 mx-auto">
+      <div className="w-full flex justify-center flex-wrap gap-5 mx-auto">
         <StyledPrimaryButton
           variant="cancel"
           onClick={() => {
-            handleDeletePostDialog(false);
+            handleCloseDialog();
           }}
         >
           キャンセル
@@ -36,8 +35,8 @@ const DeleteDialog = () => {
           削除する
         </StyledPrimaryButton>
       </div>
-    </Dialog>
+    </>
   );
 };
 
-export default DeleteDialog;
+export default DeletePost;

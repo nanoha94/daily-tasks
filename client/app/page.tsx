@@ -2,7 +2,7 @@
 import Header from "@/components/Header";
 import PostList from "@/components/PostList";
 import CreatePostButton from "@/components/button/CreatePostButton";
-import DeleteDialog from "@/components/dialog/DeleteDialog";
+import Dialog from "@/components/dialog/Dialog";
 import EditPost from "@/components/drawer/EditPost";
 import FullscreenDrawer from "@/components/drawer/FullscreenDrawer";
 import { mediaQuery, useMediaQuery } from "@/hooks/useMediaQuery";
@@ -25,7 +25,7 @@ const Page = () => {
       </div>{" "}
       {!isPc && <CreatePostButton />}
       <FullscreenDrawer />
-      <DeleteDialog />
+      <Dialog />
     </>
   );
 };
