@@ -1,15 +1,22 @@
 import { usePosts } from "@/contexts/PostsProvider";
 import PostItem from "./PostItem";
+import { useSearchParams } from "next/navigation";
 
 interface Props {
   userId?: string;
 }
 
 const PostList = ({ userId }: Props) => {
+  const searchParams = useSearchParams();
+  const searchTextParam = searchParams.get("search");
+  const searchCategoryParam = searchParams.get("category");
   const { allPosts } = usePosts();
+  // const filterdPosts = allPosts.map((post) => {
+  //   if(!!searchCategoryParam )
+  // })
 
   return (
-    <ul className="max-w-[560px] flex flex-col gap-y-2 mx-auto md:w-3/5">
+    <ul className="flex flex-col gap-y-2">
       {!!allPosts &&
         allPosts.map((post) =>
           !!userId ? (

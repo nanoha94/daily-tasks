@@ -23,11 +23,11 @@
 }
 
 .item_frame {
-  @apply bg-white shadow rounded py-2 px-3 md:border md:border-gray-600;
+  @apply bg-white shadow rounded py-2 px-3 md:border md:border-gray-600 md:shadow-none;
 }
 
 .item_frame_sm {
-  @apply bg-white shadow rounded py-1 px-2 md:border md:border-gray-600;
+  @apply bg-white shadow rounded py-1 px-2 md:border md:border-gray-600 md:shadow-none;
 }
 
 .item_error {
@@ -48,4 +48,12 @@
 
 .checkbox_label {
   @apply flex-1 text-base text-black;
+}
+
+.radiobutton_container {
+  @apply flex items-center gap-x-2;
+}
+
+.radiobutton {
+  @apply w-[18px] h-[18px] bg-white rounded-full border-2 border-gray-600 accent-green;
 }
