@@ -104,13 +104,21 @@ const EditReviewPost = () => {
       onSubmit={handleSubmit(handleSubmitSuccess)}
       className="flex flex-col gap-y-5"
     >
-      <FormItem label="今日の振り返り" memo="250文字以内で入力してください。">
+      <FormItem label="今日の振り返り">
         <textarea
           rows={4}
           placeholder="今日を振り返ってどうでしたか？"
-          {...register("comment")}
+          {...register("comment", {
+            maxLength: {
+              value: 250,
+              message: "250文字以内で入力してください",
+            },
+          })}
           className={`${styles.item} ${styles.item_frame}`}
         />
+        {errors.comment && (
+          <p className={styles.text_error}>{errors.comment.message}</p>
+        )}
       </FormItem>
       <div className="flex flex-col gap-y-2">
         <div className={styles.container}>

@@ -33,7 +33,7 @@ const EditPost = () => {
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<FormValues>({ defaultValues });
+  } = useForm<FormValues>({ defaultValues, mode: "onChange" });
   const { fields, append } = useFieldArray({
     control,
     name: "tasks",
@@ -116,36 +116,54 @@ const EditPost = () => {
       onSubmit={handleSubmit(handleSubmitSuccess)}
       className="flex flex-col gap-y-5"
     >
-      <FormItem label="今日のひとこと" memo="250文字以内で入力してください。">
+      <FormItem label="今日のひとこと">
         <textarea
           rows={4}
           placeholder="今日の意気込みは？"
-          {...register("comment")}
+          {...register("comment", {
+            maxLength: {
+              value: 250,
+              message: "250文字以内で入力してください",
+            },
+          })}
           className={`${styles.item} ${styles.item_frame}`}
         />
+        {errors.comment && (
+          <p className={styles.text_error}>{errors.comment.message}</p>
+        )}
       </FormItem>
       <div className="flex flex-col gap-y-2">
         <div className={styles.container}>
           <div className={styles.label_container}>
             <p className={styles.label}>今日のタスク（必須）</p>
-            <p className={styles.memo}>各30文字以内で入力してください。</p>
           </div>
           {fields.map((field, idx) => (
-            <div
-              key={field.id}
-              className={`${styles.checkbox_container} ${styles.item_frame_sm}`}
-            >
-              <input
-                type="checkbox"
-                checked={false}
-                {...register(`tasks.${idx}.completed`)}
-                className={styles.checkbox_disabled}
-              />
-              <input
-                placeholder="今日のタスクは？"
-                className={styles.item}
-                {...register(`tasks.${idx}.content`)}
-              />
+            <div key={field.id} className={styles.container}>
+              <div
+                className={`${styles.checkbox_container} ${styles.item_frame_sm}`}
+              >
+                <input
+                  type="checkbox"
+                  checked={false}
+                  {...register(`tasks.${idx}.completed`)}
+                  className={styles.checkbox_disabled}
+                />
+                <input
+                  placeholder="今日のタスクは？"
+                  className={styles.item}
+                  {...register(`tasks.${idx}.content`, {
+                    maxLength: {
+                      value: 30,
+                      message: "30文字以内で入力してください",
+                    },
+                  })}
+                />
+              </div>
+              {errors.tasks?.[idx]?.content && (
+                <p className={styles.text_error}>
+                  {errors.tasks?.[idx]?.content?.message}
+                </p>
+              )}
             </div>
           ))}
         </div>

@@ -12,7 +12,7 @@ const SearchWindow = ({ handleChange }: Props) => {
       onChange={(e) => {
         handleChange(e);
       }}
-      className={`${styles.item} ${styles.item_frame} border-none shadow`}
+      className={`outline-none ${styles.item} ${styles.item_frame}`}
     />
   );
 };
