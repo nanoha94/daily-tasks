@@ -1,5 +1,4 @@
 "use client";
-import styles from "@/styles/form.module.css";
 import Header from "@/components/Header";
 import PostList from "@/components/PostList";
 import CreatePostButton from "@/components/button/CreatePostButton";
@@ -8,7 +7,8 @@ import EditPost from "@/components/drawer/EditPost";
 import FullscreenDrawer from "@/components/drawer/FullscreenDrawer";
 import { mediaQuery, useMediaQuery } from "@/hooks/useMediaQuery";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import SearchWindow from "@/components/filter/SearchWindow";
+import SelectCategory from "@/components/filter/SelectCategory";
 
 const Page = () => {
   const isPc: boolean = useMediaQuery(mediaQuery.md);
@@ -17,15 +17,6 @@ const Page = () => {
   const searchTextParam = searchParams.get("search");
   const searchCategoryParam = searchParams.get("category");
   const queryParams = new URLSearchParams();
-
-  const searchCategoryItems = [
-    { value: "all", label: "すべて" },
-    { value: "review", label: "振り返りのみ" },
-    { value: "task", label: "タスクのみ" },
-  ];
-  const [selectedSearchCategory, setSelectedSearchCategory] = useState<string>(
-    searchCategoryItems[0].value
-  );
 
   const handleChangeSearchText = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.value.length > 0) {
@@ -39,10 +30,9 @@ const Page = () => {
     router.push(`/?${queryParams.toString()}`);
   };
 
-  const handleChangeSeachCategory = (
+  const handleChangeSearchCategory = (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
-    setSelectedSearchCategory(e.target.value);
     if (searchTextParam !== null) {
       queryParams.set("search", searchTextParam);
     }
@@ -66,36 +56,9 @@ const Page = () => {
           )}
           <div className="max-w-[560px] flex flex-col gap-y-2 mx-auto px-3 md:w-3/5 ">
             <form className="flex flex-col gap-y-5 py-3 md:pt-0">
-              <input
-                type="text"
-                placeholder="検索"
-                onChange={(e) => {
-                  handleChangeSearchText(e);
-                }}
-                className={`${styles.item} ${styles.item_frame} border-none shadow`}
-              />
-              <div className="flex flex-wrap gap-x-5">
-                {searchCategoryItems.map((item) => (
-                  <label
-                    key={item.value}
-                    className={(styles.label, styles.radiobutton_container)}
-                  >
-                    <input
-                      type="radio"
-                      name="postCategoryGroup"
-                      value={item.value}
-                      checked={item.value === selectedSearchCategory}
-                      onChange={(e) => {
-                        handleChangeSeachCategory(e);
-                      }}
-                      className={styles.radiobutton}
-                    />
-                    {item.label}
-                  </label>
-                ))}
-              </div>
+              <SearchWindow handleChange={handleChangeSearchText} />
+              <SelectCategory handleChange={handleChangeSearchCategory} />
             </form>
-
             <PostList />
           </div>
         </div>

@@ -43,6 +43,7 @@ const ProfileIcon = ({ className, link, user }: Props) => {
             alt={`${user.name}のプロフィール画像`}
             fill={true}
             style={{ objectFit: "cover" }}
+            sizes="100%"
             className="rounded-full"
           />
         </>

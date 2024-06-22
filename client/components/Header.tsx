@@ -1,4 +1,3 @@
-import { User } from "@/types/user";
 import ProfileIcon from "./ProfileIcon";
 import { useUser } from "@/contexts/UserProvider";
 
