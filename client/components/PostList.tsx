@@ -1,16 +1,17 @@
 import { usePosts } from "@/contexts/PostsProvider";
 import PostItem from "./PostItem";
 import { useSearchParams } from "next/navigation";
-import { POST_CATEGORIES } from "@/costants/posts";
+import { POST_CATEGORIES, POST_ORDERS } from "@/costants/posts";
 import { useEffect, useState } from "react";
 import { Post } from "@/types/post";
 
 interface Props {
   userId?: string;
   filterParam?: { category: number };
+  sortParam?: string;
 }
 
-const PostList = ({ userId, filterParam }: Props) => {
+const PostList = ({ userId, filterParam, sortParam }: Props) => {
   const searchParams = useSearchParams();
   const searchTextParam = searchParams.get("search");
   const searchCategoryParam = searchParams.get("category");
@@ -18,36 +19,39 @@ const PostList = ({ userId, filterParam }: Props) => {
   const [filteredPosts, setFilteredPosts] = useState<Post[]>(allPosts);
 
   useEffect(() => {
-    setFilteredPosts(
-      allPosts.filter((post) => {
-        if (!!searchTextParam) {
-          if (
-            !(
-              post.comment?.includes(searchTextParam) ||
-              post.tasks.some((task) => task.content.includes(searchTextParam))
-            )
-          ) {
-            return false;
-          }
+    const posts = allPosts.filter((post) => {
+      if (!!searchTextParam) {
+        if (
+          !(
+            post.comment?.includes(searchTextParam) ||
+            post.tasks.some((task) => task.content.includes(searchTextParam))
+          )
+        ) {
+          return false;
         }
-        if (!!searchCategoryParam) {
-          const categoryId = POST_CATEGORIES.find(
-            (category) => category.key === searchCategoryParam
-          )?.id;
-          if (post.category !== categoryId) {
-            return false;
-          }
+      }
+      if (!!searchCategoryParam) {
+        const categoryId = POST_CATEGORIES.find(
+          (category) => category.key === searchCategoryParam
+        )?.id;
+        if (post.category !== categoryId) {
+          return false;
         }
-        if (!!filterParam && filterParam.category !== -1) {
-          if (post.category !== filterParam?.category) {
-            return false;
-          }
+      }
+      if (!!filterParam && filterParam.category !== -1) {
+        if (post.category !== filterParam?.category) {
+          return false;
         }
+      }
 
-        return true;
-      })
-    );
-  }, [searchTextParam, searchCategoryParam, filterParam]);
+      return true;
+    });
+
+    if (!!sortParam && sortParam === "sortByOld") {
+      setFilteredPosts(posts.reverse());
+    }
+    setFilteredPosts(posts);
+  }, [searchTextParam, searchCategoryParam, filterParam, sortParam]);
 
   if (filteredPosts.length > 0) {
     return (

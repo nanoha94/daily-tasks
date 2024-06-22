@@ -1,3 +1,4 @@
+import { POST_FILTER_CATEGORIES } from "@/costants/posts";
 import styles from "@/styles/form.module.css";
 import { useState } from "react";
 
@@ -6,35 +7,29 @@ interface Props {
 }
 
 const SelectCategory = ({ handleChange }: Props) => {
-  const searchCategoryItems = [
-    { value: "all", label: "すべて" },
-    { value: "review", label: "振り返りのみ" },
-    { value: "task", label: "タスクのみ" },
-  ];
-
   const [selectedSearchCategory, setSelectedSearchCategory] = useState<string>(
-    searchCategoryItems[0].value
+    POST_FILTER_CATEGORIES[0].value
   );
 
   return (
     <div className="flex flex-wrap gap-x-5">
-      {searchCategoryItems.map((item) => (
+      {POST_FILTER_CATEGORIES.map((category) => (
         <label
-          key={item.value}
+          key={category.value}
           className={(styles.label, styles.radiobutton_container)}
         >
           <input
             type="radio"
             name="postCategoryGroup"
-            value={item.value}
-            checked={item.value === selectedSearchCategory}
+            value={category.value}
+            checked={category.value === selectedSearchCategory}
             onChange={(e) => {
               setSelectedSearchCategory(e.target.value);
               handleChange(e);
             }}
             className={styles.radiobutton}
           />
-          {item.label}
+          {category.label}
         </label>
       ))}
     </div>
