@@ -1,7 +1,7 @@
 import { usePosts } from "@/contexts/PostsProvider";
 import PostItem from "./PostItem";
 import { useSearchParams } from "next/navigation";
-import { POST_CATEGORIES, POST_ORDERS } from "@/costants/posts";
+import { POST_CATEGORIES } from "@/costants/posts";
 import { useEffect, useState } from "react";
 import { Post } from "@/types/post";
 
@@ -51,7 +51,7 @@ const PostList = ({ userId, filterParam, sortParam }: Props) => {
       setFilteredPosts(posts.reverse());
     }
     setFilteredPosts(posts);
-  }, [searchTextParam, searchCategoryParam, filterParam, sortParam]);
+  }, [searchTextParam, searchCategoryParam, filterParam, sortParam, allPosts]);
 
   if (filteredPosts.length > 0) {
     return (
