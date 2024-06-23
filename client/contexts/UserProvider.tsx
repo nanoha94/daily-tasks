@@ -36,36 +36,40 @@ interface Props {
 }
 
 export const UserProvider = ({ children }: Props) => {
+  const [isInit, setIsInit] = useState<boolean>(true);
   const [authUser, setUser] =
     useState<UserContextType["authUser"]>(DefaultUser);
   const pathname = usePathname();
   const router = useRouter();
 
   useEffect(() => {
+    const setData = async (id: string) => {
+      try {
+        const user = await apiClient.get(`/users/${id}`);
+        setUser(user.data);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
     const fetchData = async () => {
       const { data } = await supabase.auth.getUser();
 
       if (!!data.user) {
-        try {
-          const authorizedUser = await apiClient.get(`/users/${data.user.id}`);
-          setUser(authorizedUser.data);
-        } catch (err) {
-          console.error(err);
-        }
+        setData(data.user.id);
       }
     };
     fetchData();
 
     const { data } = supabase.auth.onAuthStateChange((_, session) => {
       if (session?.user) {
-        setUser({
-          ...authUser,
-          id: session.user?.id,
-        });
+        setData(session.user.id);
       } else {
         setUser(DefaultUser);
       }
     });
+
+    setIsInit(false);
 
     return () => {
       data.subscription.unsubscribe();
@@ -81,14 +85,19 @@ export const UserProvider = ({ children }: Props) => {
   }, [authUser.id]);
 
   useEffect(() => {
-    if (!!authUser.id && (pathname === "/register" || pathname === "/login")) {
-      router.push("/");
-    } else if (
-      !authUser.id &&
-      pathname !== "/register" &&
-      pathname !== "/login"
-    ) {
-      router.push("/login");
+    if (!isInit) {
+      if (
+        !!authUser.id &&
+        (pathname === "/register" || pathname === "/login")
+      ) {
+        router.push("/");
+      } else if (
+        !authUser.id &&
+        pathname !== "/register" &&
+        pathname !== "/login"
+      ) {
+        router.push("/login");
+      }
     }
   }, [pathname, authUser.id]);
 

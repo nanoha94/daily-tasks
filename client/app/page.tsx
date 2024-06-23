@@ -57,7 +57,10 @@ const Page = () => {
           <div className="max-w-[560px] flex flex-col gap-y-2 mx-auto px-3 md:w-3/5 ">
             <form className="flex flex-col gap-y-5 py-3 md:pt-0">
               <SearchWindow handleChange={handleChangeSearchText} />
-              <SelectCategory handleChange={handleChangeSearchCategory} />
+              <SelectCategory
+                selected={searchCategoryParam}
+                handleChange={handleChangeSearchCategory}
+              />
             </form>
             <PostList />
           </div>

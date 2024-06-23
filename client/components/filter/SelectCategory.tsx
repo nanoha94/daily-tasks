@@ -3,12 +3,13 @@ import styles from "@/styles/form.module.css";
 import { useState } from "react";
 
 interface Props {
+  selected?: string | null;
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-const SelectCategory = ({ handleChange }: Props) => {
+const SelectCategory = ({ selected, handleChange }: Props) => {
   const [selectedSearchCategory, setSelectedSearchCategory] = useState<string>(
-    POST_FILTER_CATEGORIES[0].value
+    selected ?? POST_FILTER_CATEGORIES[0].value
   );
 
   return (
