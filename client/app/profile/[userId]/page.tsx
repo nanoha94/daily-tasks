@@ -35,6 +35,10 @@ const Page = ({ params }: Props) => {
           POST_CATEGORIES.find((category) => category.key === e.target.value)
             ?.id ?? -1,
       });
+    } else {
+      setFilterParam({
+        category: -1,
+      });
     }
   };
 

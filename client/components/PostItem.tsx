@@ -19,6 +19,7 @@ import EditPost from "./drawer/EditPost";
 import EditReviewPost from "./drawer/EditReviewPost";
 import { useDialog } from "@/contexts/DialogProvider";
 import DeletePost from "./dialog/DeletePost";
+import useDateFormat from "@/hooks/useDateFormat";
 
 interface Props {
   post: Post;
@@ -75,7 +76,6 @@ const PostItem = ({ post }: Props) => {
   const { updatePost } = usePosts();
   const { handleOpenDialog } = useDialog();
   const { handleOpenDrawer } = useDrawer();
-  const createdAt = new Date(post.createdAt);
   const [isClickedGoodButton, setIsClickedGoodButton] =
     useState<boolean>(false);
   const handleClickNumOfGood = async () => {
@@ -89,6 +89,7 @@ const PostItem = ({ post }: Props) => {
     });
     setIsClickedGoodButton((prev) => !prev);
   };
+  const dateFormat = useDateFormat();
 
   return (
     <div className="flex flex-col gap-y-5 rounded bg-white shadow-sm p-3 mx-auto">
@@ -101,19 +102,18 @@ const PostItem = ({ post }: Props) => {
           <p className="text-xs text-black">{author.name}</p>
         </Link>
         <span className="text-xs text-gray-700">
-          {`
-          ${createdAt.toLocaleDateString("en-us", {
-            year: "numeric",
-            month: "short",
-            day: "numeric",
-          })} ${createdAt.toLocaleTimeString("en-US")}`}
+          {dateFormat(post.createdAt)}
         </span>
       </div>
       <div className="flex flex-col gap-y-2">
         <CategoryLabel $category={category}>
           {POST_CATEGORIES.find((cat) => cat.id === category)?.label}
         </CategoryLabel>
-        {comment && <p className="text-base text-black">{post.comment}</p>}
+        {comment && (
+          <p className="text-base text-black whitespace-pre-wrap">
+            {post.comment}
+          </p>
+        )}
         <div className="flex flex-col gap-y-1">
           {tasks.map((task) => (
             <div key={task.id} className={styles.checkbox_container}>
