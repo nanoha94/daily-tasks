@@ -9,7 +9,6 @@ import { mediaQuery, useMediaQuery } from "@/hooks/useMediaQuery";
 import { useRouter, useSearchParams } from "next/navigation";
 import SearchWindow from "@/components/filter/SearchWindow";
 import SelectCategory from "@/components/filter/SelectCategory";
-import { useEffect } from "react";
 
 const Page = () => {
   const isPc: boolean = useMediaQuery(mediaQuery.md);
@@ -69,7 +68,7 @@ const Page = () => {
             <PostList />
           </div>
         </div>
-      </div>{" "}
+      </div>
       {!isPc && <CreatePostButton />}
       <FullscreenDrawer />
       <Dialog />

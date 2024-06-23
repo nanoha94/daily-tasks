@@ -4,6 +4,7 @@ import Link from "next/link";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useUser } from "@/contexts/UserProvider";
 import FormItem from "@/components/FormItem";
+import { useRouter } from "next/navigation";
 
 interface FormValues {
   name: string;
@@ -26,6 +27,7 @@ const PageRegister = () => {
     reset,
     formState: { errors },
   } = useForm<FormValues>({ defaultValues });
+  const router = useRouter();
 
   const handleSubmitSuccess: SubmitHandler<FormValues> = async ({
     name,
@@ -39,6 +41,7 @@ const PageRegister = () => {
     try {
       await signUp(email, password, name);
       reset(defaultValues);
+      router.push("/login");
     } catch (err) {
       console.error(err);
     }
