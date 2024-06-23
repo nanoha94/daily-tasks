@@ -5,6 +5,7 @@ import { User } from "@/types/user";
 import ArrowButton from "./button/ArrowButton";
 import { useDrawer } from "@/contexts/DrawerProvider";
 import EditProfile from "./drawer/EditProfile";
+import useHashtag from "@/hooks/useHashtag";
 
 interface Props {
   user: User;
@@ -15,8 +16,10 @@ const StyledProfileIcon = styled(ProfileIcon)`
 `;
 
 const Profile = ({ user }: Props) => {
-  const { authUser, signOut, getProfileImg } = useUser();
+  const { authUser, signOut } = useUser();
   const { handleOpenDrawer } = useDrawer();
+
+  const contentWithHashtag = useHashtag();
 
   const logout = async () => {
     try {
@@ -45,7 +48,11 @@ const Profile = ({ user }: Props) => {
             </div>
           )}
         </div>
-        {!!user.profile?.bio && <p className="text-base">{user.profile.bio}</p>}
+        {!!user.profile?.bio && (
+          <p className="text-base whitespace-pre-wrap">
+            {contentWithHashtag(user.profile.bio)}
+          </p>
+        )}
       </div>
     </div>
   );

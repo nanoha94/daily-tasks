@@ -20,6 +20,7 @@ import EditReviewPost from "./drawer/EditReviewPost";
 import { useDialog } from "@/contexts/DialogProvider";
 import DeletePost from "./dialog/DeletePost";
 import useDateFormat from "@/hooks/useDateFormat";
+import useHashtag from "@/hooks/useHashtag";
 
 interface Props {
   post: Post;
@@ -91,29 +92,7 @@ const PostItem = ({ post }: Props) => {
     setIsClickedGoodButton((prev) => !prev);
   };
   const dateFormat = useDateFormat();
-
-  const contentWithHashTag = (content: string) => {
-    const hashtagRegex = /#(\S+)/g;
-    const parts = content.split(hashtagRegex);
-
-    const result = [];
-    for (let i = 0; i < parts.length; i++) {
-      if (i % 2 === 0) {
-        result.push(parts[i]);
-      } else {
-        result.push(
-          <Link
-            key={i}
-            href={`/?search=${parts[i]}`}
-            className="text-green  hover:underline"
-          >
-            #{parts[i]}
-          </Link>
-        );
-      }
-    }
-    return result;
-  };
+  const contentWithHashtag = useHashtag();
 
   return (
     <div className="flex flex-col gap-y-5 rounded bg-white shadow-sm p-3 mx-auto">
@@ -135,7 +114,7 @@ const PostItem = ({ post }: Props) => {
         </CategoryLabel>
         {comment && (
           <p className="text-base text-black whitespace-pre-wrap">
-            {contentWithHashTag(comment)}
+            {contentWithHashtag(comment)}
           </p>
         )}
         <div className="flex flex-col gap-y-1">
