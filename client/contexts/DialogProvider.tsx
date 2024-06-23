@@ -7,6 +7,7 @@ interface DialogContextType {
   isOpenDialog: boolean;
   handleOpenDialog: ({ dialog, post }: OpenProps) => void;
   handleCloseDialog: () => void;
+  editingPost: Post | undefined;
 }
 
 const DialogContext = createContext<DialogContextType>({
@@ -14,6 +15,7 @@ const DialogContext = createContext<DialogContextType>({
   isOpenDialog: false,
   handleOpenDialog: () => {},
   handleCloseDialog: () => {},
+  editingPost: undefined,
 });
 
 export const useDialog = () => {
@@ -33,14 +35,21 @@ export const DialogProvider = ({ children }: Props) => {
   const [dialog, setDialog] = useState<DialogContextType["dialog"]>(<></>);
   const [isOpenDialog, setIsOpenDialog] =
     useState<DialogContextType["isOpenDialog"]>(false);
+  const [editingPost, setEditingPost] =
+    useState<DialogContextType["editingPost"]>(undefined);
 
   const handleOpenDialog = ({ dialog, post }: OpenProps) => {
     setIsOpenDialog(true);
     setDialog(dialog);
+    if (!!post) {
+      setEditingPost(post);
+    }
+    console.log(editingPost);
   };
 
   const handleCloseDialog = () => {
     setIsOpenDialog(false);
+    setEditingPost(undefined);
   };
 
   return (
@@ -50,6 +59,7 @@ export const DialogProvider = ({ children }: Props) => {
         isOpenDialog,
         handleOpenDialog,
         handleCloseDialog,
+        editingPost,
       }}
     >
       {children}

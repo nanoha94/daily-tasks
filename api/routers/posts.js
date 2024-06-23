@@ -24,7 +24,14 @@ router.post("/", async (req, res) => {
   try {
     const newPost = await prisma.posts.create({
       data,
-      include: { tasks: true, author: true },
+      include: {
+        tasks: true,
+        author: {
+          include: {
+            profile: true,
+          },
+        },
+      },
     });
     res.status(201).json({ message: "投稿が作成されました", post: newPost });
   } catch (err) {
@@ -91,7 +98,14 @@ router.put("/:postId", async (req, res) => {
     const updatedPost = await prisma.posts.update({
       data,
       where: { id: postId },
-      include: { tasks: true, author: true },
+      include: {
+        tasks: true,
+        author: {
+          include: {
+            profile: true,
+          },
+        },
+      },
     });
     res
       .status(200)

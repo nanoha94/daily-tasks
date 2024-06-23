@@ -7,7 +7,6 @@ import { useUser } from "./UserProvider";
 
 interface PostsContextType {
   allPosts: Post[];
-  editingPost: Post | undefined;
   editMode: number;
   isOpenDelete: boolean;
   createPost: (post: Omit<Post, "id" | "createdAt">) => Promise<void>;
@@ -17,7 +16,6 @@ interface PostsContextType {
 
 const PostsContext = createContext<PostsContextType>({
   allPosts: [],
-  editingPost: undefined,
   editMode: POST_CATEGORY.TASK,
   isOpenDelete: false,
   createPost: async () => {},
@@ -36,8 +34,6 @@ interface Props {
 export const PostsProvider = ({ children }: Props) => {
   const { authUser } = useUser();
   const [allPosts, setAllPosts] = useState<PostsContextType["allPosts"]>([]);
-  const [editingPost, setEditingPost] =
-    useState<PostsContextType["editingPost"]>(undefined);
   const [editMode, setEditMode] = useState<PostsContextType["editMode"]>(
     POST_CATEGORY.TASK
   );
@@ -115,7 +111,6 @@ export const PostsProvider = ({ children }: Props) => {
     <PostsContext.Provider
       value={{
         allPosts,
-        editingPost,
         editMode,
         isOpenDelete,
         createPost,

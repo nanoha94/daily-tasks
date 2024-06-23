@@ -9,12 +9,12 @@ const StyledPrimaryButton = styled(PrimaryButton)`
 `;
 
 const DeletePost = () => {
-  const { editingPost, deletePost } = usePosts();
-  const { handleCloseDialog } = useDialog();
+  const { deletePost } = usePosts();
+  const { handleCloseDialog, editingPost } = useDialog();
 
-  const handleDelete = async () => {
+  const handleDelete = () => {
     if (!!editingPost) {
-      await deletePost(editingPost?.id);
+      deletePost(editingPost?.id);
       handleCloseDialog();
     }
   };
