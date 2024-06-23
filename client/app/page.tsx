@@ -9,6 +9,7 @@ import { mediaQuery, useMediaQuery } from "@/hooks/useMediaQuery";
 import { useRouter, useSearchParams } from "next/navigation";
 import SearchWindow from "@/components/filter/SearchWindow";
 import SelectCategory from "@/components/filter/SelectCategory";
+import { useEffect } from "react";
 
 const Page = () => {
   const isPc: boolean = useMediaQuery(mediaQuery.md);
@@ -56,7 +57,10 @@ const Page = () => {
           )}
           <div className="max-w-[560px] flex flex-col gap-y-2 mx-auto px-3 md:w-3/5 ">
             <form className="flex flex-col gap-y-5 py-3 md:pt-0">
-              <SearchWindow handleChange={handleChangeSearchText} />
+              <SearchWindow
+                handleChange={handleChangeSearchText}
+                value={searchTextParam ?? ""}
+              />
               <SelectCategory
                 selected={searchCategoryParam}
                 handleChange={handleChangeSearchCategory}

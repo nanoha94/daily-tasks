@@ -6,7 +6,7 @@ import styled from "styled-components";
 import { colors } from "@/tailwind.config";
 import GoodButton from "./button/GoodButton";
 import styles from "@/styles/form.module.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { usePosts } from "@/contexts/PostsProvider";
 import {
   ClipboardDocumentCheckIcon,
@@ -78,6 +78,7 @@ const PostItem = ({ post }: Props) => {
   const { handleOpenDrawer } = useDrawer();
   const [isClickedGoodButton, setIsClickedGoodButton] =
     useState<boolean>(false);
+
   const handleClickNumOfGood = async () => {
     await updatePost({
       id,
@@ -90,6 +91,29 @@ const PostItem = ({ post }: Props) => {
     setIsClickedGoodButton((prev) => !prev);
   };
   const dateFormat = useDateFormat();
+
+  const contentWithHashTag = (content: string) => {
+    const hashtagRegex = /#(\S+)/g;
+    const parts = content.split(hashtagRegex);
+
+    const result = [];
+    for (let i = 0; i < parts.length; i++) {
+      if (i % 2 === 0) {
+        result.push(parts[i]);
+      } else {
+        result.push(
+          <Link
+            key={i}
+            href={`/?search=${parts[i]}`}
+            className="text-green  hover:underline"
+          >
+            #{parts[i]}
+          </Link>
+        );
+      }
+    }
+    return result;
+  };
 
   return (
     <div className="flex flex-col gap-y-5 rounded bg-white shadow-sm p-3 mx-auto">
@@ -111,7 +135,7 @@ const PostItem = ({ post }: Props) => {
         </CategoryLabel>
         {comment && (
           <p className="text-base text-black whitespace-pre-wrap">
-            {post.comment}
+            {contentWithHashTag(comment)}
           </p>
         )}
         <div className="flex flex-col gap-y-1">
