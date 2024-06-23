@@ -44,7 +44,6 @@ export const DialogProvider = ({ children }: Props) => {
     if (!!post) {
       setEditingPost(post);
     }
-    console.log(editingPost);
   };
 
   const handleCloseDialog = () => {
