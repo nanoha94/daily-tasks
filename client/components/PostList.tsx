@@ -2,7 +2,7 @@ import { usePosts } from "@/contexts/PostsProvider";
 import PostItem from "./PostItem";
 import { useSearchParams } from "next/navigation";
 import { POST_CATEGORIES } from "@/costants/posts";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { Post } from "@/types/post";
 
 interface Props {
@@ -11,7 +11,7 @@ interface Props {
   sortParam?: string;
 }
 
-const PostList = ({ userId, filterParam, sortParam }: Props) => {
+const Inner = ({ userId, filterParam, sortParam }: Props) => {
   const searchParams = useSearchParams();
   const searchTextParam = searchParams.get("search");
   const searchCategoryParam = searchParams.get("category");
@@ -76,6 +76,14 @@ const PostList = ({ userId, filterParam, sortParam }: Props) => {
   } else {
     return <p>該当する投稿は見つかりません</p>;
   }
+};
+
+const PostList = ({ userId, filterParam, sortParam }: Props) => {
+  return (
+    <Suspense>
+      <Inner userId={userId} filterParam={filterParam} sortParam={sortParam} />
+    </Suspense>
+  );
 };
 
 export default PostList;

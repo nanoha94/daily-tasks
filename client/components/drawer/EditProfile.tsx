@@ -109,7 +109,14 @@ const EditProfile = () => {
         defaultValues.bio !== watchBio ||
         defaultProfileSrc !== profileSrc
     );
-  }, [watchName, watchBio, profileSrc]);
+  }, [
+    defaultValues,
+    defaultProfileSrc,
+    setIsEditing,
+    watchName,
+    watchBio,
+    profileSrc,
+  ]);
 
   useEffect(() => {
     //  reset data to initial state
@@ -125,7 +132,15 @@ const EditProfile = () => {
     setDefaultProfileSrc(storageImg);
     setProfileSrc(storageImg);
     setProfileImgFileName(authUser.profile?.profileSrc ?? "");
-  }, [isOpenDrawer, authUser]);
+  }, [
+    getProfileImg,
+    setDefaultProfileSrc,
+    setProfileSrc,
+    setProfileImgFileName,
+    isOpenDrawer,
+    authUser,
+    reset,
+  ]);
 
   return (
     <form

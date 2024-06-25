@@ -6,43 +6,11 @@ import Dialog from "@/components/dialog/Dialog";
 import EditPost from "@/components/drawer/EditPost";
 import FullscreenDrawer from "@/components/drawer/FullscreenDrawer";
 import { mediaQuery, useMediaQuery } from "@/hooks/useMediaQuery";
-import { useRouter, useSearchParams } from "next/navigation";
-import SearchWindow from "@/components/filter/SearchWindow";
-import SelectCategory from "@/components/filter/SelectCategory";
+import FilterForm from "./_components/FilterForm";
+import { Suspense } from "react";
 
 const Page = () => {
   const isPc: boolean = useMediaQuery(mediaQuery.md);
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const searchTextParam = searchParams.get("search");
-  const searchCategoryParam = searchParams.get("category");
-  const queryParams = new URLSearchParams();
-
-  const handleChangeSearchText = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.value.length > 0) {
-      queryParams.set("search", e.target.value);
-    }
-
-    if (searchCategoryParam !== null) {
-      queryParams.set("category", searchCategoryParam);
-    }
-
-    router.push(`/?${queryParams.toString()}`);
-  };
-
-  const handleChangeSearchCategory = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    if (searchTextParam !== null) {
-      queryParams.set("search", searchTextParam);
-    }
-
-    if (e.target.value !== "all") {
-      queryParams.set("category", e.target.value);
-    }
-
-    router.push(`/?${queryParams.toString()}`);
-  };
 
   return (
     <>
@@ -55,16 +23,9 @@ const Page = () => {
             </div>
           )}
           <div className="max-w-[560px] flex flex-col gap-y-2 mx-auto px-3 md:w-3/5 ">
-            <form className="flex flex-col gap-y-5 py-3 md:pt-0">
-              <SearchWindow
-                handleChange={handleChangeSearchText}
-                value={searchTextParam ?? ""}
-              />
-              <SelectCategory
-                selected={searchCategoryParam}
-                handleChange={handleChangeSearchCategory}
-              />
-            </form>
+            <Suspense>
+              <FilterForm />
+            </Suspense>
             <PostList />
           </div>
         </div>

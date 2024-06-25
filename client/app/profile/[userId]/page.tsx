@@ -20,7 +20,7 @@ interface Props {
 const Page = ({ params }: Props) => {
   const isPc: boolean = useMediaQuery(mediaQuery.md);
   const [user, setUser] = useState<User>(DefaultUser);
-  const { authUser, getUser } = useUser();
+  const { getUser } = useUser();
   const [filterParam, setFilterParam] = useState<{ category: number }>({
     category: -1,
   });
@@ -54,7 +54,7 @@ const Page = ({ params }: Props) => {
       }
     };
     fetchData();
-  }, [authUser]);
+  }, [params.userId, getUser]);
 
   return (
     <>

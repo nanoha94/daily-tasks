@@ -83,7 +83,13 @@ const EditReviewPost = () => {
       defaultValues.comment !== watchComment ||
         JSON.stringify(defaultValues.tasks) !== JSON.stringify(watchTasks)
     );
-  }, [watchComment, watchTasks.map((task) => task.completed)]);
+  }, [
+    setIsEnable,
+    setIsEditing,
+    defaultValues,
+    watchComment,
+    watchTasks.map((task) => task.completed),
+  ]);
 
   useEffect(() => {
     if (!!editingPost) {
@@ -97,7 +103,14 @@ const EditReviewPost = () => {
       setDefaultValues(emptyValues);
       reset(emptyValues);
     }
-  }, [isOpenDrawer, editingPost]);
+  }, [
+    setDefaultValues,
+    emptyValues,
+    isCreate,
+    isOpenDrawer,
+    editingPost,
+    reset,
+  ]);
 
   return (
     <form
