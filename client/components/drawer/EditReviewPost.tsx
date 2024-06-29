@@ -103,14 +103,7 @@ const EditReviewPost = () => {
       setDefaultValues(emptyValues);
       reset(emptyValues);
     }
-  }, [
-    setDefaultValues,
-    emptyValues,
-    isCreate,
-    isOpenDrawer,
-    editingPost,
-    reset,
-  ]);
+  }, [setDefaultValues, isCreate, isOpenDrawer, editingPost, reset]);
 
   return (
     <form
