@@ -48,6 +48,7 @@ export const DrawerProvider = ({ children }: Props) => {
     setIsOpenDrawer(true);
     setDrawer(drawer);
     if (!!post) {
+      // REVIEW: 上記の2つのメソッドもこちらのif文に入れてしまう方が良いと思います。
       setEditingPost(post);
     }
   };

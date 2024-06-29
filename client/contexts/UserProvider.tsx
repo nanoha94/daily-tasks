@@ -43,6 +43,10 @@ export const UserProvider = ({ children }: Props) => {
   const router = useRouter();
 
   useEffect(() => {
+
+    // REVIEW: setData という命名が抽象的です。
+    // また getData とソースが同じ箇所があるのが違和感がございます。
+    // 下のREVIEWで説明いたします。
     const setData = async (id: string) => {
       try {
         const user = await apiClient.get(`/users/${id}`);
@@ -52,6 +56,7 @@ export const UserProvider = ({ children }: Props) => {
       }
     };
 
+    // REVIEW: fetchData という命名が抽象的です。例) fetchSupabaseUser。
     const fetchData = async () => {
       const { data } = await supabase.auth.getUser();
 
@@ -59,10 +64,20 @@ export const UserProvider = ({ children }: Props) => {
         setData(data.user.id);
       }
     };
+
+    // REVIEW: fetchData は「取得」、setDataは「保存(格納)」という意味のため
+    // fetchData の中で、setData をするのは少し違和感があります。
+    // 下記のような流れでuserを格納するようなメソッドを作成すると可読性が上がります。
+    // const supabaseUser = fetchData();
+    // const user = getUser(supabaseUser);
+    // setUser(user);
     fetchData();
 
     const { data } = supabase.auth.onAuthStateChange((_, session) => {
       if (session?.user) {
+        // REVIEW: 上記の修正を行うと下記のような記述になると思われます。
+        // const user = getUser(session.user.id)
+        // setUser(user);
         setData(session.user.id);
       } else {
         setUser(DefaultUser);
@@ -79,6 +94,7 @@ export const UserProvider = ({ children }: Props) => {
   useEffect(() => {
     const fetchUser = async () => {
       const myUser = getUser(authUser.id);
+      // REVIEW: setUser(myUser) ではダメでしょうか？
       setUser({ ...authUser, ...myUser });
     };
     fetchUser();
@@ -98,9 +114,22 @@ export const UserProvider = ({ children }: Props) => {
       ) {
         router.push("/login");
       }
+
+      // REVIEW: 上記少し理解しずらかったので下記にリファクタリングしたものを記述しました。（動作未確認）
+      // 少し複雑なロジックの場合はコメントも記述すると良いです。
+
+      // // 認証系のパスのリダイレクトについて
+      // if (pathname === "/register" || pathname === "/login") {
+      //   if (!!authUser.id) router.push("/"); // ログイン済であればホーム画面へ
+      // } else {
+      //   if (!authUser.id) router.push("/login"); // 未ログインであればログイン画面へ
+      // }
     }
   }, [pathname, authUser.id]);
 
+  // REVIEW: getUser という命名ですと、
+  // User を SupabaseAuth から取得するのか、DBから取得するのか、authUser変数をそのまま返すのか不明なため、
+  // getUserByDatabase のような関数名が理想です。
   const getUser = async (id: User["id"]) => {
     try {
       const user = await apiClient.get(`/users/${id}`);

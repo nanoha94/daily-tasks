@@ -7,8 +7,8 @@ import { useUser } from "./UserProvider";
 
 interface PostsContextType {
   allPosts: Post[];
-  editMode: number;
-  isOpenDelete: boolean;
+  editMode: number; // REVIEW: コンポーネントで使用されていない？
+  isOpenDelete: boolean; // REVIEW: コンポーネントで使用されていない？
   createPost: (post: Omit<Post, "id" | "createdAt">) => Promise<void>;
   updatePost: (post: Omit<Post, "createdAt">) => Promise<void>;
   deletePost: (postId: string) => Promise<void>;
@@ -60,7 +60,9 @@ export const PostsProvider = ({ children }: Props) => {
         post.author.id === authUser.id ? { ...post, author: authUser } : post
       )
     );
-  }, [authUser]);
+  }, [authUser]); 
+  // REVIEW: ユーザプロフィール更新の際にも、こちらのuseEffectが流れてしまうため
+  // 依存配列は authUser.id の方が良いと思います。（動作未確認）
 
   const createPost = async (post: Omit<Post, "id" | "createdAt">) => {
     const { comment, tasks, category, numOfGood, author } = post;
