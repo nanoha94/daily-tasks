@@ -174,9 +174,13 @@ export const UserProvider = ({ children }: Props) => {
   };
 
   const signOut = async () => {
-    const { error } = await supabase.auth.signOut();
-    if (error) {
-      throw error;
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) {
+        throw error;
+      }
+    } catch (err) {
+      console.error(err);
     }
   };
 

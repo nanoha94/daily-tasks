@@ -21,14 +21,6 @@ const Profile = ({ user }: Props) => {
 
   const contentWithHashtag = useHashtag();
 
-  const logout = async () => {
-    try {
-      await signOut();
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
   return (
     <div className=" bg-white shadow-sm md:min-w-[300px] md:w-2/5 md:rounded">
       <div className="max-w-[560px] w-full flex flex-col gap-y-5 p-3 mb-5 mx-auto md:py-5 md:px-4">
@@ -39,7 +31,7 @@ const Profile = ({ user }: Props) => {
           </div>
           {user.id === authUser.id && (
             <div className="flex flex-col gap-y-2">
-              <ArrowButton onClick={logout}>ログアウト</ArrowButton>
+              <ArrowButton onClick={signOut}>ログアウト</ArrowButton>
               <ArrowButton
                 onClick={() => handleOpenDrawer({ drawer: <EditProfile /> })}
               >
