@@ -61,7 +61,6 @@ export const UserProvider = ({ children }: Props) => {
       if (!!data.user) {
         const user = await getUser(data.user.id);
         if (!!user) {
-          console.log(user);
           setUser(user);
         } else {
           setUser(DefaultUser);
@@ -77,7 +76,6 @@ export const UserProvider = ({ children }: Props) => {
       if (!!session?.user) {
         const user = await getUser(session.user.id);
         if (!!user) {
-          console.log(user);
           setUser(user);
         } else {
           setUser(DefaultUser);

@@ -184,17 +184,32 @@ const EditProfile = () => {
           type="text"
           {...register("name", {
             required: "必須項目です",
+            maxLength: {
+              value: 30,
+              message: "30文字以内で入力してください",
+            },
           })}
           className={`${styles.item} ${styles.item_frame}`}
         />
+        {errors.name && (
+          <p className={styles.text_error}>{errors.name.message}</p>
+        )}
       </FormItem>
       <FormItem label="自己紹介" memo="250文字以内で入力してください。">
         <textarea
           rows={4}
           placeholder="あなたはどんな人？"
-          {...register("bio")}
+          {...register("bio", {
+            maxLength: {
+              value: 250,
+              message: "250文字以内で入力してください",
+            },
+          })}
           className={`${styles.item} ${styles.item_frame}`}
         />
+        {errors.bio && (
+          <p className={styles.text_error}>{errors.bio.message}</p>
+        )}
       </FormItem>
       <div className="ml-auto mr-0">
         <PrimaryButton type="submit" disabled={!isEnable}>
