@@ -6,6 +6,10 @@
   @apply text-black text-2xl font-bold text-center leading-loose py-5;
 }
 
+.text_content {
+  @apply max-w-3xl flex flex-col gap-y-4 mx-auto p-5;
+}
+
 .content {
   @apply max-w-lg flex flex-col gap-y-8 mx-auto p-5;
 }

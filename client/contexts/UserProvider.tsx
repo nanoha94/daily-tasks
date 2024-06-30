@@ -109,12 +109,15 @@ export const UserProvider = ({ children }: Props) => {
     if (!isInit) {
       if (
         !!authUser.id &&
-        (pathname === "/register" || pathname === "/login")
+        (pathname === "/register" ||
+          pathname === "/register-success" ||
+          pathname === "/login")
       ) {
         router.push("/");
       } else if (
         !authUser.id &&
         pathname !== "/register" &&
+        pathname !== "/register-success" &&
         pathname !== "/login"
       ) {
         router.push("/login");

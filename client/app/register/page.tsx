@@ -42,7 +42,7 @@ const PageRegister = () => {
     // return
     await signUp(email, password, name);
     reset(defaultValues);
-    router.push("/login");
+    router.push("/register-success");
   };
 
   return (
