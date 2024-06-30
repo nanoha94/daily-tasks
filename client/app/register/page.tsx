@@ -28,8 +28,8 @@ const PageRegister = () => {
     handleSubmit,
     reset,
     watch,
-    setError,
-    clearErrors,
+    setError, // REVIEW: 使用されていない（下記レビューで一応使用します。）
+    clearErrors, // REVIEW: 使用されていない
     formState: { errors },
   } = useForm<FormValues>({ defaultValues });
   const router = useRouter();
@@ -46,7 +46,17 @@ const PageRegister = () => {
   }: FormValues) => {
     if (password !== passwordConfirm) {
       throw new Error("パスワードが一致しません");
+
+      // REVIEW: useForm を使用されているので下記の書き方にしましょう。
+      // setError('passwordConfirm', { message: 'パスワードが一致しません'})
+      // return
     }
+
+    // REVIEW: Database に問い合わせて、メールアドレスがすでに存在していないかをチェックしましょう。
+    // チェックしたのち下記の方法でエラーを表示させましょう。
+    // setError('email', { email: 'このメールアドレスは使用されています。'})
+    // return
+
     try {
       await signUp(email, password, name);
       reset(defaultValues);
@@ -56,6 +66,8 @@ const PageRegister = () => {
     }
   };
 
+  // REVIEW: パスワード確認に関して、下記実装不要になります。
+  // 詳しくは下のレビューでご確認ください。
   useEffect(() => {
     if (isSubmitted) {
       if (watchPassword !== wacthPasswordConfirm) {
@@ -152,6 +164,8 @@ const PageRegister = () => {
                     value: 6,
                     message: "6文字以上英数字で入力してください",
                   },
+                  // REVIEW: 下記の記述で、useEffect と useState を使用したパスワード一致の実装が不要になります。（コード削減）
+                  // validate: (value) => value === watch('password') || 'パスワードが一致しません'
                 })}
                 className={`${styles.item} ${
                   (!!errors.passwordConfirm || !!passwordConfirmError) &&
