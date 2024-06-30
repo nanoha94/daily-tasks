@@ -50,6 +50,7 @@ export const DrawerProvider = ({ children }: Props) => {
     if (!!post) {
       // REVIEW: 上記の2つのメソッドもこちらのif文に入れてしまう方が良いと思います。
       setEditingPost(post);
+      // Profile / CreatePostButtonコンポーネントから呼び出す時は、post情報不要でドロワーを表示したいので、このままで良いはずです（阿部）
     }
   };
 
