@@ -4,6 +4,9 @@ import { DefaultUser, User } from "@/types/user";
 import { supabase } from "@/utils/supabase";
 import { usePathname, useRouter } from "next/navigation";
 import { createContext, useContext, useEffect, useState } from "react";
+import { useSnackbar } from "./SnackbarProvider";
+import { SNACKBAR_TYPE } from "@/costants/snackbar";
+import { AuthError } from "@supabase/supabase-js";
 
 interface UserContextType {
   authUser: User;
@@ -41,6 +44,7 @@ export const UserProvider = ({ children }: Props) => {
     useState<UserContextType["authUser"]>(DefaultUser);
   const pathname = usePathname();
   const router = useRouter();
+  const { handleOpenSnackbar } = useSnackbar();
 
   useEffect(() => {
     // FIXED: setData という命名が抽象的です。
@@ -182,14 +186,22 @@ export const UserProvider = ({ children }: Props) => {
       if (error) {
         throw error;
       }
-    } catch (err) {
-      console.error(err);
+    } catch (err: AuthError | unknown) {
+      if (err instanceof AuthError) {
+        console.error("エラーが発生しました\n", err.message);
+        handleOpenSnackbar({
+          type: SNACKBAR_TYPE.ERROR,
+          message: err.message,
+        });
+      } else {
+        console.error("予期しないエラーが発生しました\n", err);
+      }
     }
   };
 
   const signUp = async (email: string, password: string, name: string) => {
     try {
-      const { error } = await supabase.auth.signUp({
+      const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
@@ -201,8 +213,16 @@ export const UserProvider = ({ children }: Props) => {
       if (error) {
         throw error;
       }
-    } catch (err) {
-      console.error(err);
+    } catch (err: AuthError | unknown) {
+      if (err instanceof AuthError) {
+        console.error("エラーが発生しました\n", err.message);
+        handleOpenSnackbar({
+          type: SNACKBAR_TYPE.ERROR,
+          message: err.message,
+        });
+      } else {
+        console.error("予期しないエラーが発生しました\n", err);
+      }
     }
   };
 

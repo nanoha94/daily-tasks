@@ -36,6 +36,10 @@ const PageRegister = () => {
     email,
     password,
   }: FormValues) => {
+    // REVIEW: Database に問い合わせて、メールアドレスがすでに存在していないかをチェックしましょう。
+    // チェックしたのち下記の方法でエラーを表示させましょう。
+    // setError('email', { email: 'このメールアドレスは使用されています。'})
+    // return
     await signUp(email, password, name);
     reset(defaultValues);
     router.push("/login");

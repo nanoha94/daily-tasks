@@ -3,6 +3,7 @@ import Header from "@/components/Header";
 import PostList from "@/components/PostList";
 import Profile from "@/components/Profile";
 import SelectForSort from "@/components/SelectForSort";
+import Snackbar from "@/components/Snackbar";
 import CreatePostButton from "@/components/button/CreatePostButton";
 import Dialog from "@/components/dialog/Dialog";
 import FullscreenDrawer from "@/components/drawer/FullscreenDrawer";
@@ -78,6 +79,7 @@ const Page = ({ params }: Props) => {
       {!isPc && <CreatePostButton />}
       <FullscreenDrawer />
       <Dialog />
+      <Snackbar />
     </>
   );
 };
