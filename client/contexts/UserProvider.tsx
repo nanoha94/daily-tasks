@@ -190,17 +190,21 @@ export const UserProvider = ({ children }: Props) => {
   };
 
   const signUp = async (email: string, password: string, name: string) => {
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: {
-          name,
+    try {
+      const { error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            name,
+          },
         },
-      },
-    });
-    if (error) {
-      throw error;
+      });
+      if (error) {
+        throw error;
+      }
+    } catch (err) {
+      console.error(err);
     }
   };
 
