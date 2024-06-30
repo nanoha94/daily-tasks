@@ -7,7 +7,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 
 interface UserContextType {
   authUser: User;
-  getUser: (id: User["id"]) => Promise<User | undefined>;
+  getUserByDatabase: (id: User["id"]) => Promise<User | undefined>;
   updateUser: (user: User) => Promise<void>;
   getProfileImg: (user: User) => string;
   uploadProfileImg: (file: File, fileName: string) => Promise<void>;
@@ -18,7 +18,7 @@ interface UserContextType {
 
 const UserContext = createContext<UserContextType>({
   authUser: DefaultUser,
-  getUser: async () => undefined,
+  getUserByDatabase: async () => undefined,
   updateUser: async () => {},
   getProfileImg: () => "",
   uploadProfileImg: async () => {},
@@ -59,7 +59,7 @@ export const UserProvider = ({ children }: Props) => {
     const fetchAuthUser = async () => {
       const { data } = await supabase.auth.getUser();
       if (!!data.user) {
-        const user = await getUser(data.user.id);
+        const user = await getUserByDatabase(data.user.id);
         if (!!user) {
           setUser(user);
         } else {
@@ -74,7 +74,7 @@ export const UserProvider = ({ children }: Props) => {
 
     const { data } = supabase.auth.onAuthStateChange(async (_, session) => {
       if (!!session?.user) {
-        const user = await getUser(session.user.id);
+        const user = await getUserByDatabase(session.user.id);
         if (!!user) {
           setUser(user);
         } else {
@@ -118,10 +118,10 @@ export const UserProvider = ({ children }: Props) => {
     }
   }, [isInit, router, pathname, authUser.id]);
 
-  // REVIEW: getUser という命名ですと、
+  // FIXED: getUser という命名ですと、
   // User を SupabaseAuth から取得するのか、DBから取得するのか、authUser変数をそのまま返すのか不明なため、
   // getUserByDatabase のような関数名が理想です。
-  const getUser = async (id: User["id"]) => {
+  const getUserByDatabase = async (id: User["id"]) => {
     try {
       if (!!id) {
         const user = await apiClient.get(`/users/${id}`);
@@ -221,7 +221,7 @@ export const UserProvider = ({ children }: Props) => {
     <UserContext.Provider
       value={{
         authUser,
-        getUser,
+        getUserByDatabase,
         updateUser,
         getProfileImg,
         uploadProfileImg,
