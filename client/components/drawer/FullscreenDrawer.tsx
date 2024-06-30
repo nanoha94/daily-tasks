@@ -1,8 +1,6 @@
 "use client";
 import { useDrawer } from "@/contexts/DrawerProvider";
 import CloseIcon from "@mui/icons-material/Close";
-import PrimaryButton from "../button/PrimaryButton";
-import styled from "styled-components";
 import { useDialog } from "@/contexts/DialogProvider";
 import DiscardData from "../dialog/DiscardData";
 
