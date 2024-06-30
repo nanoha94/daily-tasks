@@ -43,62 +43,65 @@ export const UserProvider = ({ children }: Props) => {
   const router = useRouter();
 
   useEffect(() => {
-
-    // REVIEW: setData という命名が抽象的です。
+    // FIXED: setData という命名が抽象的です。
     // また getData とソースが同じ箇所があるのが違和感がございます。
     // 下のREVIEWで説明いたします。
-    const setData = async (id: string) => {
-      try {
-        const user = await apiClient.get(`/users/${id}`);
-        setUser(user.data);
-      } catch (err) {
-        console.error(err);
-      }
-    };
 
-    // REVIEW: fetchData という命名が抽象的です。例) fetchSupabaseUser。
-    const fetchData = async () => {
-      const { data } = await supabase.auth.getUser();
+    // FIXED: fetchData という命名が抽象的です。例) fetchSupabaseUser。
 
-      if (!!data.user) {
-        setData(data.user.id);
-      }
-    };
-
-    // REVIEW: fetchData は「取得」、setDataは「保存(格納)」という意味のため
+    // FIXED: fetchData は「取得」、setDataは「保存(格納)」という意味のため
     // fetchData の中で、setData をするのは少し違和感があります。
     // 下記のような流れでuserを格納するようなメソッドを作成すると可読性が上がります。
     // const supabaseUser = fetchData();
     // const user = getUser(supabaseUser);
     // setUser(user);
-    fetchData();
 
-    const { data } = supabase.auth.onAuthStateChange((_, session) => {
-      if (session?.user) {
-        // REVIEW: 上記の修正を行うと下記のような記述になると思われます。
-        // const user = getUser(session.user.id)
-        // setUser(user);
-        setData(session.user.id);
+    const fetchAuthUser = async () => {
+      const { data } = await supabase.auth.getUser();
+      if (!!data.user) {
+        const user = await getUser(data.user.id);
+        if (!!user) {
+          console.log(user);
+          setUser(user);
+        } else {
+          setUser(DefaultUser);
+        }
+      } else {
+        setUser(DefaultUser);
+      }
+      setIsInit(false);
+    };
+    fetchAuthUser();
+
+    const { data } = supabase.auth.onAuthStateChange(async (_, session) => {
+      if (!!session?.user) {
+        const user = await getUser(session.user.id);
+        if (!!user) {
+          console.log(user);
+          setUser(user);
+        } else {
+          setUser(DefaultUser);
+        }
       } else {
         setUser(DefaultUser);
       }
     });
-
-    setIsInit(false);
 
     return () => {
       data.subscription.unsubscribe();
     };
   }, []);
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      const myUser = getUser(authUser.id);
-      // REVIEW: setUser(myUser) ではダメでしょうか？
-      setUser({ ...authUser, ...myUser });
-    };
-    fetchUser();
-  }, [authUser.id]);
+  // useEffect(() => {
+  //   const fetchUser = async () => {
+  //     const myUser = await getUser(authUser.id);
+  //     // FIXED: setUser(myUser) ではダメでしょうか？
+  //     if (!!myUser) {
+  //       setUser(myUser.data);
+  //     }
+  //   };
+  //   fetchUser();
+  // }, [authUser]);
 
   useEffect(() => {
     if (!isInit) {
@@ -114,28 +117,23 @@ export const UserProvider = ({ children }: Props) => {
       ) {
         router.push("/login");
       }
-
-      // REVIEW: 上記少し理解しずらかったので下記にリファクタリングしたものを記述しました。（動作未確認）
-      // 少し複雑なロジックの場合はコメントも記述すると良いです。
-
-      // // 認証系のパスのリダイレクトについて
-      // if (pathname === "/register" || pathname === "/login") {
-      //   if (!!authUser.id) router.push("/"); // ログイン済であればホーム画面へ
-      // } else {
-      //   if (!authUser.id) router.push("/login"); // 未ログインであればログイン画面へ
-      // }
     }
-  }, [pathname, authUser.id]);
+  }, [isInit, router, pathname, authUser.id]);
 
   // REVIEW: getUser という命名ですと、
   // User を SupabaseAuth から取得するのか、DBから取得するのか、authUser変数をそのまま返すのか不明なため、
   // getUserByDatabase のような関数名が理想です。
   const getUser = async (id: User["id"]) => {
     try {
-      const user = await apiClient.get(`/users/${id}`);
-      return user.data;
+      if (!!id) {
+        const user = await apiClient.get(`/users/${id}`);
+        return user.data;
+      } else {
+        return null;
+      }
     } catch (err) {
       console.error(err);
+      return null;
     }
   };
 
@@ -178,12 +176,16 @@ export const UserProvider = ({ children }: Props) => {
   };
 
   const signIn = async (email: string, password: string) => {
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-    if (error) {
-      throw error;
+    try {
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+      if (error) {
+        throw error;
+      }
+    } catch (err) {
+      console.error(err);
     }
   };
 

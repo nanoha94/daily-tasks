@@ -22,11 +22,7 @@ const PageLogin = () => {
     email,
     password,
   }: FormValues) => {
-    try {
-      await signIn(email, password);
-    } catch (err) {
-      console.error(err);
-    }
+    signIn(email, password);
   };
 
   return (

@@ -6,7 +6,6 @@ import { useUser } from "@/contexts/UserProvider";
 import FormItem from "@/components/FormItem";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { error } from "console";
 
 interface FormValues {
   name: string;
@@ -28,8 +27,6 @@ const PageRegister = () => {
     handleSubmit,
     reset,
     watch,
-    setError,
-    clearErrors,
     formState: { errors },
   } = useForm<FormValues>({ defaultValues });
   const router = useRouter();
