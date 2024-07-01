@@ -19,8 +19,11 @@ interface Props {
 
 const Page = ({ params }: Props) => {
   const isPc: boolean = useMediaQuery(mediaQuery.md);
+  // REVIEW: useUser から取得した user ではないため、命名を[profileUser, setProfileUser]にしたり、
+  // プロフィールを表示するユーザー ←このようなコメントを残した方がよろしいと思います。
   const [user, setUser] = useState<User>(DefaultUser);
   const { getUser } = useUser();
+  // REVIEW: -1 が何かわからないので、コメントがあると親切です。
   const [filterParam, setFilterParam] = useState<{ category: number }>({
     category: -1,
   });
@@ -33,7 +36,7 @@ const Page = ({ params }: Props) => {
       setFilterParam({
         category:
           POST_CATEGORIES.find((category) => category.key === e.target.value)
-            ?.id ?? -1,
+          ?.id ?? -1,
       });
     } else {
       setFilterParam({

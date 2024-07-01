@@ -29,6 +29,8 @@ const Profile = ({ user }: Props) => {
             <StyledProfileIcon user={user} />
             <p className="text-xs text-black">{user.name}</p>
           </div>
+          {/* REVIEW: ログインユーザでない他のユーザーのプロフィール画面にブラウザのURLを叩いて遷移した際に
+          レンダリング中にログイン/プロフィール編集ボタンが表示されてしまうので、!!user.id も条件式に加えましょう */}
           {user.id === authUser.id && (
             <div className="flex flex-col gap-y-2">
               <ArrowButton onClick={signOut}>ログアウト</ArrowButton>
