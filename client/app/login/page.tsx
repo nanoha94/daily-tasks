@@ -29,7 +29,7 @@ const PageLogin = () => {
   }: FormValues) => {
     signIn(email, password);
 
-    // REVIEW: バリデーションエラー（setError）を使用して認証に失敗したことを表示させましょう。
+    // FIXED: バリデーションエラー（setError）を使用して認証に失敗したことを表示させましょう。
     // ※ errors.password.message でパスワードフォームにエラーメッセージを表示させてください。
     // setError('email', {message: ''})
     // setError('password', {message: 'ログインできません。'})
