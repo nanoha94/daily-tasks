@@ -26,7 +26,7 @@ const PageRegister = () => {
     handleSubmit,
     reset,
     watch,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<FormValues>({ defaultValues });
   const router = useRouter();
   const watchPassword = watch("password");
@@ -134,7 +134,11 @@ const PageRegister = () => {
               />
             </FormItem>
           </div>
-          <button type="submit" className={styles.submit_button}>
+          <button
+            type="submit"
+            className={styles.submit_button}
+            disabled={isSubmitting}
+          >
             アカウント作成
           </button>
         </form>

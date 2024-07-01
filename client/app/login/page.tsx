@@ -19,7 +19,7 @@ const PageLogin = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
     setError,
   } = useForm<FormValues>();
 
@@ -81,7 +81,11 @@ const PageLogin = () => {
                 />
               </FormItem>
             </div>
-            <button type="submit" className={styles.submit_button}>
+            <button
+              type="submit"
+              className={styles.submit_button}
+              disabled={isSubmitting}
+            >
               ログイン
             </button>
           </form>

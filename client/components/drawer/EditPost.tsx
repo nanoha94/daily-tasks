@@ -32,7 +32,7 @@ const EditPost = () => {
     control,
     handleSubmit,
     reset,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<FormValues>({ defaultValues, mode: "onChange" });
   const { fields, append } = useFieldArray({
     control,
@@ -170,7 +170,7 @@ const EditPost = () => {
         <AddButton onClick={handleAddTask}>タスクを追加する</AddButton>
       </div>
       <div className="ml-auto mr-0">
-        <PrimaryButton type="submit" disabled={!isEnable}>
+        <PrimaryButton type="submit" disabled={!isEnable || isSubmitting}>
           {!editingPost ? "投稿する" : "保存する"}
         </PrimaryButton>
       </div>

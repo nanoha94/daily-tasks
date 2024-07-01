@@ -34,7 +34,7 @@ const EditReviewPost = () => {
     control,
     handleSubmit,
     reset,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<FormValues>({ defaultValues });
   const { fields, append } = useFieldArray({
     control,
@@ -151,7 +151,7 @@ const EditReviewPost = () => {
         </div>
       </div>
       <div className="ml-auto mr-0">
-        <PrimaryButton type="submit" disabled={!isEnable}>
+        <PrimaryButton type="submit" disabled={!isEnable || isSubmitting}>
           {isCreate ? "投稿する" : "保存する"}
         </PrimaryButton>
       </div>

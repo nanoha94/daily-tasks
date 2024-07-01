@@ -42,7 +42,7 @@ const EditProfile = () => {
     watch,
     handleSubmit,
     reset,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<FormValues>({ defaultValues });
 
   const watchName = watch("name");
@@ -212,7 +212,7 @@ const EditProfile = () => {
         )}
       </FormItem>
       <div className="ml-auto mr-0">
-        <PrimaryButton type="submit" disabled={!isEnable}>
+        <PrimaryButton type="submit" disabled={!isEnable || isSubmitting}>
           保存する
         </PrimaryButton>
       </div>
