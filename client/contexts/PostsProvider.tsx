@@ -52,7 +52,7 @@ export const PostsProvider = ({ children }: Props) => {
       )
     );
   }, [authUser.id]);
-  // REVIEW: ユーザプロフィール更新の際にも、こちらのuseEffectが流れてしまうため
+  // FIXED: ユーザプロフィール更新の際にも、こちらのuseEffectが流れてしまうため
   // 依存配列は authUser.id の方が良いと思います。（動作未確認）
 
   const createPost = async (post: Omit<Post, "id" | "createdAt">) => {
