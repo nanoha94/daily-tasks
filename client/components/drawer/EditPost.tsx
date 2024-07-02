@@ -81,6 +81,8 @@ const EditPost = () => {
 
     // 条件を満たすとボタンがクリックできるようになる
     // 【条件】変更がある場合、かつ、タスクが１つ以上存在する場合
+    // REVIEW: プロフィールの変更でも記述したのですが、コードが同じ箇所がございますので
+    // 関数にまとめると良いと思いました。
     setIsEnable(
       (defaultValues.comment !== watchComment ||
         JSON.stringify(nonEmptyDefaultTasks) !==

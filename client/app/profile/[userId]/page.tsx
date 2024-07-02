@@ -20,8 +20,11 @@ interface Props {
 
 const Page = ({ params }: Props) => {
   const isPc: boolean = useMediaQuery(mediaQuery.md);
+  // REVIEW: useUser から取得した user ではないため、命名を[profileUser, setProfileUser]にしたり、
+  // プロフィールを表示するユーザー ←このようなコメントを残した方がよろしいと思います。
   const [user, setUser] = useState<User>(DefaultUser);
   const { getUserByDatabase } = useUser();
+  // REVIEW: -1 が何かわからないので、コメントがあると親切です。
   const [filterParam, setFilterParam] = useState<{ category: number }>({
     category: -1,
   });
