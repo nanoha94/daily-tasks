@@ -47,8 +47,8 @@ const EditProfile = () => {
 
   const watchName = watch("name");
   const watchBio = watch("bio");
-  // REVIEW: ボタン非活性 ←このようなコメントが欲しいです。
-  const [isEnable, setIsEnable] = useState<boolean>(false);
+  // FIXED: ボタン非活性 ←このようなコメントが欲しいです。
+  const [isSubmitEnable, setIsSubmitEnable] = useState<boolean>(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [defaultProfileSrc, setDefaultProfileSrc] = useState<string>();
   const [profileImgFile, setProfileImgFile] = useState<File>();
@@ -96,21 +96,20 @@ const EditProfile = () => {
   };
 
   useEffect(() => {
-    // 条件を満たすとボタンがクリックできるようになる
-    // 【条件】変更がある場合、かつ、タスクが１つ以上存在する場合
-    setIsEnable(
-      (defaultValues.name !== watchName ||
-        defaultValues.bio !== watchBio ||
-        defaultProfileSrc !== profileSrc) &&
-        watchName !== ""
-    );
-
-    // REVIEW: 上の条件式と同じコードのため関数化するといいと思います。（下に関数化したものを書いてみました。）
-    setIsEditing(
-      defaultValues.name !== watchName ||
+    const isExistChange = (): boolean => {
+      return (
+        defaultValues.name !== watchName ||
         defaultValues.bio !== watchBio ||
         defaultProfileSrc !== profileSrc
-    );
+      );
+    };
+
+    // 条件を満たすとボタンがクリックできるようになる
+    // 【条件】変更がある場合、かつ、タスクが１つ以上存在する場合
+    setIsSubmitEnable(isExistChange() && watchName !== "");
+
+    // FIXED: 上の条件式と同じコードのため関数化するといいと思います。（下に関数化したものを書いてみました。）
+    setIsEditing(isExistChange());
   }, [
     defaultValues,
     defaultProfileSrc,
@@ -119,12 +118,6 @@ const EditProfile = () => {
     watchBio,
     profileSrc,
   ]);
-
-  // const isExistChange = (): boolean => {
-  //   return defaultValues.name !== watchName || 
-  //   defaultValues.bio !== watchBio || 
-  //   defaultProfileSrc !== profileSrc
-  // }
 
   useEffect(() => {
     //  reset data to initial state
@@ -220,7 +213,7 @@ const EditProfile = () => {
         )}
       </FormItem>
       <div className="ml-auto mr-0">
-        <PrimaryButton type="submit" disabled={!isEnable || isSubmitting}>
+        <PrimaryButton type="submit" disabled={!isSubmitEnable || isSubmitting}>
           保存する
         </PrimaryButton>
       </div>

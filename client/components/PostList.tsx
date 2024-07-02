@@ -58,6 +58,7 @@ const Inner = ({ userId, filterParam, sortParam }: Props) => {
       <ul className="flex flex-col gap-y-2">
         {/* REVIEW: こちらの条件分岐ですがどちらも同じコンポーネントを返してそうですね？ */}
         {/* ログインユーザーの投稿かどうかは PostItem の方で行っていそうです。 */}
+        {/* 特定ユーザの投稿絞り込みはPostItemでやっていないです。条件分岐がないとプロフィールページでも全ユーザの投稿がリスト表示されます。（阿部） */}
         {filteredPosts.map(
           (post) =>
             post &&

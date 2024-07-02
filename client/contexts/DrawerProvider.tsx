@@ -48,10 +48,9 @@ export const DrawerProvider = ({ children }: Props) => {
     setIsOpenDrawer(true);
     setDrawer(drawer);
     if (!!post) {
-      // REVIEW: 上記の2つのメソッドもこちらのif文に入れてしまう方が良いと思います。
-      // REVIEW: すみません、新規作成の場合もあるので上記修正はダメですね。こちらのコメント削除して大丈夫です。
+      // FIXED: 上記の2つのメソッドもこちらのif文に入れてしまう方が良いと思います。
+      // FIXED: すみません、新規作成の場合もあるので上記修正はダメですね。こちらのコメント削除して大丈夫です。
       setEditingPost(post);
-      // Profile / CreatePostButtonコンポーネントから呼び出す時は、post情報不要でドロワーを表示したいので、このままで良いはずです（阿部）
     }
   };
 

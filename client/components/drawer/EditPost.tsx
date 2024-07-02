@@ -79,21 +79,20 @@ const EditPost = () => {
     );
     const nonEmptyTasks = watchTasks.filter((task) => task.content.length > 0);
 
+    const isExistChange = (): boolean => {
+      return (
+        defaultValues.comment !== watchComment ||
+        JSON.stringify(nonEmptyDefaultTasks) !== JSON.stringify(nonEmptyTasks)
+      );
+    };
+
     // 条件を満たすとボタンがクリックできるようになる
     // 【条件】変更がある場合、かつ、タスクが１つ以上存在する場合
-    // REVIEW: プロフィールの変更でも記述したのですが、コードが同じ箇所がございますので
+    // FIXED: プロフィールの変更でも記述したのですが、コードが同じ箇所がございますので
     // 関数にまとめると良いと思いました。
-    setIsEnable(
-      (defaultValues.comment !== watchComment ||
-        JSON.stringify(nonEmptyDefaultTasks) !==
-          JSON.stringify(nonEmptyTasks)) &&
-        nonEmptyTasks.length > 0
-    );
+    setIsEnable(isExistChange() && nonEmptyTasks.length > 0);
 
-    setIsEditing(
-      defaultValues.comment !== watchComment ||
-        JSON.stringify(nonEmptyDefaultTasks) !== JSON.stringify(nonEmptyTasks)
-    );
+    setIsEditing(isExistChange());
   }, [watchComment, watchTasks.map((task) => task.content)]);
 
   useEffect(() => {
