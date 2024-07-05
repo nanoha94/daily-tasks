@@ -1,5 +1,4 @@
 "use client";
-import { useEventCallback } from "@mui/material";
 import { useEffect, useState } from "react";
 
 export const mediaQuery = {

@@ -1,6 +1,5 @@
-"use client";
 import { useDrawer } from "@/contexts/DrawerProvider";
-import CloseIcon from "@mui/icons-material/Close";
+import { XMarkIcon } from "@heroicons/react/24/outline";
 import { useDialog } from "@/contexts/DialogProvider";
 import DiscardData from "../dialog/DiscardData";
 
@@ -25,7 +24,7 @@ const FullscreenDrawer = () => {
       >
         <div className="w-full p-3">
           <button type="button" onClick={handleClose}>
-            <CloseIcon />
+            <XMarkIcon className="w-[24px]" strokeWidth={2} />
           </button>
           <div className="max-w-[600px] w-full mx-auto">{drawer}</div>
         </div>
