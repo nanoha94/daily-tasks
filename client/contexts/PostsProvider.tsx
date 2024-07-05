@@ -1,5 +1,4 @@
 "use client";
-import { POST_CATEGORY } from "@/costants/posts";
 import apiClient from "@/lib/apiClient";
 import { Post } from "@/types/post";
 import { createContext, useContext, useEffect, useState } from "react";
@@ -51,9 +50,8 @@ export const PostsProvider = ({ children }: Props) => {
         post.author.id === authUser.id ? { ...post, author: authUser } : post
       )
     );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authUser.id]);
-  // FIXED: ユーザプロフィール更新の際にも、こちらのuseEffectが流れてしまうため
-  // 依存配列は authUser.id の方が良いと思います。（動作未確認）
 
   const createPost = async (post: Omit<Post, "id" | "createdAt">) => {
     const { comment, tasks, category, numOfGood, author } = post;

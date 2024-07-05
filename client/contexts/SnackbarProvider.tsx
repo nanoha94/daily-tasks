@@ -1,6 +1,6 @@
 "use client";
 import { SNACKBAR_TYPE } from "@/costants/snackbar";
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useState } from "react";
 
 interface SnackbarContextType {
   isOpenSnackbar: boolean;

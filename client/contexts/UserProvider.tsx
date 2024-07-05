@@ -47,19 +47,6 @@ export const UserProvider = ({ children }: Props) => {
   const { handleOpenSnackbar } = useSnackbar();
 
   useEffect(() => {
-    // FIXED: setData という命名が抽象的です。
-    // また getData とソースが同じ箇所があるのが違和感がございます。
-    // 下のREVIEWで説明いたします。
-
-    // FIXED: fetchData という命名が抽象的です。例) fetchSupabaseUser。
-
-    // FIXED: fetchData は「取得」、setDataは「保存(格納)」という意味のため
-    // fetchData の中で、setData をするのは少し違和感があります。
-    // 下記のような流れでuserを格納するようなメソッドを作成すると可読性が上がります。
-    // const supabaseUser = fetchData();
-    // const user = getUser(supabaseUser);
-    // setUser(user);
-
     const fetchAuthUser = async () => {
       const { data } = await supabase.auth.getUser();
       if (!!data.user) {
@@ -94,17 +81,6 @@ export const UserProvider = ({ children }: Props) => {
     };
   }, []);
 
-  // useEffect(() => {
-  //   const fetchUser = async () => {
-  //     const myUser = await getUser(authUser.id);
-  //     // FIXED: setUser(myUser) ではダメでしょうか？
-  //     if (!!myUser) {
-  //       setUser(myUser.data);
-  //     }
-  //   };
-  //   fetchUser();
-  // }, [authUser]);
-
   useEffect(() => {
     if (!isInit) {
       if (
@@ -123,11 +99,9 @@ export const UserProvider = ({ children }: Props) => {
         router.push("/login");
       }
     }
-  }, [isInit, router, pathname, authUser.id]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pathname, authUser.id]);
 
-  // FIXED: getUser という命名ですと、
-  // User を SupabaseAuth から取得するのか、DBから取得するのか、authUser変数をそのまま返すのか不明なため、
-  // getUserByDatabase のような関数名が理想です。
   const getUserByDatabase = async (id: User["id"]) => {
     try {
       if (!!id) {

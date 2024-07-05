@@ -47,7 +47,6 @@ const EditProfile = () => {
 
   const watchName = watch("name");
   const watchBio = watch("bio");
-  // FIXED: ボタン非活性 ←このようなコメントが欲しいです。
   const [isSubmitEnable, setIsSubmitEnable] = useState<boolean>(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [defaultProfileSrc, setDefaultProfileSrc] = useState<string>();
@@ -107,17 +106,9 @@ const EditProfile = () => {
     // 条件を満たすとボタンがクリックできるようになる
     // 【条件】変更がある場合、かつ、タスクが１つ以上存在する場合
     setIsSubmitEnable(isExistChange() && watchName !== "");
-
-    // FIXED: 上の条件式と同じコードのため関数化するといいと思います。（下に関数化したものを書いてみました。）
     setIsEditing(isExistChange());
-  }, [
-    defaultValues,
-    defaultProfileSrc,
-    setIsEditing,
-    watchName,
-    watchBio,
-    profileSrc,
-  ]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [watchName, watchBio, profileSrc]);
 
   useEffect(() => {
     //  reset data to initial state
@@ -133,15 +124,8 @@ const EditProfile = () => {
     setDefaultProfileSrc(storageImg);
     setProfileSrc(storageImg);
     setProfileImgFileName(authUser.profile?.profileSrc ?? "");
-  }, [
-    getProfileImg,
-    setDefaultProfileSrc,
-    setProfileSrc,
-    setProfileImgFileName,
-    isOpenDrawer,
-    authUser,
-    reset,
-  ]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [authUser]);
 
   return (
     <form

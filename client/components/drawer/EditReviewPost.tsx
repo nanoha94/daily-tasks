@@ -18,7 +18,7 @@ interface FormValues {
 const EditReviewPost = () => {
   const { authUser } = useUser();
   const { createPost, updatePost } = usePosts();
-  const { isOpenDrawer, handleCloseDrawer, editingPost } = useDrawer();
+  const { handleCloseDrawer, editingPost } = useDrawer();
   const { setIsEditing } = useDrawer();
   const emptyValues = {
     comment: "",
@@ -83,13 +83,8 @@ const EditReviewPost = () => {
       defaultValues.comment !== watchComment ||
         JSON.stringify(defaultValues.tasks) !== JSON.stringify(watchTasks)
     );
-  }, [
-    setIsEnable,
-    setIsEditing,
-    defaultValues,
-    watchComment,
-    watchTasks.map((task) => task.completed),
-  ]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [watchComment, watchTasks.map((task) => task.completed)]);
 
   useEffect(() => {
     if (!!editingPost) {
@@ -103,7 +98,8 @@ const EditReviewPost = () => {
       setDefaultValues(emptyValues);
       reset(emptyValues);
     }
-  }, [setDefaultValues, isCreate, isOpenDrawer, editingPost, reset]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [editingPost]);
 
   return (
     <form

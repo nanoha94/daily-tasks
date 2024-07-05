@@ -2,9 +2,6 @@ import SearchWindow from "@/components/filter/SearchWindow";
 import SelectCategory from "@/components/filter/SelectCategory";
 import { useRouter, useSearchParams } from "next/navigation";
 
-// FIXED: こちらだけ _components というフォルダに分けられているので、
-// components/form の配下などに配置してもいいかなと思いました。
-// トップページだけでしか使わないので、ここに配置（阿部）
 const FilterForm = () => {
   const router = useRouter();
   const searchParams = useSearchParams();

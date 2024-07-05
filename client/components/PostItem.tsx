@@ -6,7 +6,7 @@ import styled from "styled-components";
 import { colors } from "@/tailwind.config";
 import GoodButton from "./button/GoodButton";
 import styles from "@/styles/form.module.css";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { usePosts } from "@/contexts/PostsProvider";
 import {
   ClipboardDocumentCheckIcon,

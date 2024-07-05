@@ -19,8 +19,7 @@ interface FormValues {
 const EditPost = () => {
   const { authUser } = useUser();
   const { createPost, updatePost } = usePosts();
-  const { isOpenDrawer, handleCloseDrawer, editingPost, setIsEditing } =
-    useDrawer();
+  const { handleCloseDrawer, editingPost, setIsEditing } = useDrawer();
   const emptyValues = {
     comment: "",
     tasks: [{ id: undefined, content: "", completed: false }],
@@ -88,11 +87,10 @@ const EditPost = () => {
 
     // 条件を満たすとボタンがクリックできるようになる
     // 【条件】変更がある場合、かつ、タスクが１つ以上存在する場合
-    // FIXED: プロフィールの変更でも記述したのですが、コードが同じ箇所がございますので
-    // 関数にまとめると良いと思いました。
     setIsEnable(isExistChange() && nonEmptyTasks.length > 0);
 
     setIsEditing(isExistChange());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [watchComment, watchTasks.map((task) => task.content)]);
 
   useEffect(() => {
@@ -110,7 +108,8 @@ const EditPost = () => {
       setDefaultValues(emptyValues);
       reset(emptyValues);
     }
-  }, [isOpenDrawer, editingPost]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [editingPost]);
 
   return (
     <form

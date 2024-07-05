@@ -20,7 +20,6 @@ const PageLogin = () => {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-    setError,
   } = useForm<FormValues>();
 
   const handleSubmitSuccess: SubmitHandler<FormValues> = async ({
@@ -28,12 +27,6 @@ const PageLogin = () => {
     password,
   }: FormValues) => {
     signIn(email, password);
-
-    // FIXED: バリデーションエラー（setError）を使用して認証に失敗したことを表示させましょう。
-    // ※ errors.password.message でパスワードフォームにエラーメッセージを表示させてください。
-    // setError('email', {message: ''})
-    // setError('password', {message: 'ログインできません。'})
-    // スナックバーで対応（阿部）
   };
 
   return (

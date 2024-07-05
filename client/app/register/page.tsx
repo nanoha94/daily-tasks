@@ -124,7 +124,6 @@ const PageRegister = () => {
                     value: 6,
                     message: "6文字以上英数字で入力してください",
                   },
-                  // FIXED: 下記の記述で、useEffect と useState を使用したパスワード一致の実装が不要になります。（コード削減）
                   validate: (value) =>
                     value === watchPassword || "パスワードが一致しません",
                 })}

@@ -1,6 +1,6 @@
 "use client";
 import { Post } from "@/types/post";
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useState } from "react";
 
 interface DialogContextType {
   dialog: React.ReactNode;
@@ -42,8 +42,6 @@ export const DialogProvider = ({ children }: Props) => {
     setIsOpenDialog(true);
     setDialog(dialog);
     if (!!post) {
-      // FIXED: 上記の2つのメソッドもこちらのif文に入れてしまう方が良いと思います。
-      // FullscreenDrawerコンポーネントから呼び出す時は、post情報不要でダイアログを表示したいので、このままで良いはずです（阿部）
       setEditingPost(post);
     }
   };
