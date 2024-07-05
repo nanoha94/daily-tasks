@@ -4,26 +4,33 @@ import { DefaultUser, User } from "@/types/user";
 import { supabase } from "@/utils/supabase";
 import { usePathname, useRouter } from "next/navigation";
 import { createContext, useContext, useEffect, useState } from "react";
+import { useSnackbar } from "./SnackbarProvider";
+import { SNACKBAR_TYPE } from "@/costants/snackbar";
+import { AuthError } from "@supabase/supabase-js";
 
 interface UserContextType {
   authUser: User;
-  getUser: (id: User["id"]) => Promise<User | undefined>;
+  getUserByDatabase: (id: User["id"]) => Promise<User | undefined>;
   updateUser: (user: User) => Promise<void>;
   getProfileImg: (user: User) => string;
   uploadProfileImg: (file: File, fileName: string) => Promise<void>;
   signIn: (email: string, password: string) => Promise<void>;
-  signUp: (email: string, password: string, name: string) => Promise<void>;
+  signUp: (
+    email: string,
+    password: string,
+    name: string
+  ) => Promise<void | AuthError | Error | unknown>;
   signOut: () => Promise<void>;
 }
 
 const UserContext = createContext<UserContextType>({
   authUser: DefaultUser,
-  getUser: async () => undefined,
+  getUserByDatabase: async () => undefined,
   updateUser: async () => {},
   getProfileImg: () => "",
   uploadProfileImg: async () => {},
   signIn: async () => {},
-  signUp: async () => {},
+  signUp: async () => true,
   signOut: async () => {},
 });
 
@@ -41,50 +48,37 @@ export const UserProvider = ({ children }: Props) => {
     useState<UserContextType["authUser"]>(DefaultUser);
   const pathname = usePathname();
   const router = useRouter();
+  const { handleOpenSnackbar, handleCloseSnackbar } = useSnackbar();
 
   useEffect(() => {
-
-    // REVIEW: setData という命名が抽象的です。
-    // また getData とソースが同じ箇所があるのが違和感がございます。
-    // 下のREVIEWで説明いたします。
-    const setData = async (id: string) => {
-      try {
-        const user = await apiClient.get(`/users/${id}`);
-        setUser(user.data);
-      } catch (err) {
-        console.error(err);
-      }
-    };
-
-    // REVIEW: fetchData という命名が抽象的です。例) fetchSupabaseUser。
-    const fetchData = async () => {
+    const fetchAuthUser = async () => {
       const { data } = await supabase.auth.getUser();
-
       if (!!data.user) {
-        setData(data.user.id);
+        const user = await getUserByDatabase(data.user.id);
+        if (!!user) {
+          setUser(user);
+        } else {
+          setUser(DefaultUser);
+        }
+      } else {
+        setUser(DefaultUser);
       }
+      setIsInit(false);
     };
+    fetchAuthUser();
 
-    // REVIEW: fetchData は「取得」、setDataは「保存(格納)」という意味のため
-    // fetchData の中で、setData をするのは少し違和感があります。
-    // 下記のような流れでuserを格納するようなメソッドを作成すると可読性が上がります。
-    // const supabaseUser = fetchData();
-    // const user = getUser(supabaseUser);
-    // setUser(user);
-    fetchData();
-
-    const { data } = supabase.auth.onAuthStateChange((_, session) => {
-      if (session?.user) {
-        // REVIEW: 上記の修正を行うと下記のような記述になると思われます。
-        // const user = getUser(session.user.id)
-        // setUser(user);
-        setData(session.user.id);
+    const { data } = supabase.auth.onAuthStateChange(async (_, session) => {
+      if (!!session?.user) {
+        const user = await getUserByDatabase(session.user.id);
+        if (!!user) {
+          setUser(user);
+        } else {
+          setUser(DefaultUser);
+        }
       } else {
         setUser(DefaultUser);
       }
     });
-
-    setIsInit(false);
 
     return () => {
       data.subscription.unsubscribe();
@@ -92,50 +86,37 @@ export const UserProvider = ({ children }: Props) => {
   }, []);
 
   useEffect(() => {
-    const fetchUser = async () => {
-      const myUser = getUser(authUser.id);
-      // REVIEW: setUser(myUser) ではダメでしょうか？
-      setUser({ ...authUser, ...myUser });
-    };
-    fetchUser();
-  }, [authUser.id]);
-
-  useEffect(() => {
     if (!isInit) {
       if (
         !!authUser.id &&
-        (pathname === "/register" || pathname === "/login")
+        (pathname === "/register" ||
+          pathname === "/register-success" ||
+          pathname === "/login")
       ) {
         router.push("/");
       } else if (
         !authUser.id &&
         pathname !== "/register" &&
+        pathname !== "/register-success" &&
         pathname !== "/login"
       ) {
         router.push("/login");
       }
-
-      // REVIEW: 上記少し理解しずらかったので下記にリファクタリングしたものを記述しました。（動作未確認）
-      // 少し複雑なロジックの場合はコメントも記述すると良いです。
-
-      // // 認証系のパスのリダイレクトについて
-      // if (pathname === "/register" || pathname === "/login") {
-      //   if (!!authUser.id) router.push("/"); // ログイン済であればホーム画面へ
-      // } else {
-      //   if (!authUser.id) router.push("/login"); // 未ログインであればログイン画面へ
-      // }
     }
-  }, [pathname, authUser.id]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isInit, pathname, authUser.id]);
 
-  // REVIEW: getUser という命名ですと、
-  // User を SupabaseAuth から取得するのか、DBから取得するのか、authUser変数をそのまま返すのか不明なため、
-  // getUserByDatabase のような関数名が理想です。
-  const getUser = async (id: User["id"]) => {
+  const getUserByDatabase = async (id: User["id"]) => {
     try {
-      const user = await apiClient.get(`/users/${id}`);
-      return user.data;
+      if (!!id) {
+        const user = await apiClient.get(`/users/${id}`);
+        return user.data;
+      } else {
+        return null;
+      }
     } catch (err) {
       console.error(err);
+      return null;
     }
   };
 
@@ -178,27 +159,56 @@ export const UserProvider = ({ children }: Props) => {
   };
 
   const signIn = async (email: string, password: string) => {
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-    if (error) {
-      throw error;
+    try {
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+      handleCloseSnackbar();
+      if (error) {
+        throw error;
+      }
+    } catch (err: AuthError | unknown) {
+      if (err instanceof AuthError) {
+        console.error("エラーが発生しました\n", err.message);
+        handleOpenSnackbar({
+          type: SNACKBAR_TYPE.ERROR,
+          message: err.message,
+        });
+      } else {
+        console.error("予期しないエラーが発生しました\n", err);
+      }
     }
   };
 
   const signUp = async (email: string, password: string, name: string) => {
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: {
-          name,
+    try {
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            name,
+          },
         },
-      },
-    });
-    if (error) {
-      throw error;
+      });
+      handleCloseSnackbar();
+      if (error) {
+        throw error;
+      } else if (data.user?.identities?.length === 0) {
+        throw new Error("すでに登録済みのメールアドレスです");
+      }
+    } catch (err: AuthError | Error | unknown) {
+      if (err instanceof AuthError || err instanceof Error) {
+        console.error("エラーが発生しました\n", err.message);
+        handleOpenSnackbar({
+          type: SNACKBAR_TYPE.ERROR,
+          message: err.message,
+        });
+      } else {
+        console.error("予期しないエラーが発生しました\n", err);
+      }
+      return err;
     }
   };
 
@@ -217,7 +227,7 @@ export const UserProvider = ({ children }: Props) => {
     <UserContext.Provider
       value={{
         authUser,
-        getUser,
+        getUserByDatabase,
         updateUser,
         getProfileImg,
         uploadProfileImg,

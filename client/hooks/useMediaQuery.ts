@@ -1,5 +1,4 @@
 "use client";
-import { useEventCallback } from "@mui/material";
 import { useEffect, useState } from "react";
 
 export const mediaQuery = {
@@ -36,7 +35,7 @@ export const useMediaQuery = (query: string) => {
     return () => {
       mql.onchange = null;
     };
-  }, [formattedQuery, setMatch]);
+  }, [formattedQuery]);
 
   return match;
 };

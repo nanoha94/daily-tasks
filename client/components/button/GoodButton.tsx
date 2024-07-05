@@ -1,16 +1,10 @@
-"use client";
-import ThumbUpIcon from "@mui/icons-material/ThumbUp";
+import { HandThumbUpIcon } from "@heroicons/react/24/solid";
 import { ButtonHTMLAttributes } from "react";
-import styled from "styled-components";
 
 interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
   count: number;
   isClicked: boolean;
 }
-
-const StyledThumbUpIcon = styled(ThumbUpIcon)`
-  font-size: 16px !important;
-`;
 
 const GoodButton = ({ count, isClicked, ...props }: Props) => {
   return (
@@ -23,7 +17,7 @@ const GoodButton = ({ count, isClicked, ...props }: Props) => {
       } `}
       {...props}
     >
-      <StyledThumbUpIcon />
+      <HandThumbUpIcon className="w-[16px]" />
       {count > 0 && (
         <span className="text-xs leading-none font-bold">{count}</span>
       )}

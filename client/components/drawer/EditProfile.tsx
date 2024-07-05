@@ -42,13 +42,12 @@ const EditProfile = () => {
     watch,
     handleSubmit,
     reset,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<FormValues>({ defaultValues });
 
   const watchName = watch("name");
   const watchBio = watch("bio");
-  // REVIEW: ボタン非活性 ←このようなコメントが欲しいです。
-  const [isEnable, setIsEnable] = useState<boolean>(false);
+  const [isSubmitEnable, setIsSubmitEnable] = useState<boolean>(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [defaultProfileSrc, setDefaultProfileSrc] = useState<string>();
   const [profileImgFile, setProfileImgFile] = useState<File>();
@@ -96,35 +95,20 @@ const EditProfile = () => {
   };
 
   useEffect(() => {
-    // 条件を満たすとボタンがクリックできるようになる
-    // 【条件】変更がある場合、かつ、タスクが１つ以上存在する場合
-    setIsEnable(
-      (defaultValues.name !== watchName ||
-        defaultValues.bio !== watchBio ||
-        defaultProfileSrc !== profileSrc) &&
-        watchName !== ""
-    );
-
-    // REVIEW: 上の条件式と同じコードのため関数化するといいと思います。（下に関数化したものを書いてみました。）
-    setIsEditing(
-      defaultValues.name !== watchName ||
+    const isExistChange = (): boolean => {
+      return (
+        defaultValues.name !== watchName ||
         defaultValues.bio !== watchBio ||
         defaultProfileSrc !== profileSrc
-    );
-  }, [
-    defaultValues,
-    defaultProfileSrc,
-    setIsEditing,
-    watchName,
-    watchBio,
-    profileSrc,
-  ]);
+      );
+    };
 
-  // const isExistChange = (): boolean => {
-  //   return defaultValues.name !== watchName || 
-  //   defaultValues.bio !== watchBio || 
-  //   defaultProfileSrc !== profileSrc
-  // }
+    // 条件を満たすとボタンがクリックできるようになる
+    // 【条件】変更がある場合、かつ、タスクが１つ以上存在する場合
+    setIsSubmitEnable(isExistChange() && watchName !== "");
+    setIsEditing(isExistChange());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [watchName, watchBio, profileSrc]);
 
   useEffect(() => {
     //  reset data to initial state
@@ -140,15 +124,8 @@ const EditProfile = () => {
     setDefaultProfileSrc(storageImg);
     setProfileSrc(storageImg);
     setProfileImgFileName(authUser.profile?.profileSrc ?? "");
-  }, [
-    getProfileImg,
-    setDefaultProfileSrc,
-    setProfileSrc,
-    setProfileImgFileName,
-    isOpenDrawer,
-    authUser,
-    reset,
-  ]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [authUser]);
 
   return (
     <form
@@ -192,20 +169,35 @@ const EditProfile = () => {
           type="text"
           {...register("name", {
             required: "必須項目です",
+            maxLength: {
+              value: 30,
+              message: "30文字以内で入力してください",
+            },
           })}
           className={`${styles.item} ${styles.item_frame}`}
         />
+        {errors.name && (
+          <p className={styles.text_error}>{errors.name.message}</p>
+        )}
       </FormItem>
       <FormItem label="自己紹介" memo="250文字以内で入力してください。">
         <textarea
           rows={4}
           placeholder="あなたはどんな人？"
-          {...register("bio")}
+          {...register("bio", {
+            maxLength: {
+              value: 250,
+              message: "250文字以内で入力してください",
+            },
+          })}
           className={`${styles.item} ${styles.item_frame}`}
         />
+        {errors.bio && (
+          <p className={styles.text_error}>{errors.bio.message}</p>
+        )}
       </FormItem>
       <div className="ml-auto mr-0">
-        <PrimaryButton type="submit" disabled={!isEnable}>
+        <PrimaryButton type="submit" disabled={!isSubmitEnable || isSubmitting}>
           保存する
         </PrimaryButton>
       </div>

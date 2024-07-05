@@ -1,6 +1,6 @@
 "use client";
 import { Post } from "@/types/post";
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useState } from "react";
 
 interface DrawerContextType {
   drawer: React.ReactNode;
@@ -48,8 +48,6 @@ export const DrawerProvider = ({ children }: Props) => {
     setIsOpenDrawer(true);
     setDrawer(drawer);
     if (!!post) {
-      // REVIEW: 上記の2つのメソッドもこちらのif文に入れてしまう方が良いと思います。
-      // REVIEW: すみません、新規作成の場合もあるので上記修正はダメですね。こちらのコメント削除して大丈夫です。
       setEditingPost(post);
     }
   };

@@ -1,4 +1,4 @@
-import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
+import { ChevronRightIcon } from "@heroicons/react/24/outline";
 import { ButtonHTMLAttributes } from "react";
 import styled from "styled-components";
 
@@ -6,12 +6,12 @@ interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
   children: string;
 }
 
-const StyledArrowIcon = styled(KeyboardArrowRightIcon)`
+const StyledChevronRightIcon = styled(ChevronRightIcon)`
   position: absolute;
   top: 50%;
   right: 0;
   transform: translateY(-50%);
-  font-size: 20px !important;
+  width: 14px;
 `;
 
 const ArrowButton = ({ children, ...props }: Props) => {
@@ -22,7 +22,7 @@ const ArrowButton = ({ children, ...props }: Props) => {
       {...props}
     >
       {children}
-      <StyledArrowIcon />
+      <StyledChevronRightIcon strokeWidth={3} />
     </button>
   );
 };

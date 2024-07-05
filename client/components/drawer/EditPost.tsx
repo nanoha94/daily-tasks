@@ -19,8 +19,7 @@ interface FormValues {
 const EditPost = () => {
   const { authUser } = useUser();
   const { createPost, updatePost } = usePosts();
-  const { isOpenDrawer, handleCloseDrawer, editingPost, setIsEditing } =
-    useDrawer();
+  const { handleCloseDrawer, editingPost, setIsEditing } = useDrawer();
   const emptyValues = {
     comment: "",
     tasks: [{ id: undefined, content: "", completed: false }],
@@ -32,7 +31,7 @@ const EditPost = () => {
     control,
     handleSubmit,
     reset,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<FormValues>({ defaultValues, mode: "onChange" });
   const { fields, append } = useFieldArray({
     control,
@@ -79,21 +78,18 @@ const EditPost = () => {
     );
     const nonEmptyTasks = watchTasks.filter((task) => task.content.length > 0);
 
+    const isExistChange = (): boolean => {
+      return (
+        defaultValues.comment !== watchComment ||
+        JSON.stringify(nonEmptyDefaultTasks) !== JSON.stringify(nonEmptyTasks)
+      );
+    };
+
     // 条件を満たすとボタンがクリックできるようになる
     // 【条件】変更がある場合、かつ、タスクが１つ以上存在する場合
-    // REVIEW: プロフィールの変更でも記述したのですが、コードが同じ箇所がございますので
-    // 関数にまとめると良いと思いました。
-    setIsEnable(
-      (defaultValues.comment !== watchComment ||
-        JSON.stringify(nonEmptyDefaultTasks) !==
-          JSON.stringify(nonEmptyTasks)) &&
-        nonEmptyTasks.length > 0
-    );
-
-    setIsEditing(
-      defaultValues.comment !== watchComment ||
-        JSON.stringify(nonEmptyDefaultTasks) !== JSON.stringify(nonEmptyTasks)
-    );
+    setIsEnable(isExistChange() && nonEmptyTasks.length > 0);
+    setIsEditing(isExistChange());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [watchComment, watchTasks.map((task) => task.content)]);
 
   useEffect(() => {
@@ -111,7 +107,8 @@ const EditPost = () => {
       setDefaultValues(emptyValues);
       reset(emptyValues);
     }
-  }, [isOpenDrawer, editingPost]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [editingPost]);
 
   return (
     <form
@@ -172,7 +169,7 @@ const EditPost = () => {
         <AddButton onClick={handleAddTask}>タスクを追加する</AddButton>
       </div>
       <div className="ml-auto mr-0">
-        <PrimaryButton type="submit" disabled={!isEnable}>
+        <PrimaryButton type="submit" disabled={!isEnable || isSubmitting}>
           {!editingPost ? "投稿する" : "保存する"}
         </PrimaryButton>
       </div>

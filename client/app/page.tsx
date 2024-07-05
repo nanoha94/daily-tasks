@@ -8,6 +8,7 @@ import FullscreenDrawer from "@/components/drawer/FullscreenDrawer";
 import { mediaQuery, useMediaQuery } from "@/hooks/useMediaQuery";
 import FilterForm from "./_components/FilterForm";
 import { Suspense } from "react";
+import Snackbar from "@/components/Snackbar";
 
 const Page = () => {
   const isPc: boolean = useMediaQuery(mediaQuery.md);
@@ -33,6 +34,7 @@ const Page = () => {
       {!isPc && <CreatePostButton />}
       <FullscreenDrawer />
       <Dialog />
+      <Snackbar />
     </>
   );
 };

@@ -56,8 +56,6 @@ const Inner = ({ userId, filterParam, sortParam }: Props) => {
   if (filteredPosts.length > 0) {
     return (
       <ul className="flex flex-col gap-y-2">
-        {/* REVIEW: こちらの条件分岐ですがどちらも同じコンポーネントを返してそうですね？ */}
-        {/* ログインユーザーの投稿かどうかは PostItem の方で行っていそうです。 */}
         {filteredPosts.map(
           (post) =>
             post &&

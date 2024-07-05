@@ -1,33 +1,38 @@
 const useDateFormat = () => {
   const dateFormat = (date: Date) => {
+    const postDateTime = new Date(date);
     const postDate = new Date(date);
-    const postTimeStr = postDate.toLocaleTimeString("ja-JP", {
+    postDate.setHours(0, 0, 0, 0);
+    const postTimeStr = postDateTime.toLocaleTimeString("ja-JP", {
       hour: "2-digit",
       minute: "2-digit",
     });
+    const currentDateTime = new Date();
     const currentDate = new Date();
-    const previousDate = new Date(currentDate);
-    previousDate.setDate(currentDate.getDate() - 1);
-    const previousWeekDate = new Date(currentDate);
-    previousWeekDate.setDate(currentDate.getDate() - 7);
+    currentDate.setHours(0, 0, 0, 0);
 
-    if (currentDate.getDate() - postDate.getDate() <= 10) {
-      if (postDate.getDate() === currentDate.getDate()) {
+    const numOfDiffDate = Math.floor(
+      (currentDate.getTime() - postDate.getTime()) / (1000 * 60 * 60 * 24)
+    );
+
+    if (numOfDiffDate <= 10) {
+      if (numOfDiffDate === 0) {
         return `今日 ${postTimeStr}`;
-      } else if (postDate.getDate() === previousDate.getDate()) {
+      } else if (numOfDiffDate === 1) {
         return `昨日 ${postTimeStr}`;
       } else {
-        return `${
-          currentDate.getDate() - postDate.getDate()
-        }日前 ${postTimeStr}`;
+        return `${numOfDiffDate}日前 ${postTimeStr}`;
       }
-    } else if (currentDate.getFullYear() - postDate.getFullYear() <= 0) {
-      return `${postDate.toLocaleDateString("ja-JP", {
+    } else if (
+      currentDateTime.getFullYear() - postDateTime.getFullYear() <=
+      0
+    ) {
+      return `${postDateTime.toLocaleDateString("ja-JP", {
         month: "short",
         day: "numeric",
       })} ${postTimeStr}`;
     } else {
-      return `${postDate.toLocaleDateString("ja-JP", {
+      return `${postDateTime.toLocaleDateString("ja-JP", {
         year: "numeric",
         month: "short",
         day: "numeric",

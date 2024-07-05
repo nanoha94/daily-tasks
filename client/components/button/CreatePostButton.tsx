@@ -1,5 +1,5 @@
 "use client";
-import AddRoundedIcon from "@mui/icons-material/AddRounded";
+import { PlusIcon } from "@heroicons/react/24/outline";
 import { useDrawer } from "@/contexts/DrawerProvider";
 import EditPost from "../drawer/EditPost";
 
@@ -12,7 +12,7 @@ const CreatePostButton = () => {
       onClick={() => handleOpenDrawer({ drawer: <EditPost /> })}
       className="fixed bottom-2 right-2 text-white bg-green rounded-full border-4 border-transparent p-1 hover:text-green hover:bg-white hover:border-green"
     >
-      <AddRoundedIcon className="text-4xl" />
+      <PlusIcon className="w-[36px]" strokeWidth={2} />
     </button>
   );
 };

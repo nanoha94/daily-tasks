@@ -1,5 +1,4 @@
 "use client";
-import { POST_CATEGORY } from "@/costants/posts";
 import apiClient from "@/lib/apiClient";
 import { Post } from "@/types/post";
 import { createContext, useContext, useEffect, useState } from "react";
@@ -7,8 +6,6 @@ import { useUser } from "./UserProvider";
 
 interface PostsContextType {
   allPosts: Post[];
-  editMode: number; // REVIEW: コンポーネントで使用されていない？
-  isOpenDelete: boolean; // REVIEW: コンポーネントで使用されていない？
   createPost: (post: Omit<Post, "id" | "createdAt">) => Promise<void>;
   updatePost: (post: Omit<Post, "createdAt">) => Promise<void>;
   deletePost: (postId: string) => Promise<void>;
@@ -16,8 +13,6 @@ interface PostsContextType {
 
 const PostsContext = createContext<PostsContextType>({
   allPosts: [],
-  editMode: POST_CATEGORY.TASK,
-  isOpenDelete: false,
   createPost: async () => {},
   updatePost: async () => {},
   deletePost: async () => {},
@@ -34,11 +29,6 @@ interface Props {
 export const PostsProvider = ({ children }: Props) => {
   const { authUser } = useUser();
   const [allPosts, setAllPosts] = useState<PostsContextType["allPosts"]>([]);
-  const [editMode, setEditMode] = useState<PostsContextType["editMode"]>(
-    POST_CATEGORY.TASK
-  );
-  const [isOpenDelete, setIsOpenDelete] =
-    useState<PostsContextType["isOpenDelete"]>(false);
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -60,9 +50,8 @@ export const PostsProvider = ({ children }: Props) => {
         post.author.id === authUser.id ? { ...post, author: authUser } : post
       )
     );
-  }, [authUser]); 
-  // REVIEW: ユーザプロフィール更新の際にも、こちらのuseEffectが流れてしまうため
-  // 依存配列は authUser.id の方が良いと思います。（動作未確認）
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [authUser.id]);
 
   const createPost = async (post: Omit<Post, "id" | "createdAt">) => {
     const { comment, tasks, category, numOfGood, author } = post;
@@ -113,8 +102,6 @@ export const PostsProvider = ({ children }: Props) => {
     <PostsContext.Provider
       value={{
         allPosts,
-        editMode,
-        isOpenDelete,
         createPost,
         updatePost,
         deletePost,

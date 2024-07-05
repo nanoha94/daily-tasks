@@ -1,6 +1,6 @@
 "use client";
 import { Post } from "@/types/post";
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useState } from "react";
 
 interface DialogContextType {
   dialog: React.ReactNode;
@@ -42,7 +42,6 @@ export const DialogProvider = ({ children }: Props) => {
     setIsOpenDialog(true);
     setDialog(dialog);
     if (!!post) {
-      // REVIEW: 上記の2つのメソッドもこちらのif文に入れてしまう方が良いと思います。
       setEditingPost(post);
     }
   };

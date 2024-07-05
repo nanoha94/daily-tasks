@@ -3,6 +3,7 @@ import Header from "@/components/Header";
 import PostList from "@/components/PostList";
 import Profile from "@/components/Profile";
 import SelectForSort from "@/components/SelectForSort";
+import Snackbar from "@/components/Snackbar";
 import CreatePostButton from "@/components/button/CreatePostButton";
 import Dialog from "@/components/dialog/Dialog";
 import FullscreenDrawer from "@/components/drawer/FullscreenDrawer";
@@ -19,11 +20,12 @@ interface Props {
 
 const Page = ({ params }: Props) => {
   const isPc: boolean = useMediaQuery(mediaQuery.md);
-  // REVIEW: useUser から取得した user ではないため、命名を[profileUser, setProfileUser]にしたり、
-  // プロフィールを表示するユーザー ←このようなコメントを残した方がよろしいと思います。
-  const [user, setUser] = useState<User>(DefaultUser);
-  const { getUser } = useUser();
-  // REVIEW: -1 が何かわからないので、コメントがあると親切です。
+  const [profileUser, setProfileUser] = useState<User>(DefaultUser);
+  const { getUserByDatabase } = useUser();
+  // FIXED: -1 が何かわからないので、コメントがあると親切です。
+  // POST_CATEGORYに未指定の定義も入れた方がいい？（阿部）
+
+  // 初期値（POST_CATEGORYは0以上なので、-1を初期値とする）
   const [filterParam, setFilterParam] = useState<{ category: number }>({
     category: -1,
   });
@@ -36,7 +38,7 @@ const Page = ({ params }: Props) => {
       setFilterParam({
         category:
           POST_CATEGORIES.find((category) => category.key === e.target.value)
-          ?.id ?? -1,
+            ?.id ?? -1,
       });
     } else {
       setFilterParam({
@@ -51,27 +53,27 @@ const Page = ({ params }: Props) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const currentUser = await getUser(params.userId);
+      const currentUser = await getUserByDatabase(params.userId);
       if (!!currentUser) {
-        setUser(currentUser);
+        setProfileUser(currentUser);
       }
     };
     fetchData();
-  }, [params.userId, getUser]);
+  }, [params.userId, getUserByDatabase]);
 
   return (
     <>
       <Header />
       <div className="flex-1 bg-bg">
         <div className="max-w-[960px] w-full pb-3 mx-auto md:flex md:justify-center md:items-start md:gap-x-6 md:py-5 md:px-4">
-          <Profile user={user} />
+          <Profile user={profileUser} />
           <div className="max-w-[560px] flex flex-col gap-y-2 mx-auto px-3 md:w-3/5 ">
             <form className="flex flex-wrap justify-between gap-5 py-3 md:pt-0">
               <SelectCategory handleChange={handleChangeSearchCategory} />
               <SelectForSort handleChange={handleChangeSortOrder} />
             </form>
             <PostList
-              userId={user.id}
+              userId={profileUser.id}
               filterParam={filterParam}
               sortParam={sortParam}
             />
@@ -81,6 +83,7 @@ const Page = ({ params }: Props) => {
       {!isPc && <CreatePostButton />}
       <FullscreenDrawer />
       <Dialog />
+      <Snackbar />
     </>
   );
 };
