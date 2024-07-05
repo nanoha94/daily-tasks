@@ -15,7 +15,11 @@ interface UserContextType {
   getProfileImg: (user: User) => string;
   uploadProfileImg: (file: File, fileName: string) => Promise<void>;
   signIn: (email: string, password: string) => Promise<void>;
-  signUp: (email: string, password: string, name: string) => Promise<void>;
+  signUp: (
+    email: string,
+    password: string,
+    name: string
+  ) => Promise<void | AuthError | Error | unknown>;
   signOut: () => Promise<void>;
 }
 
@@ -26,7 +30,7 @@ const UserContext = createContext<UserContextType>({
   getProfileImg: () => "",
   uploadProfileImg: async () => {},
   signIn: async () => {},
-  signUp: async () => {},
+  signUp: async () => true,
   signOut: async () => {},
 });
 
@@ -44,7 +48,7 @@ export const UserProvider = ({ children }: Props) => {
     useState<UserContextType["authUser"]>(DefaultUser);
   const pathname = usePathname();
   const router = useRouter();
-  const { handleOpenSnackbar } = useSnackbar();
+  const { handleOpenSnackbar, handleCloseSnackbar } = useSnackbar();
 
   useEffect(() => {
     const fetchAuthUser = async () => {
@@ -100,7 +104,7 @@ export const UserProvider = ({ children }: Props) => {
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pathname, authUser.id]);
+  }, [isInit, pathname, authUser.id]);
 
   const getUserByDatabase = async (id: User["id"]) => {
     try {
@@ -160,6 +164,7 @@ export const UserProvider = ({ children }: Props) => {
         email,
         password,
       });
+      handleCloseSnackbar();
       if (error) {
         throw error;
       }
@@ -187,11 +192,14 @@ export const UserProvider = ({ children }: Props) => {
           },
         },
       });
+      handleCloseSnackbar();
       if (error) {
         throw error;
+      } else if (data.user?.identities?.length === 0) {
+        throw new Error("すでに登録済みのメールアドレスです");
       }
-    } catch (err: AuthError | unknown) {
-      if (err instanceof AuthError) {
+    } catch (err: AuthError | Error | unknown) {
+      if (err instanceof AuthError || err instanceof Error) {
         console.error("エラーが発生しました\n", err.message);
         handleOpenSnackbar({
           type: SNACKBAR_TYPE.ERROR,
@@ -200,6 +208,7 @@ export const UserProvider = ({ children }: Props) => {
       } else {
         console.error("予期しないエラーが発生しました\n", err);
       }
+      return err;
     }
   };
 

@@ -4,8 +4,6 @@ import Link from "next/link";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useUser } from "@/contexts/UserProvider";
 import FormItem from "@/components/FormItem";
-import { useSnackbar } from "@/contexts/SnackbarProvider";
-import { SNACKBAR_TYPE } from "@/costants/snackbar";
 import Snackbar from "@/components/Snackbar";
 
 interface FormValues {
@@ -15,14 +13,13 @@ interface FormValues {
 
 const PageLogin = () => {
   const { signIn } = useUser();
-  const { handleOpenSnackbar } = useSnackbar();
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<FormValues>();
 
-  const handleSubmitSuccess: SubmitHandler<FormValues> = async ({
+  const handleSubmitSuccess: SubmitHandler<FormValues> = ({
     email,
     password,
   }: FormValues) => {

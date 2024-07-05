@@ -34,14 +34,12 @@ const bgColor = (type: ContainerProps["$type"]): string => {
   return colors.info;
 };
 
-const Container = styled.div<ContainerProps>`
+const Container = styled.button<ContainerProps>`
   position: fixed;
-  bottom: 16px;
-  left: 50%;
-  transform: translateX(-50%);
+  top: 20px;
+  left: 20px;
 
-  width: fit-content;
-  max-width: 80%;
+  max-width: calc(100% - 40px);
   padding: 8px 16px;
 
   display: flex;
@@ -56,9 +54,15 @@ const Container = styled.div<ContainerProps>`
 `;
 
 const Snackbar = () => {
-  const { isOpenSnackbar, alertType, message } = useSnackbar();
+  const { isOpenSnackbar, alertType, message, handleCloseSnackbar } =
+    useSnackbar();
   return (
-    <Container $type={alertType} $isOpen={isOpenSnackbar}>
+    <Container
+      $type={alertType}
+      $isOpen={isOpenSnackbar}
+      type="button"
+      onClick={handleCloseSnackbar}
+    >
       {alertType === SNACKBAR_TYPE.INFO ? (
         <CheckCircleIcon className="w-8 text-white" />
       ) : alertType === SNACKBAR_TYPE.ERROR ? (
@@ -66,7 +70,7 @@ const Snackbar = () => {
       ) : (
         <></>
       )}
-      <p className="text-base text-white font-bold">{message}</p>
+      <p className="flex-1 text-base text-white font-bold">{message}</p>
     </Container>
   );
 };

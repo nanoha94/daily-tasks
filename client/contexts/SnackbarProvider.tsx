@@ -1,12 +1,14 @@
 "use client";
 import { SNACKBAR_TYPE } from "@/costants/snackbar";
-import React, { createContext, useContext, useState } from "react";
+import { usePathname } from "next/navigation";
+import React, { createContext, useContext, useEffect, useState } from "react";
 
 interface SnackbarContextType {
   isOpenSnackbar: boolean;
   alertType: SNACKBAR_TYPE;
   message: string;
   handleOpenSnackbar: ({ type, message }: OpenProps) => void;
+  handleCloseSnackbar: () => void;
 }
 
 const SnackbarContext = createContext<SnackbarContextType>({
@@ -14,6 +16,7 @@ const SnackbarContext = createContext<SnackbarContextType>({
   alertType: SNACKBAR_TYPE.INFO,
   message: "",
   handleOpenSnackbar: () => {},
+  handleCloseSnackbar: () => {},
 });
 
 export const useSnackbar = () => {
@@ -36,6 +39,14 @@ export const SnackbarProvider = ({ children }: Props) => {
     SNACKBAR_TYPE.INFO
   );
   const [message, setMessage] = useState<string>("");
+  const pathname = usePathname();
+
+  useEffect(() => {
+    if (alertType !== SNACKBAR_TYPE.INFO) {
+      setIsOpenSnackbar(false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pathname]);
 
   const handleOpenSnackbar = ({ type, message }: OpenProps) => {
     setAlertType(type);
@@ -49,6 +60,10 @@ export const SnackbarProvider = ({ children }: Props) => {
     }
   };
 
+  const handleCloseSnackbar = () => {
+    setIsOpenSnackbar(false);
+  };
+
   return (
     <SnackbarContext.Provider
       value={{
@@ -56,6 +71,7 @@ export const SnackbarProvider = ({ children }: Props) => {
         alertType,
         message,
         handleOpenSnackbar,
+        handleCloseSnackbar,
       }}
     >
       {children}
