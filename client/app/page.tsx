@@ -7,7 +7,6 @@ import EditPost from "@/components/drawer/EditPost";
 import FullscreenDrawer from "@/components/drawer/FullscreenDrawer";
 import { mediaQuery, useMediaQuery } from "@/hooks/useMediaQuery";
 import FilterForm from "./_components/FilterForm";
-import { Suspense } from "react";
 import Snackbar from "@/components/Snackbar";
 
 const Page = () => {
@@ -24,9 +23,7 @@ const Page = () => {
             </div>
           )}
           <div className="max-w-[560px] flex flex-col gap-y-2 mx-auto px-3 md:w-3/5 ">
-            <Suspense>
-              <FilterForm />
-            </Suspense>
+            <FilterForm />
             <PostList />
           </div>
         </div>

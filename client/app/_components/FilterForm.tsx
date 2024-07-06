@@ -1,8 +1,9 @@
 import SearchWindow from "@/components/filter/SearchWindow";
 import SelectCategory from "@/components/filter/SelectCategory";
 import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 
-const FilterForm = () => {
+const Inner = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const searchTextParam = searchParams.get("search");
@@ -46,6 +47,14 @@ const FilterForm = () => {
         handleChange={handleChangeSearchCategory}
       />
     </form>
+  );
+};
+
+const FilterForm = () => {
+  return (
+    <Suspense>
+      <Inner />
+    </Suspense>
   );
 };
 

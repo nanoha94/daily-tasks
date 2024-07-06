@@ -6,7 +6,7 @@ import styled from "styled-components";
 import { colors } from "@/tailwind.config";
 import GoodButton from "./button/GoodButton";
 import styles from "@/styles/form.module.css";
-import { useState } from "react";
+import React, { useState } from "react";
 import { usePosts } from "@/contexts/PostsProvider";
 import {
   ClipboardDocumentCheckIcon,
@@ -80,8 +80,8 @@ const PostItem = ({ post }: Props) => {
   const [isClickedGoodButton, setIsClickedGoodButton] =
     useState<boolean>(false);
 
-  const handleClickNumOfGood = async () => {
-    await updatePost({
+  const handleClickNumOfGood = () => {
+    updatePost({
       id,
       comment,
       tasks,

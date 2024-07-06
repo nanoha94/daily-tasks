@@ -13,7 +13,7 @@ const GoodButton = ({ count, isClicked, ...props }: Props) => {
       className={`flex items-center gap-x-1 border-2  rounded-full py-0.5 px-2 transition-colors  hover:opacity-70  ${
         isClicked
           ? "text-white border-transparent bg-green"
-          : "text-gray-600 border-gray-600 bg-white "
+          : "text-gray-600 border-gray-600 bg-white"
       } `}
       {...props}
     >

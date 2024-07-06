@@ -39,7 +39,6 @@ const PageRegister = () => {
   }: FormValues) => {
     const ret = await signUp(email, password, name);
     reset(defaultValues);
-    console.log(ret);
     if (!ret) {
       router.push("/register-success");
     }

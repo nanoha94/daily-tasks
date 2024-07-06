@@ -5,6 +5,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { useUser } from "./UserProvider";
 
 interface PostsContextType {
+  processingFetchAllPosts: boolean;
   allPosts: Post[];
   createPost: (post: Omit<Post, "id" | "createdAt">) => Promise<void>;
   updatePost: (post: Omit<Post, "createdAt">) => Promise<void>;
@@ -12,6 +13,7 @@ interface PostsContextType {
 }
 
 const PostsContext = createContext<PostsContextType>({
+  processingFetchAllPosts: false,
   allPosts: [],
   createPost: async () => {},
   updatePost: async () => {},
@@ -27,11 +29,13 @@ interface Props {
 }
 
 export const PostsProvider = ({ children }: Props) => {
+  const [processingFetchAllPosts, setProcessingFetchAllPosts] = useState(false);
   const { authUser } = useUser();
   const [allPosts, setAllPosts] = useState<PostsContextType["allPosts"]>([]);
 
   useEffect(() => {
     const fetchPosts = async () => {
+      setProcessingFetchAllPosts(true);
       try {
         const posts = await apiClient.get("/posts");
         if (!!posts) {
@@ -40,6 +44,7 @@ export const PostsProvider = ({ children }: Props) => {
       } catch (err) {
         console.error(err);
       }
+      setProcessingFetchAllPosts(false);
     };
     fetchPosts();
   }, []);
@@ -101,6 +106,7 @@ export const PostsProvider = ({ children }: Props) => {
   return (
     <PostsContext.Provider
       value={{
+        processingFetchAllPosts,
         allPosts,
         createPost,
         updatePost,
