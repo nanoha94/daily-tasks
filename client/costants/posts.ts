@@ -1,4 +1,5 @@
 export enum POST_CATEGORY {
+  ALL = -1,
   TASK = 0,
   REVIEW = 1,
 }

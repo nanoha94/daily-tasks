@@ -9,7 +9,7 @@ import Dialog from "@/components/dialog/Dialog";
 import FullscreenDrawer from "@/components/drawer/FullscreenDrawer";
 import SelectCategory from "@/components/filter/SelectCategory";
 import { useUser } from "@/contexts/UserProvider";
-import { POST_CATEGORIES, POST_ORDERS } from "@/costants/posts";
+import { POST_CATEGORIES, POST_CATEGORY, POST_ORDERS } from "@/costants/posts";
 import { mediaQuery, useMediaQuery } from "@/hooks/useMediaQuery";
 import { DefaultUser, User } from "@/types/user";
 import { useEffect, useState } from "react";
@@ -22,12 +22,8 @@ const Page = ({ params }: Props) => {
   const isPc: boolean = useMediaQuery(mediaQuery.md);
   const [profileUser, setProfileUser] = useState<User>(DefaultUser);
   const { getUserByDatabase } = useUser();
-  // FIXED: -1 が何かわからないので、コメントがあると親切です。
-  // POST_CATEGORYに未指定の定義も入れた方がいい？（阿部）
-
-  // 初期値（POST_CATEGORYは0以上なので、-1を初期値とする）
   const [filterParam, setFilterParam] = useState<{ category: number }>({
-    category: -1,
+    category: POST_CATEGORY.ALL,
   });
   const [sortParam, setSortParam] = useState<string>(POST_ORDERS[0].value);
 
@@ -38,11 +34,11 @@ const Page = ({ params }: Props) => {
       setFilterParam({
         category:
           POST_CATEGORIES.find((category) => category.key === e.target.value)
-            ?.id ?? -1,
+            ?.id ?? POST_CATEGORY.ALL,
       });
     } else {
       setFilterParam({
-        category: -1,
+        category: POST_CATEGORY.ALL,
       });
     }
   };
@@ -59,7 +55,8 @@ const Page = ({ params }: Props) => {
       }
     };
     fetchData();
-  }, [params.userId, getUserByDatabase]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [params.userId]);
 
   return (
     <>
